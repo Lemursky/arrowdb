@@ -30,6 +30,6 @@ public class MyUserDetailService implements UserDetailsService {
                                     .map(SimpleGrantedAuthority::new)
                                     .toList())
                             .build())
-                    .orElseThrow(() -> new UsernameNotFoundException("Пользователь %s не найден".formatted(username)));
+                    .orElseThrow();
     }
 }

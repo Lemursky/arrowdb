@@ -1,0 +1,97 @@
+package com.example.arrowdb.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "constr_control")
+@AuditTable(value = "constr_control_aud", schema = "history")
+public class ConstructionControl {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "constr_control_id")
+    private Integer constrControlId;
+
+    @Audited
+    @NotBlank(message = "Поле не может быть пустым")
+    @Size(min = 1, max = 100, message = "Кол-во символов максимум 100")
+    @Pattern(regexp = "([|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
+            message = "Допускаются только буквы Латинские, Кириллицы и цифры")
+    @Column(name = "num_of_warning", unique = true)
+    private String numOfWarning;
+
+    @Audited
+    @NotNull
+    @Column(name = "date_of_issue")
+    private LocalDate dateOfIssue;
+
+    @Audited
+    @NotBlank(message = "Поле не может быть пустым")
+    @Size(min = 1, max = 1000, message = "Кол-во символов максимум 1000")
+    @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
+            message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
+    @Column(name = "warning_name")
+    private String warningName;
+
+    @Audited
+    @Column(name = "dead_line")
+    private LocalDate deadLine;
+
+    @Audited
+    @NotBlank(message = "Поле не может быть пустым")
+    @Size(min = 1, max = 100, message = "Кол-во символов максимум 100")
+    @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
+            message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
+    @Column(name = "responsible_from_customer")
+    private String responsibleFromCustomer;
+
+    @Audited
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "emp_duty_c_contr_join",
+            joinColumns = @JoinColumn(name = "join_c_contr_id"),
+            inverseJoinColumns = @JoinColumn(name = "join_emp_duty_id"))
+    private List<Employee> empDutyList = new ArrayList<>();
+
+    @Audited
+    @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
+            message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
+    @Column(name = "responsible_from_contractor")
+    private String responsibleFromContractor;
+
+    @Audited
+    @Column(name = "date_of_extension")
+    private LocalDate dateOfExtension;
+
+    @Audited
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "constr_control_status")
+    private WorkObjectStatus warningStatus;
+
+    @Audited
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "work_object")
+    private WorkObject workObject;
+
+    public void addEmployeeToConstrControlEmpDutyList(){
+        empDutyList.forEach(e -> e.getConstrControlEmpDutyList().add(this));
+    }
+
+}

@@ -1,0 +1,180 @@
+package com.example.arrowdb.controllers;
+
+import com.example.arrowdb.entity.*;
+import com.example.arrowdb.services.*;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.example.arrowdb.message.Message.*;
+
+@Controller
+@RequiredArgsConstructor
+public class MeasInstrumentController {
+
+    private final EmployeeService employeeService;
+    private final WorkObjectService workObjectService;
+    private final MeasInstrumentService measInstrumentService;
+    private final ConditionForWorkService conditionForWorkService;
+    private final ConditionForTechnService conditionForTechnService;
+    private final DepartmentService departmentService;
+
+    @GetMapping("/general/m_instrument/catalog")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')")
+    public String getMeasInstrumentList(Model model) {
+        List<MeasInstrument> measInstrument = measInstrumentService.findAllMeasInstruments().stream()
+                .sorted(Comparator.comparingInt((MeasInstrument::getMeasInstrId)))
+                .toList();
+        model.addAttribute("measInstrument", measInstrument);
+        return "stock/m_instrument-catalog";
+    }
+
+    @GetMapping("/general/m_instrument")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')")
+    public String getPersonalInstrumentListEmployee(Model model) {
+        List<Employee> employee = employeeService.findAllEmployees().stream()
+                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .sorted(Comparator.comparingInt((Employee::getEmpId)))
+                .toList();
+        model.addAttribute("employee", employee);
+        return "stock/m_instrument-com_table";
+    }
+
+    @GetMapping("/general/m_instrument/m_instrumentView/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')")
+    public String findMeasInstrumentById(@PathVariable("id") int id,
+                                         Model model) {
+        MeasInstrument measInstrument = measInstrumentService.findMeasInstrumentById(id);
+        model.addAttribute("measInstrument", measInstrument);
+        return "stock/m_instrument-view";
+    }
+
+    @GetMapping("/general/m_instrument/m_instrumentCreate")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_CREATE')")
+    public String createMeasInstrumentForm(@ModelAttribute MeasInstrument measInstrument,
+                                           Model model) {
+        List<Department> departmentList = departmentService.findAllDepartments();
+        model.addAttribute("departmentList", departmentList);
+        return "stock/m_instrument-create";
+    }
+
+    @PostMapping("/general/m_instrument/m_instrumentCreate")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_CREATE')")
+    public String createMeasInstrument(@Valid @ModelAttribute MeasInstrument measInstrument,
+                                       BindingResult bindingResult,
+                                       Model model) {
+        if (bindingResult.hasErrors()) {
+            List<Department> departmentList = departmentService.findAllDepartments();
+            model.addAttribute("departmentList", departmentList);
+            return "stock/m_instrument-create";
+        } else {
+            try {
+                measInstrument.setConditionForTechn(conditionForTechnService.findConditionForTechnBytConditionName("Исправен"));
+                measInstrument.setConditionForWork(conditionForWorkService.findConditionForWorkBywConditionName("Не закреплен"));
+                List<Department> departmentList = departmentService.findAllDepartments();
+                model.addAttribute("departmentList", departmentList);
+                measInstrumentService.saveMeasInstrument(measInstrument);
+                return "redirect:/general/m_instrument/catalog";
+            } catch (Exception e) {
+                model.addAttribute("errorInv", UNIQUE_INSTR_INV);
+                return "stock/m_instrument-create";
+            }
+        }
+    }
+
+    @GetMapping("/general/m_instrument/m_instrumentDelete/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_DELETE')")
+    public String deleteMeasInstrument(@PathVariable("id") int id, Model model) {
+        MeasInstrument measInstrument = measInstrumentService.findMeasInstrumentById(id);
+        model.addAttribute("measInstrument", measInstrument);
+        model.addAttribute("error", DELETE_INSTRUMENT_MESSAGE);
+        if (measInstrument.getEmployee() != null || measInstrument.getWorkObject() != null) {
+            return "error/m_instrument-error";
+        } else {
+            measInstrumentService.deleteMeasInstrumentById(id);
+            return "redirect:/general/m_instrument/catalog";
+        }
+    }
+
+    @GetMapping("/general/m_instrument/m_instrumentUpdate/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_UPDATE')")
+    public String updateMeasInstrumentForm(@PathVariable("id") int id,
+                                           Model model) {
+        MeasInstrument measInstrument = measInstrumentService.findMeasInstrumentById(id);
+        List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
+                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
+        List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
+                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
+        List<ConditionForWork> conditionForWork = conditionForWorkService.findAllConditionForWork();
+        List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
+        List<Department> departmentList = departmentService.findAllDepartments();
+        if (workObjectList.isEmpty() || employeeList.isEmpty()) {
+            conditionForWork.remove(conditionForWorkService.findConditionForWorkBywConditionName("Закреплен"));
+        }
+        model.addAttribute("employeeList", employeeList);
+        model.addAttribute("workObjectList", workObjectList);
+        model.addAttribute("measInstrument", measInstrument);
+        model.addAttribute("conditionForWork", conditionForWork);
+        model.addAttribute("conditionForTechn", conditionForTechn);
+        model.addAttribute("departmentList", departmentList);
+        return "stock/m_instrument-update";
+    }
+
+    @PostMapping("/general/m_instrument/m_instrumentUpdate")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_UPDATE')")
+    public String updateMeasInstrument(@Valid @ModelAttribute MeasInstrument measInstrument,
+                                       BindingResult bindingResult,
+                                       Model model) {
+        List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
+                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
+        List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
+                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
+        List<ConditionForWork> conditionForWork = conditionForWorkService.findAllConditionForWork();
+        List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
+        List<Department> departmentList = departmentService.findAllDepartments();
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("employeeList", employeeList);
+            model.addAttribute("workObjectList", workObjectList);;
+            model.addAttribute("conditionForWork", conditionForWork);
+            model.addAttribute("conditionForTechn", conditionForTechn);
+            model.addAttribute("departmentList", departmentList);
+            return "stock/m_instrument-update";
+        } else {
+            if (!measInstrument.getConditionForTechn().getTConditionName().equals("Списан")) {
+                measInstrument.setCloseDate(null);
+            }
+            try {
+                if (!measInstrument.getConditionForWork().getWConditionName().equals("Закреплен") ||
+                        !measInstrument.getConditionForTechn().getTConditionName().equals("Исправен")) {
+                    measInstrument.setEmployee(null);
+                }
+                if (!measInstrument.getConditionForWork().getWConditionName().equals("Закреплен") ||
+                        measInstrument.getConditionForTechn().getTConditionName().equals("Списан")) {
+                    measInstrument.setWorkObject(null);
+                    measInstrument.setEmployee(null);
+                }
+                model.addAttribute("employeeList", employeeList);
+                model.addAttribute("workObjectList", workObjectList);
+                model.addAttribute("conditionForWork", conditionForWork);
+                model.addAttribute("conditionForTechn", conditionForTechn);
+                model.addAttribute("departmentList", departmentList);
+                measInstrumentService.saveMeasInstrument(measInstrument);
+                return "redirect:/general/m_instrument/m_instrumentView/%d".formatted(measInstrument.getMeasInstrId());
+            } catch (Exception e) {
+                model.addAttribute("errorInv", UNIQUE_INSTR_INV);
+                return "stock/m_instrument-update";
+            }
+        }
+    }
+}

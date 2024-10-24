@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Arrow</title>
+</head>
+<body>
+<div class="tableContainer m-4" style="font-size: 15px">
+    <div>
+        <table>
+            <tbody>
+            <th>
+                <div>
+                    <a th:href="@{/general/p_instrument/catalog}">
+                        <button type="button" class="btn btn-outline-warning btn-sm">меню Каталог</button>
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div>
+                    <a th:href="@{/general/p_instrument/p_instrumentJournal/{id}(id=${personalInstrument.personalInstrId})}">
+                        <button type="button" class="btn btn-outline-success btn-sm">Журнал изменений</button>
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_UPDATE')">
+                    <a th:href="@{/general/p_instrument/p_instrumentUpdate/{id}(id=${personalInstrument.personalInstrId})}"
+                       th:unless="${personalInstrument.conditionForTechn.tConditionName == 'Списан'}">
+                        <button type="button" class="btn btn-outline-primary btn-sm">Править</button>
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_DELETE')">
+                    <a th:href="@{/general/p_instrument/p_instrumentDelete/{id}(id=${personalInstrument.personalInstrId})}">
+                        <button onclick="return confirm('Вы действительно хотите безвозвратно удалить эти данные?');"
+                                type="button" class="btn btn-outline-danger btn-sm">Удалить</button>
+                    </a>
+                </div>
+            </th>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <div class="pageName">
+        <h4>Просмотр данных персонального инструмента</h4>
+    </div>
+    <div>
+        <style>
+            .table {
+                width: 100%;}
+            .head, .body {
+                display: table;
+                width: 100%;}
+            .body {
+                display: block;
+                width: 100%;
+                height: 650px;
+                overflow: auto;}
+        </style>
+        <table class="table table-hover table-sm" style="width: 700px; text-align: center;">
+            <thead class="head">
+            <tr>
+                <th style="width: 50px; text-align: left;" scope="col">#</th>
+                <th style="width: 250px; text-align: left;" scope="col">Атрибут</th>
+                <th style="width: 400px; text-align: left;" scope="col">Параметр</th>
+            </tr>
+            </thead>
+            <tbody class="body">
+            <tr>
+                <th style="text-align: left">
+                <th style="text-align: left"><label>Техн. состояние:</label></th>
+                <td style="text-align: left; width: 400px">
+                    <span th:text="${personalInstrument.conditionForTechn}"
+                          th:if="${personalInstrument.conditionForTechn.tConditionName == 'Исправен'}"></span>
+
+                    <span th:text="${personalInstrument.conditionForTechn} + ${' ' + personalInstrument.closeDate}
+                    + ${'; Акт: ' + personalInstrument.deleteAct}"
+                          th:if="${personalInstrument.conditionForTechn.tConditionName == 'Списан'}"></span>
+
+                    <span th:text="${personalInstrument.conditionForTechn} + ${' ' + personalInstrument.brokenDate}"
+                          th:if="${personalInstrument.conditionForTechn.tConditionName == 'Не исправен'}"></span>
+                    <p style="white-space: pre-wrap" th:text="${'Комментарий: ' + personalInstrument.brokenAnnotation}"
+                       th:if="${personalInstrument.conditionForTechn.tConditionName == 'Не исправен'}"></p>
+
+                    <span th:text="${personalInstrument.conditionForTechn} + ${' с ' + personalInstrument.startRepairDate}
+                    + ${' по ' + personalInstrument.endRepairDate}"
+                          th:if="${personalInstrument.conditionForTechn.tConditionName == 'В ремонте'}"></span>
+                    <p style="white-space: pre-wrap" th:text="${'Комментарий: ' + personalInstrument.repairAnnotation}"
+                          th:if="${personalInstrument.conditionForTechn.tConditionName == 'В ремонте'}"></p>
+            </tr>
+            <tr>
+                <th style="text-align: left">
+                <th style="text-align: left"><label>Выдан Работнику:</label></th>
+                <td style="text-align: left"><span th:if="${personalInstrument.employee}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${personalInstrument.employee.empId})}">
+                    <button style="width: 400px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
+                        <span th:text="(${personalInstrument.employee} == null)? '' :
+                ((${personalInstrument.employee.profession} == null)? ${personalInstrument.employee} :
+                (${personalInstrument.employee} + ${', ' + personalInstrument.employee.profession.getProfessionName}?: ''))"></span></button>
+                </a></span><br>
+                    <p th:text="${personalInstrument.issueDateVariants}"
+                       th:if="${personalInstrument.employee != null}">
+                    </p>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">001</th>
+                <td style="text-align: left">#ID</td>
+                <td style="text-align: left"><span th:text="${personalInstrument.personalInstrId}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">002</th>
+                <td style="text-align: left">№ ТИ 1С</td>
+                <td style="text-align: left"><span th:text="${personalInstrument.personalOneCNumber}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">003</th>
+                <td style="text-align: left">Инвентарный номер</td>
+                <td style="text-align: left"><span th:text="${personalInstrument.personalInventNumber}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">004</th>
+                <td style="text-align: left">Серийный номер</td>
+                <td style="text-align: left"><span th:text="${personalInstrument.personalSerialNumber}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">005</th>
+                <td style="text-align: left">Изготовитель</td>
+                <td style="text-align: left"><span th:text="${personalInstrument.personalInstrManufacturer}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">006</th>
+                <td style="text-align: left">Модель</td>
+                <td style="text-align: left"><span th:text="${personalInstrument.personalInstrModel}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">007</th>
+                <td style="text-align: left">Наименование</td>
+                <td style="text-align: left"><span th:text="${personalInstrument.personalInstrName}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">008</th>
+                <td style="text-align: left">Дата приобретения</td>
+                <td style="text-align: left"><span
+                        th:text="${#temporals.format(personalInstrument.personalDateOfPurchase, 'dd-MM-yyyy')}"></span>
+                    <span th:text="${personalInstrument.personalTimeExperience}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">009</th>
+                <td style="text-align: left">Гарантийный период</td>
+                <td style="text-align: left"><span th:text="${personalInstrument.personalGuaranteePeriod == null}? '' :
+                ${personalInstrument.personalGuaranteePeriod + ' мес'}"></span>
+                    <span th:text="${personalInstrument.personalTimeOfGuarantee}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">010</th>
+                <td style="text-align: left">Срок службы</td>
+                <td style="text-align: left"><span th:text="${personalInstrument.personalServicePeriod == null}? '' :
+                ${personalInstrument.personalServicePeriod + ' лет'}"></span>
+                    <span th:text="${personalInstrument.personalTimeOfService}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">011</th>
+                <td style="text-align: left">Комментарий</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${personalInstrument.personalInstrComment}"></span>
+            </tr>
+        </table>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

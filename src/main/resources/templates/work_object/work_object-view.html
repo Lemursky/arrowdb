@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Arrow</title>
+</head>
+<body>
+<div class="tableContainer m-4" style="font-size: 15px">
+    <div>
+        <table>
+            <tbody>
+            <th>
+                <div>
+                    <a th:href="@{/general/workobject}">
+                        <button type="button" class="btn btn-outline-warning btn-sm" aria-pressed="true">меню Объекты работ</button>
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_UPDATE')">
+                    <a th:href="@{/general/workobject/workobjectUpdate/{id}(id=${workObject.workObjectId})}"
+                       th:unless="${workObject.workObjectStat.statusName == 'Закрыт'}">
+                        <button type="button" class="btn btn-outline-primary btn-sm" aria-pressed="true">Править</button>
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_DELETE')">
+                    <a th:href="@{/general/workobject/workobjectDelete/{id}(id=${workObject.workObjectId})}">
+                        <button onclick="return confirm('Вы действительно хотите безвозвратно удалить эти данные?');"
+                                type="button" class="btn btn-outline-danger btn-sm" aria-pressed="true">Удалить</button>
+                    </a>
+                </div>
+            </th>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class="pageName">
+        <h4>Просмотр данных объекта строительства</h4>
+    </div>
+    <br>
+    <div>
+        <style>
+            .table {
+                width: 100%;}
+            thead, tbody {
+                display: table;
+                width: 100%;}
+            .body {
+                display: block;
+                width: 100%;
+                height: 550px;
+                overflow: auto;}
+        </style>
+        <table class="table table-hover table-sm" style="width: 1000px; text-align: center;">
+            <thead>
+            <tr>
+                <th style="width: 50px; text-align: left;" scope="col">#</th>
+                <th style="width: 300px; text-align: left;" scope="col">Атрибут</th>
+                <th style="width: 600px; text-align: left;" scope="col">Параметр</th>
+            </tr>
+            </thead>
+            <tbody class="body">
+            <tr>
+                <th style="text-align: left">
+                <th style="text-align: left"><label>Статус:</label></th>
+                <td style="text-align: left; width: 600px"><span th:text="${workObject.workObjectStat}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">001</th>
+                <td style="text-align: left">#ID</td>
+                <td style="text-align: left"><span th:text="${workObject.workObjectId}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">002</th>
+                <td style="text-align: left">№ Заказа (внутр.)</td>
+                <td style="text-align: left"><span th:text="${workObject.workObjectOrder}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">003</th>
+                <td style="text-align: left">№ Лота</td>
+                <td style="text-align: left"><span th:text="${workObject.workObjectLot}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">004</th>
+                <td style="text-align: left">Наименование объекта строительства</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.workObjectName}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">005</th>
+                <td style="text-align: left">Заказчик</td>
+                <td style="text-align: left"><span th:text="${workObject.workObjectCustomer}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">006</th>
+                <td style="text-align: left">Номер договора Заказчик - Генподрядчик (Заказчик - ТИК)</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.workObjectContractCustomerTotGeneralContractor}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">007</th>
+                <td style="text-align: left">Генподрядчик</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.workObjectGeneralContractor}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">008</th>
+                <td style="text-align: left">Номер договора ТИК - Генподрядчик</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.workObjectContractContractorTotGeneralContractor}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">009</th>
+                <td style="text-align: left">Предмет договора</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.valueOfContract}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">010</th>
+                <td style="text-align: left">Сумма контракта ТИК - Генподрядчик (Заказчик), с НДС (20%)</td>
+                <td style="text-align: left">
+                    <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_FINANCE')">
+                        <span th:text="${workObject.priceOfContract == ''}? '' : ${workObject.priceOfContract + ' руб.'}"></span>
+                    </div>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">011</th>
+                <td style="text-align: left">Аванс</td>
+                <td style="text-align: left">
+                    <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_FINANCE')">
+                        <span th:text="${workObject.valueOfDeposit + '%'}"></span>
+                    </div>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">012</th>
+                <td style="text-align: left">Срок контракта</td>
+                <td style="text-align: left"><span th:text="${'Начало: ' + workObject.dateOfStart + ' | Окончание: ' + workObject.dateOfEnd}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">013</th>
+                <td style="text-align: left">Руководитель проекта</td>
+                <td style="text-align: left"><span th:if="${workObject.workObjectChief}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${workObject.workObjectChief.empId})}">
+                    <button style="width: 450px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
+                        <span th:text="(${workObject.workObjectChief} == null)? '' :
+                ((${workObject.workObjectChief.profession} == null)? ${workObject.workObjectChief} :
+                (${workObject.workObjectChief} + ${', ' + workObject.workObjectChief.profession.getProfessionName}?: ''))"></span></button></a></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">014</th>
+                <td style="text-align: left">Ответственные ПТО</td>
+                <td style="text-align: left"><span th:each="emp:${workObject.PTOList}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
+                        <button style="text-align: left; width: 450px" type="button" class="btn btn-outline-dark btn-sm">
+                            <span th:text="(${emp} == null)? '' : ((${emp.profession} == null)? ${emp} :
+                (${emp} + ${', ' + emp.profession.getProfessionName}?: ''))"></span></button></a><br></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">015</th>
+                <td style="text-align: left">Куратор от Заказчика</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.chiefOfCustomer}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">016</th>
+                <td style="text-align: left">Акты-предупреждения</td>
+                <td style="text-align: left">
+                    <a th:href="@{/general/constr_control/constr_controlWarnings/{id}(id=${workObject.workObjectId})}">
+                        <button style="text-align: left; width: 450px" type="button" class="btn btn-outline-dark btn-sm"><span
+                                th:text="${'Действующих: ' + workObject.getConstructionControlActive +
+                                ' | Закрытых: ' + workObject.getConstructionControlClosed +
+                                ' | Всего: ' + #lists.size(workObject.constructionControlList)}"></span></button></a><br></span></td>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">017</th>
+                <td style="text-align: left">Адрес/локация производства работ</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.workObjectLocalAddress}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">018</th>
+                <td style="text-align: left">Адрес склада</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.workObjectStorageAddress}"></span>
+            </tr>
+
+            <tr>
+                <th style="text-align: left" scope="row">019</th>
+                <td style="text-align: left">Ответственный за склад/инструмент</td>
+                <td style="text-align: left"><span th:each="skeep:${workObject.storeKeeperList}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${skeep.empId})}">
+                        <button style="text-align: left; width: 450px" type="button" class="btn btn-outline-dark btn-sm">
+                            <span th:text="(${skeep} == null)? '' : ((${skeep.profession} == null)? ${suppl} :
+                (${skeep} + ${', ' + skeep.profession.getProfessionName}?: ''))"></span></button></a><br></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row">020</th>
+                <td style="text-align: left">Ответственные ОМТР</td>
+                <td style="text-align: left"><span th:each="suppl:${workObject.supplierList}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${suppl.empId})}">
+                        <button style="text-align: left; width: 450px" type="button" class="btn btn-outline-dark btn-sm">
+                            <span th:text="(${suppl} == null)? '' : ((${suppl.profession} == null)? ${suppl} :
+                (${suppl} + ${', ' + suppl.profession.getProfessionName}?: ''))"></span></button></a><br></span>
+            </tr>
+<!--            <tr>-->
+<!--                <th style="text-align: left" scope="row">021.1</th>-->
+<!--                <td style="text-align: left">Задествованный инструмент строительный</td>-->
+<!--                <td style="text-align: left"><span th:each="workInstr:${workObject.workInstrumentList}">-->
+<!--                    <a th:href="@{/general/w_instrument/w_instrumentView/{id}(id=${workInstr.workInstrId})}">-->
+<!--                        <button style="text-align: left; width: 450px" type="button" class="btn btn-outline-dark btn-sm"><span-->
+<!--                                th:text="${workInstr}"></span></button></a><br></span>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th style="text-align: left" scope="row">021.2</th>-->
+<!--                <td style="text-align: left">Задествованный инструмент измерительный</td>-->
+<!--                <td style="text-align: left"><span th:each="measInstr:${workObject.measInstrumentList}">-->
+<!--                    <a th:href="@{/general/m_instrument/m_instrumentView/{id}(id=${measInstr.measInstrId})}">-->
+<!--                        <button style="text-align: left; width: 450px" type="button" class="btn btn-outline-dark btn-sm"><span-->
+<!--                                th:text="${measInstr}"></span></button></a><br></span>-->
+<!--            </tr>-->
+
+            <tr>
+                <th style="text-align: left" scope="row">022</th>
+                <td style="text-align: left">Комментарий</td>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.workObjectComment}"></span>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

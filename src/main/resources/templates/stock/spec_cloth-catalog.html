@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Arrow</title>
+</head>
+<body>
+<div class="tableContainer m-4" style="font-size: 15px">
+    <div>
+        <a th:href="@{/general}">
+            <button type="button" class="btn btn-outline-warning">Главное меню</button>
+        </a>
+    </div>
+    <hr>
+    <div>
+        <table>
+            <tbody>
+            <th>
+                <div>
+                    <a th:href="@{/general/s_cloth}">
+                        <button type="button" class="btn btn-outline-primary btn-sm">Сводная таблица Спецодежды и СИЗ по Работникам</button></a>
+                </div>
+            </th>
+            <th>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_CREATE')">
+                    <a th:href="@{/general/s_cloth/s_clothCreate}" class="btn btn-outline-success btn-sm">Создать новую Спецодежду и СИЗ</a>
+                </div>
+            </th>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <h4>Каталог Спецодежды и СИЗ</h4>
+    <style>
+        .mainTable {
+            width: 100%;
+            height: 650px;
+            border-collapse: collapse;
+            border-spacing: 0;
+            overflow-y: scroll;
+            -moz-hyphens: auto;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
+        .head {
+            position: sticky;
+            top: 0;
+        }
+    </style>
+    <form th:action="@{/general/s_cloth/catalog}" th:method="get">
+        <table class="table-sm" style="width: 1200px;">
+            <tbody class="bodySearch">
+            <tr>
+                <td style="width: 100px; text-align: left;">Поиск...</td>
+                <th style="width: 600px; text-align: left;">
+                    <input type="text" style="width: 250px; height: 27px;" id="byName" onkeyup="myFunctionNAME()">
+                <th style="width: 200px; text-align: left;">
+                <th style="width: 200px; text-align: left;">
+                <input type="text" style="width: 120px; height: 27px;" id="byStat" onkeyup="myFunctionSTAT()">
+                <th style="width: 100px; text-align: left;">
+                    <button class="btn btn-outline-dark btn-sm" id="resetButton">Очистить</button>
+                </th>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+    <div class="mainTable">
+        <table class="table table-hover table-sm" style="width: 1200px;" id="catalog-table">
+            <thead class="head">
+            <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
+                <th style="width: 100px; text-align: left;">#ID</th>
+                <th onclick="sortTable(0)" style="width: 600px; text-align: left;">Наименование</th>
+                <th style="width: 200px; text-align: left;">Всего выдано</th>
+                <th onclick="sortTable(2)" style="width: 200px; text-align: left;">Статус</th>
+                <th style="width: 100px; text-align: center;">Действие</th>
+            </tr>
+            </thead>
+            <tbody class="body">
+            <tr th:each="specCloth:${specialClothList}">
+                <th th:text="${specCloth.specClothId}">
+                <td th:text="${specCloth.specClothName}">
+                <td th:text="${#lists.size(specCloth.specialClothEmployeeList)} +
+            ${' ' + specCloth.uniteOfInstrument.unitName}">
+                <td th:text="${specCloth.specClothStatus.statusName}" style="width: 200px">
+                <td><a th:href="@{/general/s_cloth/s_clothView/{id}(id=${specCloth.specClothId})}">
+                    <button type="button" class="btn btn-outline-primary btn-sm">Просмотр</button>
+                </a>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("catalog-table");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByTagName("TR");
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionNAME() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("byName");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("catalog-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        function myFunctionSTAT() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("byStat");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("catalog-table");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        document.getElementById("resetButton").reset();
+    </script>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+spring:
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/arrow_db
+    username: main_user
+    password: user666
+
+server:
+  port: 8080

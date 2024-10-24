@@ -92,6 +92,11 @@ public class Employee {
     @Column(name = "shoes_size")
     private Integer shoesSize;
 
+    @Audited
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "employee_status")
+    private EmployeeStatus empStatus;
+
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "employee", fetch = FetchType.LAZY)
     private List<PersonalInstrument> personalInstrumentList = new ArrayList<>();
 
@@ -101,16 +106,11 @@ public class Employee {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "employee", fetch = FetchType.LAZY)
     private List<MeasInstrument> measInstrumentList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObjectChief", fetch = FetchType.LAZY)
-    private List<WorkObject> workObjectChiefList = new ArrayList<>();
-
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "employee", fetch = FetchType.LAZY)
     private List<SpecialClothEmployee> specialClothEmployeeList = new ArrayList<>();
 
-    @Audited
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "employee_status")
-    private EmployeeStatus empStatus;
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObjectChief", fetch = FetchType.LAZY)
+    private List<WorkObject> workObjectChiefList = new ArrayList<>();
 
     @Audited
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

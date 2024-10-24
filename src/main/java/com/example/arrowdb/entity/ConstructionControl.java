@@ -94,4 +94,8 @@ public class ConstructionControl {
         empDutyList.forEach(e -> e.getConstrControlEmpDutyList().add(this));
     }
 
+    @Override
+    public String toString() {
+        return String.format("№ предупр.: %s; Объект: %s", numOfWarning, workObject);
+    }
 }

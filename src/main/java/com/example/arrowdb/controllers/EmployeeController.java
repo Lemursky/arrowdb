@@ -22,10 +22,6 @@ public class EmployeeController {
     private final ProfessionService professionService;
     private final DriverLicenseService driverLicenseService;
     private final EmployeeStatusService employeeStatusService;
-    private final PersonalInstrumentService personalInstrumentService;
-    private final WorkInstrumentService workInstrumentService;
-    private final MeasInstrumentService measInstrumentService;
-    private final SpecialClothEmployeeService specialClothEmployeeService;
 
     @GetMapping("/general/employee")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE_VIEW')")
@@ -81,7 +77,7 @@ public class EmployeeController {
         } catch (Exception e) {
             Employee employee = employeeService.findEmployeeById(id);
             model.addAttribute("employee", employee);
-            model.addAttribute("error", new StringBuilder(DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE));
+            model.addAttribute("error", DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE);
             return "error/employee-error";
         }
         return "redirect:/general/employee";
@@ -107,7 +103,7 @@ public class EmployeeController {
 
     @PostMapping("/general/employee/employeeUpdate")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE_UPDATE')")
-    public String updateEmployee(@Valid Employee employee,
+    public String updateEmployee(@Valid @ModelAttribute Employee employee,
                                  BindingResult bindingResult,
                                  Model model) {
         List<Profession> professionList = professionService.findAllProfessions();
@@ -117,31 +113,23 @@ public class EmployeeController {
         List<EmployeeStatus> employeeStatus = employeeStatusService.findAllEmployeeStatus();
         employeeStatus.remove(employeeStatusService.findEmployeeStatusByStatusName("В отпуске"));
         if (bindingResult.hasErrors()) {
-            model.addAttribute("employee", employee);
             model.addAttribute("professionList", professionList);
             model.addAttribute("driverLicenseList", driverLicenseList);
             model.addAttribute("employeeStatus", employeeStatus);
             return "employee/employee-update";
         } else {
-            if (employee.getEmpStatus().getStatusName().equals("Закрыт") && employee.getCloseDate() == null){
-                model.addAttribute("employee", employee);
-                model.addAttribute("professionList", professionList);
-                model.addAttribute("driverLicenseList", driverLicenseList);
-                model.addAttribute("employeeStatus", employeeStatus);
-                model.addAttribute("errorStatus", new StringBuilder(MESSAGE_CHANGE_STATUS_DATE));
-                return "employee/employee-update";
-            }
-            List<Integer> personalIntegerList = personalInstrumentService.findAllIdEmployees(employee.getEmpId());
-            List<Integer> workInstrumentList = workInstrumentService.findAllIdEmployees(employee.getEmpId());
-            List<Integer> measInstrumentList = measInstrumentService.findAllIdEmployees(employee.getEmpId());
-            List<Integer> specialClothList = specialClothEmployeeService.findAllEmployeeBySpecialClothEmployeeId(employee.getEmpId());
-            if (personalIntegerList.contains(employee.getEmpId()) && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    workInstrumentList.contains(employee.getEmpId()) && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    measInstrumentList.contains(employee.getEmpId()) && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    specialClothList.contains(employee.getEmpId()) && employee.getEmpStatus().getStatusName().equals("Закрыт")) {
+            if(employee.getPersonalInstrumentList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
+                    employee.getWorkInstrumentList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
+                    employee.getMeasInstrumentList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
+                    employee.getSpecialClothEmployeeList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
+                    employee.getWorkObjectChiefList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
+                    employee.getWorkObjectPTOList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
+                    employee.getWorkObjectSupplierList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
+                    employee.getWorkObjectStoreKeeperList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
+                    employee.getConstrControlEmpDutyList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт")){
                 Employee employees = employeeService.findEmployeeById(employee.getEmpId());
                 model.addAttribute("employee", employees);
-                model.addAttribute("error", new StringBuilder(DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE));
+                model.addAttribute("error", DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE);
                 return "error/employee-error";
             } else {
                 employeeService.saveEmployee(employee);

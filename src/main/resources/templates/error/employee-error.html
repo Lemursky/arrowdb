@@ -14,19 +14,47 @@
         <span th:text="${error}"></span>
         <br>
         <hr>
-        <span th:each="pInstr:${employee.personalInstrumentList}">
-                <span th:text="${pInstr}"><br></span><br></span>
-        <span th:each="wInstr:${employee.workInstrumentList}">
-                <span th:text="${wInstr}"><br></span><br></span>
-        <span th:each="mInstr:${employee.measInstrumentList}">
-                <span th:text="${mInstr}"><br></span><br></span>
-        <span th:each="scInstr:${employee.specialClothEmployeeList}">
-                <span th:text="${scInstr.specialCloth.specClothName}"/><br></span><br></span>
+        <div th:each="pInstr:${employee.personalInstrumentList}">
+            <span th:text="${pInstr}"
+                  th:if="${employee.personalInstrumentList != null}"></span><br>
+        </div>
+        <div th:each="wInstr:${employee.workInstrumentList}">
+            <span th:text="${wInstr}"
+                  th:if="${employee.workInstrumentList != null}"></span><br>
+        </div>
+        <div th:each="mInstr:${employee.measInstrumentList}">
+            <span th:text="${mInstr}"
+                  th:if="${employee.measInstrumentList != null}"></span><br>
+        </div>
+        <div th:each="sCloth:${employee.specialClothEmployeeList}">
+            <span th:text="${sCloth.specialCloth.specClothName}"
+                  th:if="${employee.specialClothEmployeeList != null}"></span><br>
+        </div>
+        <div th:each="wObjChief:${employee.workObjectChiefList}">
+            <span th:text="${wObjChief} + ${' - Руководитель проекта'}"
+                  th:if="${employee.workObjectChiefList != null}"></span><br>
+        </div>
+        <div th:each="wObjPTO:${employee.workObjectPTOList}">
+            <span th:text="${wObjPTO} + ${' - Ответственные ПТО'}"
+                  th:if="${employee.workObjectPTOList != null}"></span><br>
+        </div>
+        <div th:each="wObjStore:${employee.workObjectStoreKeeperList}">
+            <span th:text="${wObjStore} + ${' - Ответственный за склад/инструмент'}"
+                  th:if="${employee.workObjectStoreKeeperList != null}"></span><br>
+        </div>
+        <div th:each="wObjSuppl:${employee.workObjectSupplierList}">
+            <span th:text="${wObjSuppl} + ${' - Ответственные ОМТР'}"
+                  th:if="${employee.workObjectSupplierList != null}"></span><br>
+        </div>
+        <div th:each="wObjConstr:${employee.constrControlEmpDutyList}">
+            <span th:text="${wObjConstr} + ${' - Отв. предст. за устранение замечаний НПП ТИК'}"
+                  th:if="${employee.constrControlEmpDutyList != null}"></span><br>
+        </div>
     </div>
     <div>
         <div>
             <a th:href="@{/general/employee/employeeView/{id}(id=${employee.empId})}">
-                <button type="button" class="btn btn-outline-warning">Назад</button>
+                <button type="button" class="btn btn-outline-warning btn-sm">Назад</button>
             </a>
         </div>
     </div>

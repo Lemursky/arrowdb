@@ -74,8 +74,10 @@ public class PersonalInstrumentController {
             return "stock/p_instrument-create";
         } else {
             try {
-                personalInstrument.setConditionForTechn(conditionForTechnService.findConditionForTechnBytConditionName("Исправен"));
-                personalInstrument.setConditionForPersonal(conditionForPersonalService.findConditionForPersonalBypConditionName("Не выдан"));
+                personalInstrument.setConditionForTechn(conditionForTechnService
+                        .findConditionForTechnBytConditionName("Исправен"));
+                personalInstrument.setConditionForPersonal(conditionForPersonalService
+                        .findConditionForPersonalBypConditionName("Не выдан"));
                 personalInstrumentService.savePersonalInstrument(personalInstrument);
                 return "redirect:/general/p_instrument/catalog";
             } catch (Exception e) {
@@ -155,7 +157,8 @@ public class PersonalInstrumentController {
                 model.addAttribute("conditionForPersonal", conditionForPersonal);
                 model.addAttribute("conditionForTechn", conditionForTechn);
                 personalInstrumentService.savePersonalInstrument(personalInstrument);
-                return "redirect:/general/p_instrument/p_instrumentView/%d".formatted(personalInstrument.getPersonalInstrId());
+                return "redirect:/general/p_instrument/p_instrumentView/%d"
+                        .formatted(personalInstrument.getPersonalInstrId());
             } catch (Exception e) {
                 model.addAttribute("errorInv", new StringBuilder(UNIQUE_INSTR_INV));
                 return "stock/p_instrument-update";

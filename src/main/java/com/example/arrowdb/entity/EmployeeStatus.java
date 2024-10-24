@@ -32,15 +32,8 @@ public class EmployeeStatus {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "empStatus", fetch = FetchType.LAZY)
     private List<Employee> employeeList = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "specClothStatus", fetch = FetchType.LAZY)
-    private List<SpecialCloth> specialClothList = new ArrayList<>();
-
     public void addEmployeeToStatus(){
         employeeList.forEach(e -> e.setEmpStatus(this));
-    }
-
-    public void addSpecialClothToStatus(){
-        specialClothList.forEach(e -> e.setSpecClothStatus(this));
     }
 
     @Override

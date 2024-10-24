@@ -19,7 +19,6 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @NoArgsConstructor
 @Entity
 @Table(name = "professions")
-@AuditTable(value = "professions_aud", schema = "history")
 public class Profession {
 
     @Id
@@ -27,32 +26,27 @@ public class Profession {
     @Column(name = "prof_id")
     private Integer profId;
 
-    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "[а-яА-Я-\\s]+", message = "только - алфавит: Кириллица")
     @Column(name = "profession_name", unique=true)
     private String professionName;
 
-    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "quality")
     private Quality quality;
 
-    @Audited
     @Size(max = 1000, message = "Кол-во символов максимум 1000")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "speciality")
     private String speciality;
 
-    @Audited
     @Min(1)
     @Max(30)
     @Column(name = "experience")
     private Integer experience;
-
-    @Audited
+    
     @Size(max = 1000, message = "Кол-во символов максимум 1000")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
@@ -61,7 +55,6 @@ public class Profession {
 
     private String suffix;
 
-    @Audited
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profession", fetch = FetchType.LAZY)
     private List<Employee> employeeList = new ArrayList<>();
 

@@ -68,7 +68,7 @@ public class ProfessionController {
                 model.addAttribute("quality", quality);
                 return "redirect:/general/profession";
             } catch (Exception e) {
-                model.addAttribute("error", new StringBuilder(UNIQUE_PROFESSION));
+                model.addAttribute("error", UNIQUE_PROFESSION);
                 return "profession/profession-create";
             }
         }
@@ -83,7 +83,7 @@ public class ProfessionController {
         } catch (Exception e) {
             Profession profession = professionService.findProfessionById(id);
             model.addAttribute("profession", profession);
-            model.addAttribute("error", new StringBuilder(DELETE_PROFESSION_MESSAGE));
+            model.addAttribute("error", DELETE_PROFESSION_MESSAGE);
             return "error/profession-error";
         }
         return "redirect:/general/profession";
@@ -115,7 +115,7 @@ public class ProfessionController {
                 professionService.saveProfession(profession);
                 return "redirect:/general/profession/professionView/%d".formatted(profession.getProfId());
             } catch (Exception e) {
-                model.addAttribute("error", new StringBuilder(UNIQUE_PROFESSION));
+                model.addAttribute("error", UNIQUE_PROFESSION);
                 return "profession/profession-update";
             }
         }

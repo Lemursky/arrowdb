@@ -57,7 +57,8 @@ public class WorkInstrumentEmployeeController {
                                                  @ModelAttribute WorkObject workObject,
                                                  TempIssueDate tempIssueDate) {
         Employee employee = employeeService.findEmployeeById(id);
-        ConditionForWork conditionForWork = conditionForWorkService.findConditionForWorkBywConditionName("Закреплен");
+        ConditionForWork conditionForWork = conditionForWorkService
+                .findConditionForWorkBywConditionName("Закреплен");
         workInstrumentListAdd.forEach(e -> e.setConditionForWork(conditionForWork));
         workInstrumentListAdd.forEach(e -> e.setEmployee(employee));
         workInstrumentListAdd.forEach(e -> e.setWorkObject(workObject));
@@ -71,7 +72,8 @@ public class WorkInstrumentEmployeeController {
     public String deletePersonalInstrumentEmployee(@PathVariable("id") int id) {
         Integer localId = workInstrumentService.findEmployeeIdByWorkInstId(id);
         WorkInstrument workInstrument = workInstrumentService.findWorkInstrumentById(id);
-        ConditionForWork conditionForWork = conditionForWorkService.findConditionForWorkBywConditionName("Не закреплен");
+        ConditionForWork conditionForWork = conditionForWorkService
+                .findConditionForWorkBywConditionName("Не закреплен");
         workInstrument.setConditionForWork(conditionForWork);
         workInstrument.setWorkObject(null);
         workInstrument.setEmployee(null);
@@ -85,7 +87,8 @@ public class WorkInstrumentEmployeeController {
     public String deleteAllPersonalInstrumentEmployee(@PathVariable("id") int id) {
         Employee employee = employeeService.findEmployeeById(id);
         List<WorkInstrument> workInstrumentListCurrent = employee.getWorkInstrumentList();
-        ConditionForWork conditionForWork = conditionForWorkService.findConditionForWorkBywConditionName("Не закреплен");
+        ConditionForWork conditionForWork = conditionForWorkService
+                .findConditionForWorkBywConditionName("Не закреплен");
         workInstrumentListCurrent.forEach(e -> e.setConditionForWork(conditionForWork));
         workInstrumentListCurrent.forEach(e -> e.setWorkObject(null));
         workInstrumentListCurrent.forEach(e -> e.setEmployee(null));

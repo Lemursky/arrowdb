@@ -28,7 +28,6 @@ public class Quality {
     @Column(name = "qualities")
     private String qualityName;
 
-    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "quality", fetch = FetchType.LAZY)
     private List<Profession> professionList = new ArrayList<>();
 

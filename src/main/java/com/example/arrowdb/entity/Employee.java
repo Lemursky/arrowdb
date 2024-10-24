@@ -47,7 +47,6 @@ public class Employee {
     @Column(name = "middle_name")
     private String middleName;
 
-    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "profession")
     private Profession profession;
@@ -119,19 +118,15 @@ public class Employee {
             inverseJoinColumns = @JoinColumn(name = "join_dl_id"))
     private List<DriverLicense> driverLicenseEmpList = new ArrayList<>();
 
-    @Audited(targetAuditMode = NOT_AUDITED)
     @ManyToMany(mappedBy = "storeKeeperList", cascade = CascadeType.REFRESH)
     private List<WorkObject> workObjectStoreKeeperList = new ArrayList<>();
 
-    @Audited(targetAuditMode = NOT_AUDITED)
     @ManyToMany(mappedBy = "supplierList", cascade = CascadeType.REFRESH)
     private List<WorkObject> workObjectSupplierList = new ArrayList<>();
 
-    @Audited(targetAuditMode = NOT_AUDITED)
     @ManyToMany(mappedBy = "PTOList", cascade = CascadeType.REFRESH)
     private List<WorkObject> workObjectPTOList = new ArrayList<>();
 
-    @Audited(targetAuditMode = NOT_AUDITED)
     @ManyToMany(mappedBy = "empDutyList", cascade = CascadeType.REFRESH)
     private List<ConstructionControl> constrControlEmpDutyList = new ArrayList<>();
 
@@ -200,16 +195,16 @@ public class Employee {
         }
     }
 
-    public void setPhoneNumber(@NotNull String phoneNumber) {
-        if (phoneNumber.equals("+7(___)___-__-__") || phoneNumber.equals("")) {
+    public void setPhoneNumber(String phoneNumber) {
+        if (phoneNumber.equals("+7(___)___-__-__") || phoneNumber.isEmpty()) {
             this.phoneNumber = "";
         } else {
             this.phoneNumber = phoneNumber;
         }
     }
 
-    public void setEmail(@NotNull String email) {
-        if (email.equals("")) {
+    public void setEmail(String email) {
+        if (email.isEmpty()) {
             this.email = "";
         } else {
             this.email = email.trim();

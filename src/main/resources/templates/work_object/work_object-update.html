@@ -211,9 +211,6 @@
                     <td style="text-align: left"><label>Ответственные ПТО</label></td>
                     <td style="text-align: left">
                         <select class="livesearch" style="width:400px;" name="PTOList" multiple>
-                            <option th:value="null"
-                                    th:text="${'Не назначен'}">
-                            </option>
                             <option th:each="emp:${employeeForPTO}"
                                     th:field="*{PTOList}"
                                     th:value="${emp.empId}"
@@ -253,12 +250,9 @@
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">019</th>
-                    <td style="text-align: left"><label>Отвественный за склад/инструмент</label></td>
+                    <td style="text-align: left"><label>Ответственный за склад/инструмент</label></td>
                     <td style="text-align: left">
                         <select class="livesearch" style="width:400px;" name="storeKeeperList" multiple>
-                            <option th:value="null"
-                                    th:text="${'Не назначен'}">
-                            </option>
                             <option th:each="emp:${employeeForStoreKeeper}"
                                     th:field="*{storeKeeperList}"
                                     th:value="${emp.empId}"
@@ -270,12 +264,9 @@
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">020</th>
-                    <td style="text-align: left"><label>Отвественные ОМТР</label></td>
+                    <td style="text-align: left"><label>Ответственные ОМТР</label></td>
                     <td style="text-align: left">
                         <select class="livesearch" style="width:400px;" name="supplierList" multiple>
-                            <option th:value="null"
-                                    th:text="${'Не назначен'}">
-                            </option>
                             <option th:each="emp:${employeeForSupplier}"
                                     th:field="*{supplierList}"
                                     th:value="${emp.empId}"

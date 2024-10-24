@@ -27,7 +27,6 @@ public class WorkObjectStatus {
     @Column(name = "status_name")
     private String statusName;
 
-    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObjectStat", fetch = FetchType.LAZY)
     private List<WorkObject> workObjectList = new ArrayList<>();
 

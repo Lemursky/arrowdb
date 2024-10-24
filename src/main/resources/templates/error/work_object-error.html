@@ -14,10 +14,30 @@
         <span th:text="${error}"></span>
         <br>
         <hr>
-        <span th:each="wObj:${workObject.workInstrumentList}">
-                <span th:text="${wObj}"></span><br></span>
-        <span th:each="instr:${workObject.measInstrumentList}">
-                <span th:text="${instr}"></span><br></span>
+        <div th:each="wInstr:${workObject.workInstrumentList}">
+            <span th:text="${wInstr}"
+                  th:if="${workObject.workInstrumentList != null}"></span><br>
+        </div>
+        <div th:each="mInstr:${workObject.measInstrumentList}">
+            <span th:text="${mInstr}"
+                  th:if="${workObject.measInstrumentList != null}"></span><br>
+        </div>
+        <div th:each="wObjChief:${workObject.workObjectChief}">
+            <span th:text="${wObjChief} + ${' - Руководитель проекта'}"
+                  th:if="${workObject.workObjectChief != null}"></span><br>
+        </div>
+        <div th:each="wObjPTO:${workObject.PTOList}">
+            <span th:text="${wObjPTO} + ${' - Ответственные ПТО'}"
+                  th:if="${workObject.PTOList != null}"></span><br>
+        </div>
+        <div th:each="wObjStore:${workObject.storeKeeperList}">
+            <span th:text="${wObjStore} + ${' - Ответственный за склад/инструмент'}"
+                  th:if="${workObject.storeKeeperList != null}"></span><br>
+        </div>
+        <div th:each="wObjSuppl:${workObject.supplierList}">
+            <span th:text="${wObjSuppl} + ${' - Ответственные ОМТР'}"
+                  th:if="${workObject.supplierList != null}"></span><br>
+        </div>
     </div>
     <div>
         <div>

@@ -80,8 +80,10 @@ public class MeasInstrumentController {
             return "stock/m_instrument-create";
         } else {
             try {
-                measInstrument.setConditionForTechn(conditionForTechnService.findConditionForTechnBytConditionName("Исправен"));
-                measInstrument.setConditionForWork(conditionForWorkService.findConditionForWorkBywConditionName("Не закреплен"));
+                measInstrument.setConditionForTechn(conditionForTechnService
+                        .findConditionForTechnBytConditionName("Исправен"));
+                measInstrument.setConditionForWork(conditionForWorkService
+                        .findConditionForWorkBywConditionName("Не закреплен"));
                 List<Department> departmentList = departmentService.findAllDepartments();
                 model.addAttribute("departmentList", departmentList);
                 measInstrumentService.saveMeasInstrument(measInstrument);
@@ -170,7 +172,8 @@ public class MeasInstrumentController {
                 model.addAttribute("conditionForTechn", conditionForTechn);
                 model.addAttribute("departmentList", departmentList);
                 measInstrumentService.saveMeasInstrument(measInstrument);
-                return "redirect:/general/m_instrument/m_instrumentView/%d".formatted(measInstrument.getMeasInstrId());
+                return "redirect:/general/m_instrument/m_instrumentView/%d"
+                        .formatted(measInstrument.getMeasInstrId());
             } catch (Exception e) {
                 model.addAttribute("errorInv", UNIQUE_INSTR_INV);
                 return "stock/m_instrument-update";

@@ -118,17 +118,26 @@ public class EmployeeController {
             model.addAttribute("employeeStatus", employeeStatus);
             return "employee/employee-update";
         } else {
-            if(employee.getPersonalInstrumentList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    employee.getWorkInstrumentList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    employee.getMeasInstrumentList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    employee.getSpecialClothEmployeeList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    employee.getWorkObjectChiefList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    employee.getWorkObjectPTOList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    employee.getWorkObjectSupplierList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    employee.getWorkObjectStoreKeeperList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт") ||
-                    employee.getConstrControlEmpDutyList() != null && employee.getEmpStatus().getStatusName().equals("Закрыт")){
-                Employee employees = employeeService.findEmployeeById(employee.getEmpId());
-                model.addAttribute("employee", employees);
+            Employee empById = employeeService.findEmployeeById(employee.getEmpId());
+            if (!empById.getPersonalInstrumentList().isEmpty() && employee.getEmpStatus().getStatusName()
+                    .equals("Закрыт") ||
+                    !empById.getWorkInstrumentList().isEmpty() && employee.getEmpStatus().getStatusName()
+                            .equals("Закрыт") ||
+                    !empById.getMeasInstrumentList().isEmpty() && employee.getEmpStatus().getStatusName()
+                            .equals("Закрыт") ||
+                    !empById.getSpecialClothEmployeeList().isEmpty() && employee.getEmpStatus().getStatusName()
+                            .equals("Закрыт") ||
+                    !empById.getWorkObjectChiefList().isEmpty() && employee.getEmpStatus().getStatusName()
+                            .equals("Закрыт") ||
+                    !empById.getWorkObjectPTOList().isEmpty() && employee.getEmpStatus().getStatusName()
+                            .equals("Закрыт") ||
+                    !empById.getWorkObjectSupplierList().isEmpty() && employee.getEmpStatus().getStatusName()
+                            .equals("Закрыт") ||
+                    !empById.getWorkObjectStoreKeeperList().isEmpty() && employee.getEmpStatus().getStatusName()
+                            .equals("Закрыт") ||
+                    !empById.getConstrControlEmpDutyList().isEmpty() && employee.getEmpStatus().getStatusName()
+                            .equals("Закрыт")) {
+                model.addAttribute("employee", empById);
                 model.addAttribute("error", DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE);
                 return "error/employee-error";
             } else {

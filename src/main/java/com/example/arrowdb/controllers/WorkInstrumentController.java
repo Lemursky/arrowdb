@@ -71,8 +71,10 @@ public class WorkInstrumentController {
             return "stock/w_instrument-create";
         } else {
             try {
-                workInstrument.setConditionForTechn(conditionForTechnService.findConditionForTechnBytConditionName("Исправен"));
-                workInstrument.setConditionForWork(conditionForWorkService.findConditionForWorkBywConditionName("Не закреплен"));
+                workInstrument.setConditionForTechn(conditionForTechnService
+                        .findConditionForTechnBytConditionName("Исправен"));
+                workInstrument.setConditionForWork(conditionForWorkService
+                        .findConditionForWorkBywConditionName("Не закреплен"));
                 workInstrumentService.saveWorkInstrument(workInstrument);
                 return "redirect:/general/w_instrument/catalog";
             } catch (Exception e) {
@@ -155,7 +157,8 @@ public class WorkInstrumentController {
                 model.addAttribute("conditionForWork", conditionForWork);
                 model.addAttribute("conditionForTechn", conditionForTechn);
                 workInstrumentService.saveWorkInstrument(workInstrument);
-                return "redirect:/general/w_instrument/w_instrumentView/%d".formatted(workInstrument.getWorkInstrId());
+                return "redirect:/general/w_instrument/w_instrumentView/%d"
+                        .formatted(workInstrument.getWorkInstrId());
             } catch (Exception e) {
                 model.addAttribute("errorInv", UNIQUE_INSTR_INV);
                 return "stock/w_instrument-update";

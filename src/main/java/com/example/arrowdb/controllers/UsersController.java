@@ -90,27 +90,6 @@ public class UsersController {
         model.addAttribute("rolesStore", rolesStore);
         model.addAttribute("rolesActivity", rolesActivity);
         model.addAttribute("statusList", statusList);
-//        Set<Roles> currentRoleAdmin = users.getRoles();
-//        Set<Roles> currentRolePersonal = users.getRoles().stream()
-//                .filter(e -> e.getMenuName().equals("personal"))
-//                .collect(Collectors.toSet());
-//        Set<Roles> currentRoleStore = users.getRoles().stream()
-//                .filter(e -> e.getMenuName().equals("store"))
-//                .collect(Collectors.toSet());
-//        Set<Roles> currentRoleActivity = users.getRoles().stream()
-//                .filter(e -> e.getMenuName().equals("activity"))
-//                .collect(Collectors.toSet());
-//        rolesAdmin.removeAll(currentRoleAdmin);
-//        rolesPersonal.removeAll(currentRolePersonal);
-//        rolesStore.removeAll(currentRoleStore);
-//        rolesActivity.removeAll(currentRoleActivity);
-//        UserStatus currentUserStatus = users.getUserStatus();
-//        statusList.remove(currentUserStatus);
-//        model.addAttribute("currentRoleAdmin", currentRoleAdmin);
-//        model.addAttribute("currentRolePersonal", currentRolePersonal);
-//        model.addAttribute("currentRoleStore", currentRoleStore);
-//        model.addAttribute("currentRoleActivity", currentRoleActivity);
-//        model.addAttribute("currentUserStatus", currentUserStatus);
         return "user/user-update";
     }
 

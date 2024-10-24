@@ -21,7 +21,7 @@ public class PersonalInstrumentAUD {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, unique = true)
     private Integer id;
 
     @Column(name = "instr_id")

@@ -1,5 +1,6 @@
 package com.example.arrowdb.services;
 
+import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.WorkObject;
 import com.example.arrowdb.entity.WorkObjectStatus;
 import com.example.arrowdb.repositories.WorkObjectRepository;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class WorkObjectServiceImpl implements WorkObjectService{
+public class WorkObjectServiceImpl implements WorkObjectService {
 
     private final WorkObjectRepository workObjectRepository;
 
@@ -27,7 +28,7 @@ public class WorkObjectServiceImpl implements WorkObjectService{
     public WorkObject findWorkObjectById(Integer id) {
         WorkObject workObject = null;
         Optional<WorkObject> optional = workObjectRepository.findById(id);
-        if(optional.isPresent()){
+        if (optional.isPresent()) {
             workObject = optional.get();
         }
         return workObject;
@@ -46,6 +47,7 @@ public class WorkObjectServiceImpl implements WorkObjectService{
     }
 
     @Override
+    @Transactional
     public List<WorkObject> findWorkObjectByStatus(Integer status1, Integer status2, Integer status3) {
         return workObjectRepository.findWorkObjectByStatus(status1, status2, status3);
     }

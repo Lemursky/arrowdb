@@ -74,7 +74,9 @@
                           th:if="${wInstr.conditionForTechn.tConditionName == 'Не исправен'}"></span>
                     <span th:text="${wInstr.conditionForTechn} + ${' с ' + wInstr.startRepDate}+ ${' по ' + wInstr.endRepDate}"
                               th:if="${wInstr.conditionForTechn.tConditionName == 'В ремонте'}"></span></td>
-                    <td><span th:text="${wInstr.conditionForWork}"></span>
+                    <td><span th:text="${wInstr.conditionForWork}"
+                              th:if="${wInstr.conditionForTechn.tConditionName == 'Исправен' ||
+                              wInstr.conditionForTechn.tConditionName == 'Не исправен'}">></span>
                         <span th:text="${' ' + wInstr.issueDate}"
                               th:if="${wInstr.conditionForWork.wConditionName == 'Закреплен'}"></span>
                     </td>

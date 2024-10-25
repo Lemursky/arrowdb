@@ -39,7 +39,9 @@ public class WorkObjectStatusServiceImpl implements WorkObjectStatusService {
     }
 
     @Override
+    @Transactional
     public Integer findWorkObjectStatusIdByStatusName(String name) {
         return workObjectStatusRepository.findWorkObjectStatusIdByStatusName(name);
     }
+
 }

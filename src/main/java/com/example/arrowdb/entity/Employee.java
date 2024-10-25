@@ -47,6 +47,7 @@ public class Employee {
     @Column(name = "middle_name")
     private String middleName;
 
+    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "profession")
     private Profession profession;

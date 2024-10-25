@@ -5,7 +5,6 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 
 import java.time.LocalDate;
@@ -116,6 +115,7 @@ public class WorkObject {
     @Column(name = "work_object_comment")
     private String workObjectComment;
 
+    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
     private List<WorkInstrument> workInstrumentList = new ArrayList<>();
 

@@ -9,4 +9,5 @@ public interface ConditionForTechnService {
     ConditionForTechn findConditionForTechnById(Integer id);
     List<ConditionForTechn> findAllConditionForTechn();
     ConditionForTechn findConditionForTechnBytConditionName(String name);
+
 }

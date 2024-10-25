@@ -169,6 +169,11 @@ public class ConstructionControlController {
             model.addAttribute("warningStatusList", warningStatusList);
             return "constr_control/constr_control-update";
         } else {
+            if(constructionControl.getWarningStatus().getStatusName().equals("Закрыт")){
+             constructionControl.setResponsibleFromContractor(null);
+             constructionControl.setResponsibleFromCustomer(null);
+             constructionControl.getEmpDutyList().clear();
+            }
             try {
                 constructionControlService.saveConstructionControl(constructionControl);
                 return "redirect:/general/constr_control/constr_controlWarnings/%d"

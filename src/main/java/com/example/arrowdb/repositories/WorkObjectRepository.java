@@ -17,4 +17,6 @@ public interface WorkObjectRepository extends JpaRepository<WorkObject, Integer>
             "or work_object_status=:status2 or work_object_status=:status3 order by w_obj_id")
     List<WorkObject> findWorkObjectByStatus(Integer status1, Integer status2, Integer status3);
 
+
+
 }

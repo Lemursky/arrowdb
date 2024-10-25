@@ -51,4 +51,5 @@ public class WorkObjectServiceImpl implements WorkObjectService {
     public List<WorkObject> findWorkObjectByStatus(Integer status1, Integer status2, Integer status3) {
         return workObjectRepository.findWorkObjectByStatus(status1, status2, status3);
     }
+
 }

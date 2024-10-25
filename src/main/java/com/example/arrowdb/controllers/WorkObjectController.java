@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.example.arrowdb.message.Message.*;
@@ -29,6 +30,7 @@ public class WorkObjectController {
     private final EmployeeService employeeService;
     private final WorkInstrumentService workInstrumentService;
     private final MeasInstrumentService measInstrumentService;
+    private final ConstructionControlService constructionControlService;
 
     @GetMapping("/general/workobject")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_WORK_OBJECT_VIEW')")
@@ -84,7 +86,7 @@ public class WorkObjectController {
         } catch (Exception e) {
             WorkObject workObject = workObjectService.findWorkObjectById(id);
             model.addAttribute("workObject", workObject);
-            model.addAttribute("error", new StringBuilder(DELETE_OR_CHANGE_STATUS_WORK_OBJECT_MESSAGE));
+            model.addAttribute("error", DELETE_OR_CHANGE_STATUS_WORK_OBJECT_MESSAGE);
             return "error/work_object-error";
         }
         return "redirect:/general/workobject";
@@ -184,6 +186,9 @@ public class WorkObjectController {
             return "work_object/work_object-update";
         } else {
             WorkObject workObjectById = workObjectService.findWorkObjectById(workObject.getWorkObjectId());
+            List<ConstructionControl> constructionControlListActive = workObjectById.getConstructionControlList().stream()
+                    .filter(e -> e.getWarningStatus().getStatusName().equals("Действующий"))
+                    .toList();
             if (!workObjectById.getWorkInstrumentList().isEmpty() && workObject.getWorkObjectStat().getStatusName()
                     .equals("Закрыт") ||
                     !workObjectById.getWorkInstrumentList().isEmpty() && workObject.getWorkObjectStat().getStatusName()
@@ -207,44 +212,20 @@ public class WorkObjectController {
                     !workObjectById.getSupplierList().isEmpty() && workObject.getWorkObjectStat().getStatusName()
                             .equals("Закрыт") ||
                     !workObjectById.getSupplierList().isEmpty() && workObject.getWorkObjectStat().getStatusName()
-                            .equals("Приостановлен")) {
+                            .equals("Приостановлен") ||
+                    (workObjectById.getConstructionControlActive() != 0) &&
+                            workObject.getWorkObjectStat().getStatusName().equals("Закрыт") ||
+                    (workObjectById.getConstructionControlActive() != 0) &&
+                            workObject.getWorkObjectStat().getStatusName().equals("Приостановлен")
+            ) {
                 model.addAttribute("workObject", workObjectById);
-                model.addAttribute("error", new StringBuilder(DELETE_OR_CHANGE_STATUS_WORK_OBJECT_MESSAGE));
+                model.addAttribute("constructionControlListActive", constructionControlListActive);
+                model.addAttribute("error", DELETE_OR_CHANGE_STATUS_WORK_OBJECT_MESSAGE);
                 return "error/work_object-error";
             } else {
                 workObjectService.saveWorkObject(workObject);
             }
         }
-//        try {
-//            if (workObject.getWorkObjectStat().getStatusName().equals("Приостановлен")) {
-//                storeKeeperList.clear();
-//                supplierList.clear();
-//                PTOList.clear();
-//            }
-//            if (workObject.getWorkObjectStat().getStatusName().equals("Закрыт")) {
-//                workObject.setWorkObjectChief(null);
-//                storeKeeperList.clear();
-//                supplierList.clear();
-//                PTOList.clear();
-//            }
-//            workObjectService.saveWorkObject(workObject);
-//            return "redirect:/general/workobject/workobjectView/%d".formatted(workObject.getWorkObjectId());
-//        } catch (Exception e) {
-//            model.addAttribute("workObjectStatusList", workObjectStatusList);
-//            model.addAttribute("employeeList", employeeList);
-//            model.addAttribute("employeeForChief", employeeForChief);
-//            model.addAttribute("employeeForSupplier", employeeForSupplier);
-//            model.addAttribute("workObjectChief", workObjectChief);
-//            model.addAttribute("storeKeeperList", storeKeeperList);
-//            model.addAttribute("employeeForStoreKeeper", employeeForStoreKeeper);
-//            model.addAttribute("supplierList", supplierList);
-//            model.addAttribute("workInstrumentList", workInstrumentList);
-//            model.addAttribute("measInstrumentList", measInstrumentList);
-//            model.addAttribute("employeeForPTO", employeeForPTO);
-//            model.addAttribute("PTOList", PTOList);
-//            model.addAttribute("errorName", new StringBuilder(UNIQUE_WORK_OBJECT));
-//            return "work_object/work_object-update";
-//        }
         return "redirect:/general/workobject/workobjectView/%d".formatted(workObject.getWorkObjectId());
     }
 }

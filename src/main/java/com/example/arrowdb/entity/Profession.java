@@ -55,6 +55,7 @@ public class Profession {
 
     private String suffix;
 
+    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profession", fetch = FetchType.LAZY)
     private List<Employee> employeeList = new ArrayList<>();
 
@@ -71,7 +72,7 @@ public class Profession {
     }
 
     public void setSpeciality(String speciality) {
-        if (speciality.equals("")) {
+        if (speciality.isEmpty()) {
             this.speciality = "";
         } else {
             this.speciality = speciality.trim();
@@ -79,7 +80,7 @@ public class Profession {
     }
 
     public void setAdditionalRequirements(String additionalRequirements) {
-        if (additionalRequirements.equals("")) {
+        if (additionalRequirements.isEmpty()) {
             this.additionalRequirements = "";
         } else {
             this.additionalRequirements = additionalRequirements.trim();

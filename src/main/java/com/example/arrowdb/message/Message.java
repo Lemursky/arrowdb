@@ -12,7 +12,7 @@ public class Message {
             "одному из Работников";
 
     public static String DELETE_OR_CHANGE_STATUS_WORK_OBJECT_MESSAGE = "Не возможно приостановить, закрыть или удалить " +
-            "Объект строительства если за ним числятся Работники и/или Инструмент";
+            "Объект строительства если за ним числятся Работники и/или Инструмент, или числятся незакрытые предупреждения";
 
     public static String DELETE_OR_CHANGE_STATUS_SCLOTH_MESSAGE = "Не возможно удалить 'Спецодежду и СИЗ' или присвоить " +
             "статус 'Закрыт' она числится хотя бы за одним из Работников";
@@ -21,17 +21,11 @@ public class Message {
 
     public static String UNIQUE_WORK_OBJECT = "Объект строительства с данным значением уже существует";
 
-    public static String UNIQUE_INSTR_SERIAL = "Данный Серийный номер уже существует";
-
     public static String UNIQUE_SCLOTH_NAME = "Данная спецодежда и СИЗ уже существуют";
 
     public static String UNIQUE_PROFESSION = "Данная должнось уже существует";
 
     public static String UNIQUE_CONST_CONTROL = "Данный номер предупреждения уже существует";
-
-    public static String MESSAGE_CHANGE_STATUS_DATE = "Не заполнена дата";
-
-    public static String MESSAGE_CHANGE_STATUS = "Не выбрана позиция для добавления или список для выбора пуст";
 
     public static String SPEC_CLOTH_UNIQUE_ERROR = "Данная экипировка уже закреплена за работником";
 

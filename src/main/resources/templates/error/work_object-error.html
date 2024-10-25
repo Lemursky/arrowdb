@@ -38,6 +38,10 @@
             <span th:text="${wObjSuppl} + ${' - Ответственные ОМТР'}"
                   th:if="${workObject.supplierList != null}"></span><br>
         </div>
+        <div th:each="constrContr:${constructionControlListActive}">
+            <span th:text="${constrContr} + ${' - Незакрытые предупреждения'}"
+                  th:if="${constructionControlListActive != null}"></span><br>
+        </div>
     </div>
     <div>
         <div>

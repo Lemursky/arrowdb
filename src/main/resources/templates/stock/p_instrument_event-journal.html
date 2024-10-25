@@ -72,8 +72,7 @@
                     <span th:text="${pInstr.conditionForTechn} + ${' c ' + pInstr.brokenDate}"
                           th:if="${pInstr.conditionForTechn.tConditionName == 'Не исправен'}"></span>
                     <span th:text="${pInstr.conditionForTechn} + ${' с ' + pInstr.startRepDate}+ ${' по ' + pInstr.endRepDate}"
-                              th:if="${pInstr.conditionForTechn.tConditionName == 'В ремонте'}"></span>
-                </td>
+                              th:if="${pInstr.conditionForTechn.tConditionName == 'В ремонте'}"></span></td>
                     <td><span th:text="${pInstr.conditionForPersonal}"
                               th:if="${pInstr.conditionForTechn.tConditionName == 'Исправен' ||
                               pInstr.conditionForTechn.tConditionName == 'Не исправен'}"></span>

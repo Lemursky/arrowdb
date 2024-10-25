@@ -164,6 +164,7 @@ public class WorkInstrument {
     @Column(name = "instr_comment")
     private String workInstrComment;
 
+    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "work_object")
     private WorkObject workObject;

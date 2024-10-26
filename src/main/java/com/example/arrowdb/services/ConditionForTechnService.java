@@ -1,6 +1,5 @@
 package com.example.arrowdb.services;
 
-import com.example.arrowdb.entity.ConditionForPersonal;
 import com.example.arrowdb.entity.ConditionForTechn;
 
 import java.util.List;

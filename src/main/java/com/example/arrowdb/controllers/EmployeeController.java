@@ -88,6 +88,9 @@ public class EmployeeController {
     public String updateEmployeeForm(@PathVariable("id") int id,
                                      Model model) {
         Employee employee = employeeService.findEmployeeById(id);
+        if(employee.getEmpStatus().getStatusName().equals("Закрыт")){
+            return "redirect:/general/employee/employeeView/%d".formatted(employee.getEmpId());
+        }
         List<Profession> professionList = professionService.findAllProfessions();
         List<DriverLicense> driverLicenseList = new ArrayList<>(driverLicenseService.findAllDriverLicense().stream()
                 .sorted(Comparator.comparingInt((DriverLicense::getDrLiId)))

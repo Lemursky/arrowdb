@@ -123,6 +123,10 @@ public class ConstructionControlController {
     public String updateConstructionControlForm(@PathVariable("id") int id,
                                                 Model model) {
         ConstructionControl constructionControl = constructionControlService.findConstructionControlById(id);
+        if (constructionControl.getWarningStatus().getStatusName().equals("Закрыт")) {
+            return "redirect:/general/constr_control/constr_controlWarnings/%d"
+                    .formatted(constructionControl.getWorkObject().getWorkObjectId());
+        }
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
@@ -169,10 +173,10 @@ public class ConstructionControlController {
             model.addAttribute("warningStatusList", warningStatusList);
             return "constr_control/constr_control-update";
         } else {
-            if(constructionControl.getWarningStatus().getStatusName().equals("Закрыт")){
-             constructionControl.setResponsibleFromContractor(null);
-             constructionControl.setResponsibleFromCustomer(null);
-             constructionControl.getEmpDutyList().clear();
+            if (constructionControl.getWarningStatus().getStatusName().equals("Закрыт")) {
+                constructionControl.setResponsibleFromContractor(null);
+                constructionControl.setResponsibleFromCustomer(null);
+                constructionControl.getEmpDutyList().clear();
             }
             try {
                 constructionControlService.saveConstructionControl(constructionControl);

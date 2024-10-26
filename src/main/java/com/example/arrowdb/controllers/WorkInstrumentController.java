@@ -104,6 +104,10 @@ public class WorkInstrumentController {
     public String updateWorkInstrumentForm(@PathVariable("id") int id,
                                            Model model) {
         WorkInstrument workInstrument = workInstrumentService.findWorkInstrumentById(id);
+        if(workInstrument.getConditionForTechn().getTConditionName().equals("Списан")){
+            return "redirect:/general/w_instrument/w_instrumentView/%d"
+                    .formatted(workInstrument.getWorkInstrId());
+        }
         List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
                 .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()

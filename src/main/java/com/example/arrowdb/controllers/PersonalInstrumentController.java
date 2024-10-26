@@ -104,9 +104,12 @@ public class PersonalInstrumentController {
 
     @GetMapping("/general/p_instrument/p_instrumentUpdate/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_UPDATE')")
-    public String updateInstrumentForm(@PathVariable("id") int id,
-                                       Model model) {
+    public String updateInstrumentForm(@PathVariable("id") int id, Model model) {
         PersonalInstrument personalInstrument = personalInstrumentService.findPersonalInstrumentById(id);
+        if (personalInstrument.getConditionForTechn().getTConditionName().equals("Списан")) {
+            return "redirect:/general/p_instrument/p_instrumentView/%d"
+                    .formatted(personalInstrument.getPersonalInstrId());
+        }
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
         List<ConditionForPersonal> conditionForPersonal = conditionForPersonalService.findAllConditionForPersonal();

@@ -114,6 +114,10 @@ public class MeasInstrumentController {
     public String updateMeasInstrumentForm(@PathVariable("id") int id,
                                            Model model) {
         MeasInstrument measInstrument = measInstrumentService.findMeasInstrumentById(id);
+        if(measInstrument.getConditionForTechn().getTConditionName().equals("Списан")){
+            return "redirect:/general/m_instrument/m_instrumentView/%d"
+                    .formatted(measInstrument.getMeasInstrId());
+        }
         List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
                 .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()

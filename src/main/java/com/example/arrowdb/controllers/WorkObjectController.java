@@ -97,6 +97,9 @@ public class WorkObjectController {
     public String updateWorkObjectForm(@PathVariable("id") int id,
                                        Model model) {
         WorkObject workObject = workObjectService.findWorkObjectById(id);
+        if(workObject.getWorkObjectStat().getStatusName().equals("Закрыт")){
+            return "redirect:/general/workobject/workobjectView/%d".formatted(workObject.getWorkObjectId());
+        }
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
         List<WorkObjectStatus> workObjectStatusList = workObjectStatusService.findAllWorkObjectStatus();

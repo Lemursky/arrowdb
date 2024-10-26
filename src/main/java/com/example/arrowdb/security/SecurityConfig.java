@@ -18,7 +18,6 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     @Bean

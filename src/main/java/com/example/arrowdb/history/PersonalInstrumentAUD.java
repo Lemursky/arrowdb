@@ -30,7 +30,7 @@ public class PersonalInstrumentAUD {
     @Column(name = "onec_number")
     private String personalOneCNumber;
 
-    @Column(name = "invent_number", unique=true)
+    @Column(name = "invent_number")
     private String personalInventNumber;
 
     @Column(name = "serial_number")

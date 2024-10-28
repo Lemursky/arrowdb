@@ -2,9 +2,11 @@ package com.example.arrowdb.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -93,7 +95,7 @@ public class Employee {
     private Integer shoesSize;
 
     @Audited
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "employee_status")
     private EmployeeStatus empStatus;
 
@@ -113,64 +115,23 @@ public class Employee {
     private List<WorkObject> workObjectChiefList = new ArrayList<>();
 
     @Audited
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "employees_driver_license_join",
             joinColumns = @JoinColumn(name = "join_emp_id"),
             inverseJoinColumns = @JoinColumn(name = "join_dl_id"))
     private List<DriverLicense> driverLicenseEmpList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "storeKeeperList", cascade = CascadeType.REFRESH)
+    @ManyToMany(mappedBy = "storeKeeperList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<WorkObject> workObjectStoreKeeperList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "supplierList", cascade = CascadeType.REFRESH)
+    @ManyToMany(mappedBy = "supplierList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<WorkObject> workObjectSupplierList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "PTOList", cascade = CascadeType.REFRESH)
+    @ManyToMany(mappedBy = "PTOList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<WorkObject> workObjectPTOList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "empDutyList", cascade = CascadeType.REFRESH)
+    @ManyToMany(mappedBy = "empDutyList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<ConstructionControl> constrControlEmpDutyList = new ArrayList<>();
-
-    public void addSpecialClotHEmployeeToEmployee() {
-        specialClothEmployeeList.forEach(e -> e.setEmployee(this));
-    }
-
-    public void addEmployeeToWorkObjectSupplierList() {
-        workObjectSupplierList.forEach(e -> e.getSupplierList().add(this));
-    }
-
-    public void addEmployeeToWorkObjectPTOList() {
-        workObjectPTOList.forEach(e -> e.getPTOList().add(this));
-    }
-
-    public void addEmployeeToWorkObjectEmpDutyList() {
-        constrControlEmpDutyList.forEach(e -> e.getEmpDutyList().add(this));
-    }
-
-    public void addWorkObjectChiefToWorkObject() {
-        workObjectChiefList.forEach(e -> e.setWorkObjectChief(this));
-    }
-
-    public void addEmployeeToDriverLicense() {
-        driverLicenseEmpList.forEach(e -> e.getEmployeeList().add(this));
-    }
-
-    public void addEmployeeToPersonalInstrument() {
-        personalInstrumentList.forEach(e -> e.setEmployee(this));
-
-    }
-
-    public void addEmployeeToWorkInstrumentList() {
-        workInstrumentList.forEach(e -> e.setEmployee(this));
-    }
-
-    public void addEmployeeToMeasInstrumentList() {
-        measInstrumentList.forEach(e -> e.setEmployee(this));
-    }
-
-    public void addWorkObjectStoreKeeperListToWorkObject() {
-        workObjectStoreKeeperList.forEach(e -> e.getStoreKeeperList().add(this));
-    }
 
     public void setSurName(String surName) {
         try {

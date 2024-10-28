@@ -30,7 +30,6 @@ public class WorkObjectController {
     private final EmployeeService employeeService;
     private final WorkInstrumentService workInstrumentService;
     private final MeasInstrumentService measInstrumentService;
-    private final ConstructionControlService constructionControlService;
 
     @GetMapping("/general/workobject")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_WORK_OBJECT_VIEW')")

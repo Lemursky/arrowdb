@@ -55,7 +55,7 @@ public class ConstructionControl {
     @Column(name = "responsible_from_customer")
     private String responsibleFromCustomer;
     
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "emp_duty_c_contr_join",
             joinColumns = @JoinColumn(name = "join_c_contr_id"),
             inverseJoinColumns = @JoinColumn(name = "join_emp_duty_id"))
@@ -69,11 +69,11 @@ public class ConstructionControl {
     @Column(name = "date_of_extension")
     private LocalDate dateOfExtension;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "constr_control_status")
     private WorkObjectStatus warningStatus;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "work_object")
     private WorkObject workObject;
 

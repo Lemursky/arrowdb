@@ -38,26 +38,6 @@ public class DriverLicense {
     @ManyToMany(mappedBy = "driverLicenseEmpList", cascade = CascadeType.REFRESH)
     private List<Employee> employeeList = new ArrayList<>();
 
-    public void addDriverLicenseToEmployee(){
-        employeeList.forEach(e -> e.getDriverLicenseEmpList().add(this));
-    }
-
-    public void setDrLiName(String drLiName) {
-        try {
-            this.drLiName = drLiName.trim();
-        } catch (Exception e) {
-            e.getStackTrace();
-        }
-    }
-
-    public void setAnnotation(String annotation) {
-        try {
-            this.annotation = annotation.substring(0, 1).toUpperCase() + annotation.substring(1);
-        } catch (Exception e) {
-            e.getStackTrace();
-        }
-    }
-
     @Override
     public String toString() {
         return drLiName;

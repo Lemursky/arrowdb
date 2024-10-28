@@ -26,13 +26,13 @@ public class WorkInstrumentAUD {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, unique = true)
     private Integer Id;
 
     @Column(name = "onec_number")
     private String workOneCNumber;
 
-    @Column(name = "invent_number", unique=true)
+    @Column(name = "invent_number")
     private String workInventNumber;
 
     @Column(name = "serial_number")

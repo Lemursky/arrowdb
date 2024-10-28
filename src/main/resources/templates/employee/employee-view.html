@@ -135,7 +135,7 @@
                 <th style="text-align: left" scope="row">009</th>
                 <td style="text-align: left">Категории ВУ</td>
                 <th style="text-align: left"><span th:each="drl:${employee.driverLicenseEmpList}">
-                    <span th:text="${drl.drLiName + ' '}"></span>
+                    <span th:text="${drl.getDrLiName() + ' '}"></span>
                 </span>
             </tr>
             <tr>

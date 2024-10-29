@@ -155,30 +155,6 @@ public class WorkObject {
             inverseJoinColumns = @JoinColumn(name = "join_suppl_id"))
     private List<Employee> supplierList = new ArrayList<>();
 
-    public void addWorkInstrumentListToWorkObject() {
-        workInstrumentList.forEach(e-> e.setWorkObject(this));
-    }
-
-    public void addMeasInstrumentListToWorkObject() {
-        measInstrumentList.forEach(e-> e.setWorkObject(this));
-    }
-
-    public void addConstructionControlListToWorkObject() {
-        constructionControlList.forEach(e-> e.setWorkObject(this));
-    }
-
-    public void addEmployeeToSupplierList(){
-        supplierList.forEach(e -> e.getWorkObjectSupplierList().add(this));
-    }
-
-    public void addEmployeeToPTOList(){
-        PTOList.forEach(e -> e.getWorkObjectPTOList().add(this));
-    }
-
-    public void addEmployeeToStoreKeeperList(){
-        PTOList.forEach(e -> e.getWorkObjectSupplierList().add(this));
-    }
-
     public void setWorkObjectName(String workObjectName) {
         try {
             this.workObjectName = workObjectName;

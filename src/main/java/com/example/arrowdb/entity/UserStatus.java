@@ -29,10 +29,6 @@ public class UserStatus {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "userStatus", fetch = FetchType.LAZY)
     private List<Users> usersList = new ArrayList<>();
 
-    public void addUsersToStatus(){
-        usersList.forEach(e -> e.setUserStatus(this));
-    }
-
     @Override
     public String toString() {
         return statAnnotation;

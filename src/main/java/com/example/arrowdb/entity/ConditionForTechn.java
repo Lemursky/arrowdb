@@ -18,6 +18,7 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @NoArgsConstructor
 @Entity
 @Table(name = "conditions_for_techn")
+@AuditTable(value = "conditions_for_techn_aud", schema = "history")
 public class ConditionForTechn {
 
     @Id
@@ -42,18 +43,6 @@ public class ConditionForTechn {
 //    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "conditionForTechn", fetch = FetchType.LAZY)
     private List<MeasInstrument> measInstrumentList = new ArrayList<>();
-
-    public void addWorkInstrumentToCondition(){
-        workInstrumentList.forEach(e -> e.setConditionForTechn(this));
-    }
-
-    public void addMeasInstrumentToCondition(){
-        measInstrumentList.forEach(e -> e.setConditionForTechn(this));
-    }
-
-    public void addPersonalInstrumentToCondition(){
-        personalInstrumentList.forEach(e -> e.setConditionForTechn(this));
-    }
 
     @Override
     public String toString() {

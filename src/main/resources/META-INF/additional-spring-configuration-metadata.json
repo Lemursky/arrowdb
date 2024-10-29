@@ -4,5 +4,10 @@
       "name": "spring.profiles",
       "type": "java.lang.String",
       "description": "Description for spring.profiles."
-  }
-] }
+    },
+    {
+      "name": "spring.jpa.hibernate.hibernate.enable_lazy_load_no_trans",
+      "type": "java.lang.String",
+      "description": "Description for spring.jpa.hibernate.hibernate.enable_lazy_load_no_trans."
+    }
+  ] }

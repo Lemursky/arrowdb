@@ -124,6 +124,10 @@ public class MeasInstrumentController {
                 .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
         List<ConditionForWork> conditionForWork = conditionForWorkService.findAllConditionForWork();
         List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
+        if(!measInstrument.getConditionForTechn().getTConditionName().equals("Исправен")){
+            measInstrument.setConditionForWork(conditionForWorkService
+                    .findConditionForWorkBywConditionName("Не закреплен"));
+        }
         List<Department> departmentList = departmentService.findAllDepartments();
         if (workObjectList.isEmpty() || employeeList.isEmpty()) {
             conditionForWork.remove(conditionForWorkService.findConditionForWorkBywConditionName("Закреплен"));
@@ -159,6 +163,11 @@ public class MeasInstrumentController {
         } else {
             if (!measInstrument.getConditionForTechn().getTConditionName().equals("Списан")) {
                 measInstrument.setCloseDate(null);
+            }
+            if (!measInstrument.getConditionForWork().getWConditionName().equals("Закреплен")) {
+                measInstrument.setIssueDate(null);
+                measInstrument.setConditionForWork(conditionForWorkService
+                        .findConditionForWorkBywConditionName("Не закреплен"));
             }
             try {
                 if (!measInstrument.getConditionForWork().getWConditionName().equals("Закреплен") ||

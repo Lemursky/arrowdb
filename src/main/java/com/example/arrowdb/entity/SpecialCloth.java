@@ -47,10 +47,6 @@ public class SpecialCloth {
     @JoinColumn(name = "unit_of_sc")
     private UniteOfInstrument uniteOfInstrument;
 
-    public void addSpecialClotHToSpecialClothEmployeeList() {
-        specialClothEmployeeList.forEach(e -> e.setSpecialCloth(this));
-    }
-
     public void setSpecClothName(String specClothName) {
         try {
             this.specClothName = specClothName.substring(0, 1).toUpperCase() + specClothName.substring(1).trim();

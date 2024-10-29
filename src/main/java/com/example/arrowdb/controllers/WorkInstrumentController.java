@@ -114,6 +114,10 @@ public class WorkInstrumentController {
                 .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
         List<ConditionForWork> conditionForWork = conditionForWorkService.findAllConditionForWork();
         List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
+        if(!workInstrument.getConditionForTechn().getTConditionName().equals("Исправен")){
+            workInstrument.setConditionForWork(conditionForWorkService.
+                    findConditionForWorkBywConditionName("Не закреплен"));
+        }
         if (workObjectList.isEmpty() || employeeList.isEmpty()) {
             conditionForWork.remove(conditionForWorkService.findConditionForWorkBywConditionName("Закреплен"));
         }
@@ -145,6 +149,11 @@ public class WorkInstrumentController {
         } else {
             if (!workInstrument.getConditionForTechn().getTConditionName().equals("Списан")) {
                 workInstrument.setCloseDate(null);
+            }
+            if (!workInstrument.getConditionForWork().getWConditionName().equals("Закреплен")) {
+                workInstrument.setIssueDate(null);
+                workInstrument.setConditionForWork(conditionForWorkService
+                        .findConditionForWorkBywConditionName("Не закреплен"));
             }
             try {
                 if (!workInstrument.getConditionForWork().getWConditionName().equals("Закреплен") ||

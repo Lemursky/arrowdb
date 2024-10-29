@@ -114,8 +114,13 @@ public class PersonalInstrumentController {
                 .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
         List<ConditionForPersonal> conditionForPersonal = conditionForPersonalService.findAllConditionForPersonal();
         List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
+        if (!personalInstrument.getConditionForTechn().getTConditionName().equals("Исправен")) {
+            personalInstrument.setConditionForPersonal(conditionForPersonalService
+                    .findConditionForPersonalBypConditionName("Не выдан"));
+        }
         if (employeeList.isEmpty()) {
-            conditionForPersonal.remove(conditionForPersonalService.findConditionForPersonalBypConditionName("Выдан"));
+            conditionForPersonal.remove(conditionForPersonalService
+                    .findConditionForPersonalBypConditionName("Выдан"));
         }
         model.addAttribute("personalInstrument", personalInstrument);
         model.addAttribute("conditionForPersonal", conditionForPersonal);

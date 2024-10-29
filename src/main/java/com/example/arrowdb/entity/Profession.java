@@ -59,10 +59,6 @@ public class Profession {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profession", fetch = FetchType.LAZY)
     private List<Employee> employeeList = new ArrayList<>();
 
-    public void addEmployeeToProfession() {
-        employeeList.forEach(e -> e.setProfession(this));
-    }
-
     public void setProfessionName(String professionName) {
         try {
             this.professionName = professionName.substring(0, 1).toUpperCase() + professionName.substring(1).trim();

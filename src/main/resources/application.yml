@@ -1,6 +1,7 @@
 spring:
 
   jpa:
+#    open-in-view: false
     show-sql: true
     hibernate:
       ddl-auto: update
@@ -13,3 +14,7 @@ spring:
 
 server:
   port: 8080
+
+logging:
+  level:
+    root: INFO

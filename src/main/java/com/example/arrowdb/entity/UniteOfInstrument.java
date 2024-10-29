@@ -26,10 +26,6 @@ public class UniteOfInstrument {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "uniteOfInstrument", fetch = FetchType.LAZY)
     private List<SpecialCloth> specialClothList = new ArrayList<>();
 
-    public void addUnitToInstrument(){
-        specialClothList.forEach(e -> e.setUniteOfInstrument(this));
-    }
-
     @Override
     public String toString() {
         return unitName;

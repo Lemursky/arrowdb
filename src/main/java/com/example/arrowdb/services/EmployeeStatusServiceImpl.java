@@ -16,13 +16,13 @@ public class EmployeeStatusServiceImpl implements EmployeeStatusService {
     private final EmployeeStatusRepository employeeStatusRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public EmployeeStatus findEmployeeStatusByStatusName(String name) {
         return employeeStatusRepository.findEmployeeStatusByStatusName(name);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public EmployeeStatus findEmployeeStatusById(Integer id) {
         EmployeeStatus employeeStatus = null;
         Optional<EmployeeStatus> optional = employeeStatusRepository.findById(id);
@@ -33,7 +33,7 @@ public class EmployeeStatusServiceImpl implements EmployeeStatusService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<EmployeeStatus> findAllEmployeeStatus() {
         return employeeStatusRepository.findAll();
     }

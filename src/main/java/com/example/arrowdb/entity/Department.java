@@ -29,10 +29,6 @@ public class Department {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "department", fetch = FetchType.LAZY)
     private List<MeasInstrument> measInstrumentList = new ArrayList<>();
 
-    public void addWorkObjectToStatus(){
-        measInstrumentList.forEach(e -> e.setDepartment(this));
-    }
-
     @Override
     public String toString() {
         return depName;

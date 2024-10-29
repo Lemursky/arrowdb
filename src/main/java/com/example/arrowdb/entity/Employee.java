@@ -8,6 +8,7 @@ import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.jpa.repository.EntityGraph;
 
+import java.sql.Driver;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;

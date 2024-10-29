@@ -77,10 +77,6 @@ public class ConstructionControl {
     @JoinColumn(name = "work_object")
     private WorkObject workObject;
 
-    public void addEmployeeToConstrControlEmpDutyList(){
-        empDutyList.forEach(e -> e.getConstrControlEmpDutyList().add(this));
-    }
-
     @Override
     public String toString() {
         return String.format("№ предупр.: %s; Объект: %s", numOfWarning, workObject);

@@ -152,7 +152,7 @@
                 <th style="text-align: left" scope="row">007</th>
                 <td style="text-align: left"><label>Почта</label></td>
                 <td style="text-align: left">
-                    <input type="email" style="width: 350px" th:field="${employee.email}" placeholder="name@example.com">
+                    <input type="text" style="width: 350px" th:field="${employee.email}" placeholder="name@example.com">
                     <p if="${#fields.hasErrors('email')}" th:errors="${employee.email}" style="font-size: 13px; color: brown"></p>
             </tr>
             <tr>

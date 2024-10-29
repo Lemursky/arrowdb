@@ -26,12 +26,8 @@ public class Roles {
     @Column(name = "menu_name")
     private String menuName;
 
-    @ManyToMany(mappedBy = "rolesSet", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "rolesSet", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Users> users = new HashSet<>();
-
-    public void addUsersToRoles() {
-        users.forEach(e -> e.getRolesSet().add(this));
-    }
 
     @Override
     public String toString() {

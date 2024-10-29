@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,7 +62,6 @@
                                                        th:field="${personalInstrument.brokenAnnotation}"></textarea></p>
                             <p if="${#fields.hasErrors('brokenDate')}" th:errors="${personalInstrument.brokenDate}"
                                style="font-size: 13px; color: brown"></p>
-<!--                            <p><span th:text="${errorStatus}" style="font-size: 13px; color: brown"></span></p>-->
                             <script th:inline="javascript">
                                 const inputDate2 = String([[${personalInstrument.brokenDate}]]);
                                 document.getElementById("date2").valueAsDate = new Date(inputDate2);
@@ -227,52 +226,8 @@
                                 document.getElementById('deleteAct').setAttribute('disabled', 'true');
                             }
                         </script>
-                        <script>
-                            function j() {
-                                let statusIssue = document.getElementById("statusIssue");
-                                let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
-                                let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
-                                let issueDate = document.getElementById("issueDate");
-                                if(isIssued){
-                                    issueDate.style.display = 'block';
-                                    document.getElementById('date5').setAttribute('required', 'true');
-                                } else {
-                                    issueDate.style.display = 'none';
-                                    document.getElementById('date5').removeAttribute('required');
-                                }
-                            }
-                        </script>
-                        <script>
-                            let statusIssue = document.getElementById("statusIssue");
-                            let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
-                            let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
-                            let issueDate = document.getElementById("issueDate");
-                            if(isIssued){
-                                issueDate.style.display = 'block';
-                                document.getElementById('date5').setAttribute('required', 'true');
-                            } else {
-                                issueDate.style.display = 'none';
-                                document.getElementById('date5').removeAttribute('required');
-                            }
-                        </script>
                     <td>
                 </tr>
-                <script>
-                    $('#status').change(function () {
-                        if ($('#status').val() === "1") {
-                            $('#issuePanel').css('display', 'block');
-                        } else {
-                            $('#issuePanel').css('display', 'none');
-                        }
-                    });
-                </script>
-                <script>
-                    if ($('#status').val() === "1") {
-                        $('#issuePanel').css('display', 'block');
-                    } else {
-                        $('#issuePanel').css('display', 'none');
-                    }
-                </script>
                 <tr>
                     <th style="text-align: left" scope="row"></th>
                     <th style="text-align: left"><label>Выдать Работнику: </label></th>
@@ -291,18 +246,63 @@
                             </script>
                         </div>
                         <script>
+                            function j() {
+                                let statusIssue = document.getElementById("statusIssue");
+                                let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                                let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
+                                let issueDate = document.getElementById("issueDate");
+                                if(isIssued){
+                                    issueDate.style.display = 'block';
+                                    document.getElementById('date5').setAttribute('required', 'true');
+                                    document.getElementById('issuePanelEmp').style.display = 'block';
+                                } else {
+                                    issueDate.style.display = 'none';
+                                    document.getElementById('date5').removeAttribute('required');
+                                    document.getElementById('issuePanelEmp').style.display = 'none';
+                                }
+                            }
+                        </script>
+                        <script>
+                            let statusIssue = document.getElementById("statusIssue");
+                            let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                            let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
+                            let issueDate = document.getElementById("issueDate");
+                            if(isIssued){
+                                issueDate.style.display = 'block';
+                                document.getElementById('date5').setAttribute('required', 'true');
+                                document.getElementById('issuePanelEmp').style.display = 'block';
+                            } else {
+                                issueDate.style.display = 'none';
+                                document.getElementById('date5').removeAttribute('required');
+                                document.getElementById('issuePanelEmp').style.display = 'none';
+                            }
+                        </script>
+                        <script>
                             $('#status').change(function () {
                                 if ($('#status').val() === "1") {
-                                    $('#issuePanelEmp').css('display', 'block');
+                                    $('#issuePanel').css('display', 'block');
                                 } else {
-                                    $('#issuePanelEmp').css('display', 'none');
+                                    $('#issuePanel').css('display', 'none');
                                 }
                             });
                         </script>
                         <script>
                             if ($('#status').val() === "1") {
-                                $('#issuePanelEmp').css('display', 'block');
+                                $('#issuePanel').css('display', 'block');
                             } else {
+                                $('#issuePanel').css('display', 'none');
+                            }
+                        </script>
+
+                        <script>
+                            $('#status').change(function () {
+                                if ($('#status').val() !== "1") {
+                                    $('#issuePanelEmp').css('display', 'none');
+                                }
+                            });
+                        </script>
+                        <script>
+                            if ($('#status').val() !== "1") {
                                 $('#issuePanelEmp').css('display', 'none');
                             }
                         </script>

@@ -3,6 +3,7 @@ package com.example.arrowdb.services;
 import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.repositories.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,13 +18,13 @@ public class EmployeeServiceImpl implements EmployeeService{
     private final EmployeeRepository employeeRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Employee> findAllEmployees() {
         return employeeRepository.findAll();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Employee findEmployeeById(Integer id) {
         Employee employee = null;
         Optional<Employee> optional = employeeRepository.findById(id);

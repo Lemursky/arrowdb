@@ -32,10 +32,6 @@ public class EmployeeStatus {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "empStatus", fetch = FetchType.LAZY)
     private List<Employee> employeeList = new ArrayList<>();
 
-    public void addEmployeeToStatus(){
-        employeeList.forEach(e -> e.setEmpStatus(this));
-    }
-
     @Override
     public String toString() {
         return statusName;

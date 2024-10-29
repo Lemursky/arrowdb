@@ -228,51 +228,7 @@
                                     document.getElementById('deleteAct').setAttribute('disabled', 'true');
                                 }
                             </script>
-                            <script>
-                                function j() {
-                                    let statusIssue = document.getElementById("statusIssue");
-                                    let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
-                                    let isIssued = selectStatusIssue === "Закреплен (за объектом строительства)"
-                                    let issueDate = document.getElementById("issueDate");
-                                    if(isIssued){
-                                        issueDate.style.display = 'block';
-                                        document.getElementById('date5').setAttribute('required', 'true');
-                                    } else {
-                                        issueDate.style.display = 'none';
-                                        document.getElementById('date5').removeAttribute('required');
-                                    }
-                                }
-                            </script>
-                            <script>
-                                let statusIssue = document.getElementById("statusIssue");
-                                let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
-                                let isIssued = selectStatusIssue === "Закреплен (за объектом строительства)"
-                                let issueDate = document.getElementById("issueDate");
-                                if(isIssued){
-                                    issueDate.style.display = 'block';
-                                    document.getElementById('date5').setAttribute('required', 'true');
-                                } else {
-                                    issueDate.style.display = 'none';
-                                    document.getElementById('date5').removeAttribute('required');
-                                }
-                            </script>
                         </div>
-                        <script>
-                            $('#status').change(function () {
-                                if ($('#status').val() === "1") {
-                                    $('#issuePanel').css('display', 'block');
-                                } else {
-                                    $('#issuePanel').css('display', 'none');
-                                }
-                            });
-                        </script>
-                        <script>
-                            if ($('#status').val() === "1") {
-                                $('#issuePanel').css('display', 'block');
-                            } else {
-                                $('#issuePanel').css('display', 'none');
-                            }
-                        </script>
                     <td>
                 </tr>
                 <tr>
@@ -291,22 +247,6 @@
                                 $(".livesearch").chosen();
                             </script>
                         </div>
-                        <script>
-                            $('#status').change(function () {
-                                if ($('#status').val() === "1") {
-                                    $('#issuePanelObj').css('display', 'block');
-                                } else {
-                                    $('#issuePanelObj').css('display', 'none');
-                                }
-                            });
-                        </script>
-                        <script>
-                            if ($('#status').val() === "1") {
-                                $('#issuePanelObj').css('display', 'block');
-                            } else {
-                                $('#issuePanelObj').css('display', 'none');
-                            }
-                        </script>
                     <th>
                 </tr>
                 <tr>
@@ -327,18 +267,70 @@
                             </script>
                         </div>
                         <script>
+                            function j() {
+                                let statusIssue = document.getElementById("statusIssue");
+                                let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                                let isIssued = selectStatusIssue === "Закреплен (за объектом строительства)"
+                                let issueDate = document.getElementById("issueDate");
+                                if(isIssued){
+                                    issueDate.style.display = 'block';
+                                    document.getElementById('date5').setAttribute('required', 'true');
+                                    document.getElementById('issuePanelEmp').style.display = 'block';
+                                    document.getElementById('issuePanelObj').style.display = 'block';
+                                } else {
+                                    issueDate.style.display = 'none';
+                                    document.getElementById('date5').removeAttribute('required');
+                                    document.getElementById('issuePanelEmp').style.display = 'none';
+                                    document.getElementById('issuePanelObj').style.display = 'none';
+                                }
+                            }
+                        </script>
+                        <script>
+                            let statusIssue = document.getElementById("statusIssue");
+                            let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                            let isIssued = selectStatusIssue === "Закреплен (за объектом строительства)"
+                            let issueDate = document.getElementById("issueDate");
+                            if(isIssued){
+                                issueDate.style.display = 'block';
+                                document.getElementById('date5').setAttribute('required', 'true');
+                                document.getElementById('issuePanelEmp').style.display = 'block';
+                                document.getElementById('issuePanelObj').style.display = 'block';
+                            } else {
+                                issueDate.style.display = 'none';
+                                document.getElementById('date5').removeAttribute('required');
+                                document.getElementById('issuePanelEmp').style.display = 'none';
+                                document.getElementById('issuePanelObj').style.display = 'none';
+                            }
+                        </script>
+
+                        <script>
                             $('#status').change(function () {
                                 if ($('#status').val() === "1") {
-                                    $('#issuePanelEmp').css('display', 'block');
+                                    $('#issuePanel').css('display', 'block');
                                 } else {
-                                    $('#issuePanelEmp').css('display', 'none');
+                                    $('#issuePanel').css('display', 'none');
                                 }
                             });
                         </script>
                         <script>
                             if ($('#status').val() === "1") {
-                                $('#issuePanelEmp').css('display', 'block');
+                                $('#issuePanel').css('display', 'block');
                             } else {
+                                $('#issuePanel').css('display', 'none');
+                            }
+                        </script>
+
+                        <script>
+                            $('#status').change(function () {
+                                if ($('#status').val() !== "1") {
+                                    $('#issuePanelObj').css('display', 'none');
+                                    $('#issuePanelEmp').css('display', 'none');
+                                }
+                            });
+                        </script>
+                        <script>
+                            if ($('#status').val() !== "1") {
+                                $('#issuePanelObj').css('display', 'none');
                                 $('#issuePanelEmp').css('display', 'none');
                             }
                         </script>

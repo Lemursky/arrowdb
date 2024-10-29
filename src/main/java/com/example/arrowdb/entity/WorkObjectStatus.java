@@ -30,10 +30,6 @@ public class WorkObjectStatus {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObjectStat", fetch = FetchType.LAZY)
     private List<WorkObject> workObjectList = new ArrayList<>();
 
-    public void addWorkObjectToStatus(){
-        workObjectList.forEach(e -> e.setWorkObjectStat(this));
-    }
-
     @Override
     public String toString() {
         return statusName;

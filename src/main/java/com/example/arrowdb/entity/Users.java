@@ -27,7 +27,7 @@ public class Users {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "join_user_id"),
             inverseJoinColumns = @JoinColumn(name = "join_role_id"))
@@ -36,10 +36,6 @@ public class Users {
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "user_stat")
     private UserStatus userStatus;
-
-    public void addRolesToUsers() {
-        rolesSet.forEach(e -> e.getUsers().add(this));
-    }
 
     @Override
     public String toString() {

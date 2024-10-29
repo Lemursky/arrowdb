@@ -31,10 +31,6 @@ public class Quality {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "quality", fetch = FetchType.LAZY)
     private List<Profession> professionList = new ArrayList<>();
 
-    public void addProfessionToQuality(){
-        professionList.forEach(e -> e.setQuality(this));
-    }
-
     public void setQualityName(String qualityName) {
         try {
             this.qualityName = qualityName.substring(0, 1).toUpperCase() + qualityName.substring(1);

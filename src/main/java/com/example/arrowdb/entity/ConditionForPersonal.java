@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @NoArgsConstructor
 @Entity
 @Table(name = "conditions_for_pers")
+@AuditTable(value = "conditions_for_pers_aud", schema = "history")
 public class ConditionForPersonal {
 
     @Id
@@ -32,10 +34,6 @@ public class ConditionForPersonal {
     @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "conditionForPersonal", fetch = FetchType.LAZY)
     private List<PersonalInstrument> personalInstrumentList = new ArrayList<>();
-
-    public void addPersonalInstrumentToCondition(){
-        personalInstrumentList.forEach(e -> e.setConditionForPersonal(this));
-    }
 
     @Override
     public String toString() {

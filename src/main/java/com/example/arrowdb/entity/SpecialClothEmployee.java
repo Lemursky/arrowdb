@@ -9,9 +9,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "spec_cloth_emp")
 public class SpecialClothEmployee {

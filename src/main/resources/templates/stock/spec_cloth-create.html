@@ -42,11 +42,11 @@
                     <th style="text-align: left" scope="row">003</th>
                     <td style="text-align: left"><label>Ед. изм.</label></td>
                     <td style="text-align: left">
-                        <select style="width: 150px"; class="form-select form-select-sm" name="uniteOfInstrument">
-                            <option th:each="unit:${uniteOfInstrumentList}"
-                                    th:field="*{uniteOfInstrument}"
-                                    th:value="${unit.unitId}"
-                                    th:text="${unit}">
+                        <select style="width: 150px"; class="form-select form-select-sm" name="uniteOfInstrumentENUM">
+                            <option th:each="unit:${uniteOfInstrument}"
+                                    th:field="*{uniteOfInstrumentENUM}"
+                                    th:value="${unit}"
+                                    th:text="${unit.getTitle()}">
                             </option>
                         </select>
                 </tr>

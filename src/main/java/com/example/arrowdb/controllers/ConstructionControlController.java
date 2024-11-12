@@ -61,7 +61,7 @@ public class ConstructionControlController {
     public String createConstructionControlForm(@ModelAttribute ConstructionControl constructionControl,
                                                 Model model) {
         List<Employee> employeeList = employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList();
         List<WorkObjectStatus> warningStatusList = new ArrayList<>(workObjectStatusService
@@ -86,7 +86,7 @@ public class ConstructionControlController {
                                            BindingResult bindingResult,
                                            Model model) {
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList());
         List<WorkObjectStatus> warningStatusList = new ArrayList<>(workObjectStatusService
@@ -128,7 +128,7 @@ public class ConstructionControlController {
                     .formatted(constructionControl.getWorkObject().getWorkObjectId());
         }
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList());
         List<WorkObjectStatus> warningStatusList = new ArrayList<>(workObjectStatusService
@@ -154,7 +154,7 @@ public class ConstructionControlController {
                                                 @NotNull BindingResult bindingResult,
                                                 Model model) {
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList());
         List<WorkObjectStatus> warningStatusList = new ArrayList<>(workObjectStatusService

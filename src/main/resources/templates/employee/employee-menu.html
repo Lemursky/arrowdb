@@ -77,13 +77,13 @@
                 </tr>
                 </thead>
                 <tbody class="body">
-                <tr th:each="emp:${employee}">
+                <tr th:each="emp:${employeeList}">
                     <th th:text="${emp.empId}"/>
                     <td th:text="${emp.surName}"/>
                     <td th:text="${emp.name}"/>
                     <td th:text="${emp.middleName}"/>
                     <td th:text="${emp.profession}"/>
-                    <td th:text="${emp.empStatus}"/>
+                    <td th:text="${emp.employeeStatusENUM.getTitle()}"/>
                     <td><a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}" style="width: 100px">
                         <button style="width: 90px" type="button" class="btn btn-outline-primary btn-sm">Просмотр</button>
                     </a>

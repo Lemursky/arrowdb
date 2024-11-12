@@ -1,5 +1,7 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.SpecialClothStatusENUM;
+import com.example.arrowdb.enums.UniteOfInstrumentENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -11,9 +13,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "special_cloth")
 public class SpecialCloth {
@@ -39,13 +39,11 @@ public class SpecialCloth {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "specialCloth", fetch = FetchType.LAZY)
     private List<SpecialClothEmployee> specialClothEmployeeList = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "spec_cloth_status")
-    private EmployeeStatus specClothStatus;
+    @Column(name = "spec_cloth_status")
+    private SpecialClothStatusENUM specialClothStatusENUM;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "unit_of_sc")
-    private UniteOfInstrument uniteOfInstrument;
+    @Column(name = "unit_of_sc")
+    private UniteOfInstrumentENUM uniteOfInstrumentENUM;
 
     public void setSpecClothName(String specClothName) {
         try {

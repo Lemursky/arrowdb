@@ -14,13 +14,10 @@ import java.util.List;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "driver_license")
-@AuditTable(value = "driver_license_aud", schema = "history")
 public class DriverLicense {
 
     @Id
@@ -34,7 +31,6 @@ public class DriverLicense {
     @Column(name = "annotation")
     private String annotation;
 
-    @Audited(targetAuditMode = NOT_AUDITED)
     @ManyToMany(mappedBy = "driverLicenseEmpList", cascade = CascadeType.REFRESH)
     private List<Employee> employeeList = new ArrayList<>();
 

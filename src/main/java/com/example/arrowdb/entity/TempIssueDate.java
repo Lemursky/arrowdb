@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Component
 public class TempIssueDate {
 

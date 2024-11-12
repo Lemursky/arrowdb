@@ -13,9 +13,7 @@ import java.util.List;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "work_object")
 public class WorkObject {
@@ -115,7 +113,6 @@ public class WorkObject {
     @Column(name = "work_object_comment")
     private String workObjectComment;
 
-    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
     private List<WorkInstrument> workInstrumentList = new ArrayList<>();
 

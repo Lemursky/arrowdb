@@ -29,7 +29,7 @@ public class WorkInstrumentEmployeeController {
                                                    Model model) {
         Employee employee = employeeService.findEmployeeById(id);
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList());
         employeeList.remove(employee);

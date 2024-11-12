@@ -1,6 +1,8 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.SpecialClothStatusENUM;
+import com.example.arrowdb.enums.UniteOfInstrumentENUM;
 import com.example.arrowdb.services.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -23,18 +25,16 @@ import static com.example.arrowdb.message.Message.*;
 public class SpecialClothController {
 
     private final SpecialClothService specialClothService;
-    private final EmployeeStatusService employeeStatusService;
     private final EmployeeService employeeService;
-    private final UniteOfInstrumentService uniteOfInstrumentService;
     private final SpecialClothEmployeeService specialClothEmployeeService;
 
     @GetMapping("/general/s_cloth/catalog")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_VIEW')")
     public String getAllSpecialClothList(@NotNull Model model){
-        List<SpecialCloth> specialClothList = specialClothService.findAllSpecialCloths().stream()
+        model.addAttribute("specialClothList", specialClothService.findAllSpecialCloths()
+                .stream()
                 .sorted(Comparator.comparingInt((SpecialCloth::getSpecClothId)))
-                .toList();
-        model.addAttribute("specialClothList", specialClothList);
+                .toList());
         return "stock/spec_cloth-catalog";
     }
 
@@ -42,7 +42,7 @@ public class SpecialClothController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_VIEW')")
     public String getAllSpecialClothListEmployee(@NotNull Model model) {
         List<Employee> employee = employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt((Employee::getEmpId)))
                 .toList();
         model.addAttribute("employee", employee);
@@ -53,7 +53,6 @@ public class SpecialClothController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_VIEW')")
     public String findSpecialClothById(@PathVariable("id") int id,
                                        @NotNull Model model) {
-        SpecialCloth specialCloth = specialClothService.findSpecialClothById(id);
         List<Integer> idList = specialClothEmployeeService.findAllEmployeeBySpecialClothEmployeeId(id);
         Employee employee;
         List<Employee> employeeList = new ArrayList<>();
@@ -62,7 +61,7 @@ public class SpecialClothController {
             employeeList.add(employee);
         }
         model.addAttribute("employeeList", employeeList);
-        model.addAttribute("specialCloth", specialCloth);
+        model.addAttribute("specialCloth", specialClothService.findSpecialClothById(id));
         return "stock/spec_cloth-view";
     }
 
@@ -70,8 +69,7 @@ public class SpecialClothController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_CREATE')")
     public String createSpecialClothForm(@ModelAttribute SpecialCloth specialCloth,
                                          @NotNull Model model) {
-        List<UniteOfInstrument> uniteOfInstrumentList = uniteOfInstrumentService.findAllUniteOfInstrument();
-        model.addAttribute("uniteOfInstrumentList", uniteOfInstrumentList);
+        model.addAttribute("uniteOfInstrument", UniteOfInstrumentENUM.values());
         return "stock/spec_cloth-create";
     }
 
@@ -80,15 +78,14 @@ public class SpecialClothController {
     public String createSpecialCloth(@Valid SpecialCloth specialCloth,
                                      @NotNull BindingResult bindingResult,
                                      Model model) {
-        List<UniteOfInstrument> uniteOfInstrumentList = uniteOfInstrumentService.findAllUniteOfInstrument();
         if (bindingResult.hasErrors()) {
-            model.addAttribute("uniteOfInstrumentList", uniteOfInstrumentList);
+            model.addAttribute("uniteOfInstrument", UniteOfInstrumentENUM.values());
             return "stock/spec_cloth-create";
         } else {
             try {
-                specialCloth.setSpecClothStatus(employeeStatusService.findEmployeeStatusByStatusName("Действующий"));
+                specialCloth.setSpecialClothStatusENUM(SpecialClothStatusENUM.ACTIVE);
                 model.addAttribute("specialCloth", specialCloth);
-                model.addAttribute("uniteOfInstrumentList", uniteOfInstrumentList);
+                model.addAttribute("uniteOfInstrument", UniteOfInstrumentENUM.values());
                 specialClothService.saveSpecialCloth(specialCloth);
                 return "redirect:/general/s_cloth/catalog";
             } catch (Exception e) {
@@ -125,13 +122,9 @@ public class SpecialClothController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_UPDATE')")
     public String updateSpecialClothForm(@PathVariable("id") int id,
                                          @NotNull Model model) {
-        SpecialCloth specialCloth = specialClothService.findSpecialClothById(id);
-        List<EmployeeStatus> employeeStatus = employeeStatusService.findAllEmployeeStatus();
-        employeeStatus.remove(employeeStatusService.findEmployeeStatusByStatusName("В отпуске"));
-        List<UniteOfInstrument> uniteOfInstrumentList = uniteOfInstrumentService.findAllUniteOfInstrument();
-        model.addAttribute("specialCloth", specialCloth);
-        model.addAttribute("employeeStatus", employeeStatus);
-        model.addAttribute("uniteOfInstrumentList", uniteOfInstrumentList);
+        model.addAttribute("specialCloth", specialClothService.findSpecialClothById(id));
+        model.addAttribute("specialClothStatus", SpecialClothStatusENUM.values());
+        model.addAttribute("uniteOfInstrument", UniteOfInstrumentENUM.values());
         return "stock/spec_cloth-update";
     }
 
@@ -140,15 +133,13 @@ public class SpecialClothController {
     public String updateSpecialCloth(@Valid SpecialCloth specialCloth,
                                      @NotNull BindingResult bindingResult,
                                      Model model) {
-        List<EmployeeStatus> employeeStatus = employeeStatusService.findAllEmployeeStatus();
-        employeeStatus.remove(employeeStatusService.findEmployeeStatusByStatusName("В отпуске"));
-        List<UniteOfInstrument> uniteOfInstrumentList = uniteOfInstrumentService.findAllUniteOfInstrument();
         if (bindingResult.hasErrors()) {
-            model.addAttribute("employeeStatus", employeeStatus);
-            model.addAttribute("uniteOfInstrumentList", uniteOfInstrumentList);
+            model.addAttribute("specialClothStatus", SpecialClothStatusENUM.values());
+            model.addAttribute("uniteOfInstrument", UniteOfInstrumentENUM.values());
             return "stock/spec_cloth-update";
         } else {
-            List<Integer> idList = specialClothEmployeeService.findAllEmployeeBySpecialClothEmployeeId(specialCloth.getSpecClothId());
+            List<Integer> idList = specialClothEmployeeService
+                    .findAllEmployeeBySpecialClothEmployeeId(specialCloth.getSpecClothId());
             Employee employee;
             List<Employee> employeeList = new ArrayList<>();
             for (Integer integer : idList) {
@@ -156,17 +147,17 @@ public class SpecialClothController {
                 employeeList.add(employee);
             }
             model.addAttribute("employeeList", employeeList);
-            if(employeeList.size() !=0
-                    && specialCloth.getSpecClothStatus().getStatusName().equals("Закрыт")){
+            if(!employeeList.isEmpty()
+                    && specialCloth.getSpecialClothStatusENUM().getTitle().equals("Закрыт")){
                 model.addAttribute("error", new StringBuilder(DELETE_OR_CHANGE_STATUS_SCLOTH_MESSAGE));
                 return "error/s_cloth-error";
             }
             try{
                 List<Employee> currentEmployeesInV = new ArrayList<>(employeeService.findAllEmployees().stream()
-                        .filter(e -> e.getEmpStatus().getStatusName().equals("В отпуске")).toList());
-                model.addAttribute("uniteOfInstrumentList", uniteOfInstrumentList);
+                        .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("В отпуске")).toList());
+                model.addAttribute("uniteOfInstrument", UniteOfInstrumentENUM.values());
                 model.addAttribute("currentEmployeesInV", currentEmployeesInV);
-                model.addAttribute("employeeStatus", employeeStatus);
+                model.addAttribute("specialClothStatus", SpecialClothStatusENUM.values());
                 specialClothService.saveSpecialCloth(specialCloth);
                 return "redirect:/general/s_cloth/s_clothView/%d".formatted(specialCloth.getSpecClothId());
             } catch (Exception e){

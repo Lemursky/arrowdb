@@ -31,7 +31,7 @@ public class SpecialClothEmployeeController {
                 .findAllSpecialClothEmployeeByEmployeeId(id);
         List<SpecialCloth> specialClothList = specialClothService.findAllSpecialCloths().stream()
                 .sorted(Comparator.comparingInt((SpecialCloth::getSpecClothId)))
-                .filter(e -> e.getSpecClothStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getSpecialClothStatusENUM().getTitle().equals("Действующий"))
                 .toList();
         model.addAttribute("specialClothEmployeeList", specialClothEmployeeList);
         model.addAttribute("employee", employee);
@@ -57,7 +57,7 @@ public class SpecialClothEmployeeController {
                 .findAllSpecialClothEmployeeByEmployeeId(id);
         List<SpecialCloth> specialClothList = specialClothService.findAllSpecialCloths().stream()
                 .sorted(Comparator.comparingInt((SpecialCloth::getSpecClothId)))
-                .filter(e -> e.getSpecClothStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getSpecialClothStatusENUM().getTitle().equals("Действующий"))
                 .toList();
         List<Integer> specialClothListByEmpId = specialClothEmployeeService.findSpecialClothByEmployeeId(id);
         specialClothEmployee.setEmpId(id);

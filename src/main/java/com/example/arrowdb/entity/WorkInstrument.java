@@ -13,13 +13,9 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "w_instruments")
-@AuditTable(value = "w_instruments_aud", schema = "history")
 public class WorkInstrument {
 
     @Id
@@ -27,7 +23,6 @@ public class WorkInstrument {
     @Column(name = "instr_id")
     private Integer workInstrId;
 
-    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([-\\dа-яА-Я-a\\s]+)?",
@@ -35,15 +30,13 @@ public class WorkInstrument {
     @Column(name = "onec_number")
     private String workOneCNumber;
 
-    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "invent_number", unique=true)
     private String workInventNumber;
-
-    @Audited
+    
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -51,15 +44,14 @@ public class WorkInstrument {
     @Column(name = "serial_number")
     private String workSerialNumber;
 
-    @Audited
+    
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 200, message = "Кол-во символов от 2 до 200")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "instr_name")
     private String workInstrName;
-
-    @Audited
+    
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 200, message = "Кол-во символов от 2 до 200")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -67,7 +59,6 @@ public class WorkInstrument {
     @Column(name = "instr_model")
     private String workInstrModel;
 
-    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 200, message = "Кол-во символов от 2 до 200")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -75,37 +66,31 @@ public class WorkInstrument {
     @Column(name = "instr_manufacturer")
     private String workInstrManufacturer;
 
-    @Audited
     @PastOrPresent
     @Column(name = "date_of_purchase")
     private LocalDate workDateOfPurchase;
-
-    @Audited
+    
     @PastOrPresent
     @Column(name = "date_of_events")
     private LocalDate workDateOfEvents;
 
-    @Audited
     @Column(name = "time_exp")
     private String workTimeExperience;
 
-    @Audited
     @Min(1)
     @Max(100)
     @Column(name = "guarantee_period")
     private Integer workGuaranteePeriod;
 
-    @Audited
+    
     @Column(name = "time_of_guarantee")
     private String workTimeOfGuarantee;
-
-    @Audited
+    
     @Min(1)
     @Max(50)
     @Column(name = "service_period")
     private Integer workServicePeriod;
 
-    @Audited
     @Column(name = "time_of_service")
     private String workTimeOfService;
 
@@ -116,7 +101,6 @@ public class WorkInstrument {
     @Column(name = "close_date")
     private LocalDate closeDate;
 
-    @Audited
     @PastOrPresent
     @Column(name = "broken_date")
     private LocalDate brokenDate;
@@ -126,12 +110,10 @@ public class WorkInstrument {
     @Column(name = "broken_annotation")
     private String brokenAnnotation;
 
-    @Audited
     @PastOrPresent
     @Column(name = "start_rep_date")
     private LocalDate startRepairDate;
 
-    @Audited
     @FutureOrPresent
     @Column(name = "end_rep_date")
     private LocalDate endRepairDate;
@@ -141,35 +123,29 @@ public class WorkInstrument {
     @Column(name = "repair_annotation")
     private String repairAnnotation;
 
-    @Audited
     @Column(name = "issue_date")
     private LocalDate issueDate;
 
     private String issueDateVariants;
 
-    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "w_status")
     private ConditionForWork conditionForWork;
-
-    @Audited
+    
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "t_status")
     private ConditionForTechn conditionForTechn;
 
-    @Audited
     @Size(max = 1000, message = "Кол-во символов максимум 1000")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "instr_comment")
     private String workInstrComment;
 
-    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "work_object")
     private WorkObject workObject;
 
-    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "employee")
     private Employee employee;

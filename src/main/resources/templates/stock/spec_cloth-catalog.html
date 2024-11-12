@@ -21,12 +21,14 @@
             <th>
                 <div>
                     <a th:href="@{/general/s_cloth}">
-                        <button type="button" class="btn btn-outline-primary btn-sm">Сводная таблица Спецодежды и СИЗ по Работникам</button></a>
+                        <button type="button" class="btn btn-outline-primary btn-sm">
+                            Сводная таблица Спецодежды и СИЗ по Работникам</button></a>
                 </div>
             </th>
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_CREATE')">
-                    <a th:href="@{/general/s_cloth/s_clothCreate}" class="btn btn-outline-success btn-sm">Создать новую Спецодежду и СИЗ</a>
+                    <a th:href="@{/general/s_cloth/s_clothCreate}" class="btn btn-outline-success btn-sm">
+                        Создать новую Спецодежду и СИЗ</a>
                 </div>
             </th>
             </tbody>
@@ -83,8 +85,8 @@
                 <th th:text="${specCloth.specClothId}">
                 <td th:text="${specCloth.specClothName}">
                 <td th:text="${#lists.size(specCloth.specialClothEmployeeList)} +
-            ${' ' + specCloth.uniteOfInstrument.unitName}">
-                <td th:text="${specCloth.specClothStatus.statusName}" style="width: 200px">
+            ${' ' + specCloth.uniteOfInstrumentENUM.getTitle()}">
+                <td th:text="${specCloth.specialClothStatusENUM.getTitle()}" style="width: 200px">
                 <td><a th:href="@{/general/s_cloth/s_clothView/{id}(id=${specCloth.specClothId})}">
                     <button type="button" class="btn btn-outline-primary btn-sm">Просмотр</button>
                 </a>

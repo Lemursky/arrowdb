@@ -22,7 +22,7 @@
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_SCLOTH_UPDATE')">
                     <a th:href="@{/general/s_cloth/s_clothUpdate/{id}(id=${specialCloth.specClothId})}"
-                       th:unless="${specialCloth.specClothStatus.statusName == 'Закрыт'}">
+                       th:unless="${specialCloth.specialClothStatusENUM.getTitle() == 'Закрыт'}">
                         <button type="button" class="btn btn-outline-primary btn-sm">Править
                         </button>
                     </a>
@@ -57,7 +57,7 @@
             <tr>
                 <th style="text-align: left">
                 <th style="text-align: left"><label>Статус:</label></th>
-                <td style="text-align: left"><span th:text="${specialCloth.specClothStatus}"></span>
+                <td style="text-align: left"><span th:text="${specialCloth.specialClothStatusENUM.getTitle()}"></span>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">001</th>
@@ -72,7 +72,7 @@
             <tr>
                 <th style="text-align: left" scope="row">003</th>
                 <td style="text-align: left">Ед. изм.</td>
-                <td style="text-align: left"><span th:text="${specialCloth.uniteOfInstrument.unitName}"></span>
+                <td style="text-align: left"><span th:text="${specialCloth.uniteOfInstrumentENUM.getTitle()}"></span>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">004</th>

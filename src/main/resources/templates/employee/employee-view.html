@@ -29,7 +29,7 @@
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE_UPDATE')">
                     <a th:href="@{/general/employee/employeeUpdate/{id}(id=${employee.empId})}"
-                       th:unless="${employee.empStatus.statusName == 'Закрыт'}">
+                       th:unless="${employee.employeeStatusENUM.getTitle() == 'Закрыт'}">
                         <button type="button" class="btn btn-outline-primary btn-sm" id="updateButton">Править</button>
                     </a>
                 </div>
@@ -55,10 +55,12 @@
             .table {
                 width: 100%;
             }
+
             thead, tbody {
                 display: table;
                 width: 100%;
             }
+
             .body {
                 display: block;
                 width: 100%;
@@ -79,10 +81,17 @@
                 <th style="text-align: left">
                 <th style="text-align: left"><label>Статус:</label></th>
                 <td style="text-align: left; width: 500px">
-                    <span th:text="${employee.empStatus.statusName}"
-                          th:if="${employee.empStatus.statusName == 'Действующий'}"></span>
-                    <span th:text="${employee.empStatus.statusName + ' ' + employee.closeDate}"
-                          th:if="${employee.empStatus.statusName == 'Закрыт'}"></span>
+                    <span th:text="${employee.employeeStatusENUM.getTitle()}"
+                          th:if="${employee.employeeStatusENUM.getTitle() == 'Действующий'}"></span>
+                    <span th:text="${employee.employeeStatusENUM.getTitle()}"
+                          th:if="${employee.employeeStatusENUM.getTitle() == 'В отпуске'}"></span>
+                    <span th:text="${employee.employeeStatusENUM.getTitle() + ' ' + employee.closeDate}"
+                          th:if="${employee.employeeStatusENUM.getTitle() == 'Закрыт'}"></span>
+            </tr>
+            <tr>
+                <th style="text-align: left" scope="row"></th>
+                <th style="text-align: left">Логин:</th>
+                <th style="text-align: left"><span th:text="${employee.login}"></span>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">001</th>
@@ -193,11 +202,27 @@
             <tr>
                 <th style="text-align: left" scope="row">014</th>
                 <td style="text-align: left">Спецодежда и СИЗ</td>
-                <td style="text-align: left"><span th:each="spCloth:${specialClothEmployeeList}">
+                <td style="text-align: left"><span th:each="spCloth:${employee.specialClothEmployeeList}">
                         <span th:text="${spCloth}"></span><br>
                     </span>
                 </td>
             </tr>
+            <div th:if="${userName == employee.login} OR ${adminAccept} OR ${personalAccept}">
+                <tr>
+                    <th style="text-align: left" scope="row">015</th>
+                    <td style="text-align: left">Персональный информация</td>
+                    <td style="text-align: left">AAAAAAAAAAA
+                    </td>
+                </tr>
+            </div>
+            <div th:if="${userName == employee.login} OR ${adminAccept} OR ${financeAccept}">
+                <tr>
+                    <th style="text-align: left" scope="row">016</th>
+                    <td style="text-align: left">Финансовый проект</td>
+                    <td style="text-align: left">BBBBBBBBBBBBBBBB
+                    </td>
+                </tr>
+            </div>
             </tbody>
         </table>
     </div>

@@ -43,7 +43,7 @@ public class PersonalInstrumentController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_VIEW')")
     public String getPersonalInstrumentListEmployee(Model model) {
         List<Employee> employee = employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt((Employee::getEmpId)))
                 .toList();
         model.addAttribute("employee", employee);
@@ -111,7 +111,7 @@ public class PersonalInstrumentController {
                     .formatted(personalInstrument.getPersonalInstrId());
         }
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
         List<ConditionForPersonal> conditionForPersonal = conditionForPersonalService.findAllConditionForPersonal();
         List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
         if (!personalInstrument.getConditionForTechn().getTConditionName().equals("Исправен")) {
@@ -135,7 +135,7 @@ public class PersonalInstrumentController {
                                    @NotNull BindingResult bindingResult,
                                    Model model) {
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
         List<ConditionForPersonal> conditionForPersonal = conditionForPersonalService.findAllConditionForPersonal();
         List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
         if (bindingResult.hasErrors()) {

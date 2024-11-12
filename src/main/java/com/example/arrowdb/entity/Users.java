@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class Users {
@@ -36,6 +34,10 @@ public class Users {
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "user_stat")
     private UserStatus userStatus;
+
+    public void addRolesToUsers() {
+        rolesSet.forEach(e -> e.getUsers().add(this));
+    }
 
     @Override
     public String toString() {

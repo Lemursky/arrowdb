@@ -28,18 +28,18 @@
                 <th style="text-align: left" scope="row"></th>
                 <th style="text-align: left"><label>Статус: </label></th>
                 <td style="text-align: left">
-                    <select style="width: 200px" class="form-select form-select-sm" name="empStatus" id="status" onchange="i()">
+                    <select style="width: 200px" class="form-select form-select-sm" name="employeeStatusENUM"
+                            id="status" onchange="i()">
                         <option th:each="stat:${employeeStatus}"
-                                th:field="*{empStatus}"
-                                th:value="${stat.epmStatId}"
-                                th:text="${stat.statusName}">
+                                th:field="*{employeeStatusENUM}"
+                                th:value="${stat}"
+                                th:text="${stat.getTitle()}">
                         </option>
                     </select>
                     <br>
                     <div id="closeDate" style="display: none; text-align: right" class="item">
                         <p>Дата закрытия: <input type="date" th:field="${employee.closeDate}" id="closeDatePool"></p>
                         <p if="${#fields.hasErrors('closeDate')}" th:errors="${employee.closeDate}"></p>
-<!--                        <p><span th:text="${errorStatus}" style="font-size: 13px; color: brown"></span></p>-->
                     </div>
                     <script>
                         function i() {
@@ -142,11 +142,6 @@
                             n ? inputEl.setSelectionRange(n + 1, n + 1) : inputEl.setSelectionRange(17, 17)
                         }
                     </script>
-<!--                    <script src="https://unpkg.com/imask"></script>-->
-<!--                    <script>-->
-<!--                        IMask(document.getElementById('phoneNumber'),-->
-<!--                            {mask: '+{7}(000)000-00-00'})-->
-<!--                    </script>-->
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">007</th>

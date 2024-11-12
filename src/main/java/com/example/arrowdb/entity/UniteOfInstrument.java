@@ -8,11 +8,9 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "unit_instr")
-@Getter
-@Setter
-@NoArgsConstructor
 public class UniteOfInstrument {
 
     @Id
@@ -23,8 +21,8 @@ public class UniteOfInstrument {
     @Column(name = "unit_instr_name")
     private String unitName;
 
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "uniteOfInstrument", fetch = FetchType.LAZY)
-    private List<SpecialCloth> specialClothList = new ArrayList<>();
+//    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "uniteOfInstrument", fetch = FetchType.LAZY)
+//    private List<SpecialCloth> specialClothList = new ArrayList<>();
 
     @Override
     public String toString() {

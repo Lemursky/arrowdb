@@ -4,17 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.envers.AuditTable;
-import org.hibernate.envers.Audited;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
-
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "w_obj_status")
 public class WorkObjectStatus {
@@ -34,5 +28,5 @@ public class WorkObjectStatus {
     public String toString() {
         return statusName;
     }
-}
 
+}

@@ -28,11 +28,11 @@
                     <th style="text-align: left" scope="row"></th>
                     <th style="text-align: left"><label>Статус:</label></th>
                     <td style="text-align: left">
-                        <select style="width: 200px" class="form-select form-select-sm" name="specClothStatus">
-                            <option th:each="specCloth:${employeeStatus}"
-                                    th:field="*{specClothStatus}"
-                                    th:value="${specCloth.epmStatId}"
-                                    th:text="${specCloth}">
+                        <select style="width: 200px" class="form-select form-select-sm" name="specialClothStatusENUM">
+                            <option th:each="specCloth:${specialClothStatus}"
+                                    th:field="*{specialClothStatusENUM}"
+                                    th:value="${specCloth}"
+                                    th:text="${specCloth.getTitle()}">
                         </select>
                     <td>
                 </tr>
@@ -56,11 +56,11 @@
                     <th style="text-align: left" scope="row">003</th>
                     <td style="text-align: left"><label>Ед. изм.</label></td>
                     <td style="text-align: left">
-                        <select style="width: 150px"; class="form-select form-select-sm" name="uniteOfInstrument">
-                            <option th:each="unit:${uniteOfInstrumentList}"
-                                    th:field="*{uniteOfInstrument}"
-                                    th:value="${unit.unitId}"
-                                    th:text="${unit}">
+                        <select style="width: 150px"; class="form-select form-select-sm" name="uniteOfInstrumentENUM">
+                            <option th:each="unit:${uniteOfInstrument}"
+                                    th:field="*{uniteOfInstrumentENUM}"
+                                    th:value="${unit}"
+                                    th:text="${unit.getTitle()}">
                             </option>
                         </select>
                 </tr>

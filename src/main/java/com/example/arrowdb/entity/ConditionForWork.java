@@ -13,12 +13,9 @@ import java.util.List;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "conditions_for_work")
-@AuditTable(value = "conditions_for_work_aud", schema = "history")
 public class ConditionForWork {
 
     @Id
@@ -32,11 +29,9 @@ public class ConditionForWork {
     @Column(name = "w_annotation")
     private String wAnnotation;
 
-    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "conditionForWork", fetch = FetchType.LAZY)
     private List<WorkInstrument> workInstrumentList = new ArrayList<>();
 
-//    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "conditionForWork", fetch = FetchType.LAZY)
     private List<MeasInstrument> measInstrumentList = new ArrayList<>();
 

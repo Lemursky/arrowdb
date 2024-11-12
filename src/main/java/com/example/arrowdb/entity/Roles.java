@@ -8,9 +8,7 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "roles")
 public class Roles {
@@ -28,6 +26,10 @@ public class Roles {
 
     @ManyToMany(mappedBy = "rolesSet", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Users> users = new HashSet<>();
+
+    public void addUsersToRoles() {
+        users.forEach(e -> e.getRolesSet().add(this));
+    }
 
     @Override
     public String toString() {

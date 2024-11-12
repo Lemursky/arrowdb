@@ -1,10 +1,15 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.EmployeeStatusENUM;
+import com.example.arrowdb.repositories.RoleRepository;
+import com.example.arrowdb.repositories.UsersRepository;
 import com.example.arrowdb.services.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,26 +26,32 @@ public class EmployeeController {
     private final EmployeeService employeeService;
     private final ProfessionService professionService;
     private final DriverLicenseService driverLicenseService;
-    private final EmployeeStatusService employeeStatusService;
+    private final UsersRepository usersRepository;
+    private final RoleRepository roleRepository;
 
     @GetMapping("/general/employee")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE_VIEW')")
     public String getEmployeesList(Model model) {
-        List<Employee> employee = employeeService.findAllEmployees().stream()
+        model.addAttribute("employeeList", employeeService.findAllEmployees().stream()
                 .sorted(Comparator.comparingInt((Employee::getEmpId)))
-                .toList();
-        model.addAttribute("employee", employee);
+                .toList());
         return "employee/employee-menu";
     }
 
     @GetMapping("/general/employee/employeeView/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE_VIEW')")
     public String findEmployeeById(@PathVariable("id") int id,
+                                   @AuthenticationPrincipal UserDetails userDetails,
                                    Model model) {
-        Employee employee = employeeService.findEmployeeById(id);
-        List<SpecialClothEmployee> specialClothEmployeeList = employee.getSpecialClothEmployeeList();
-        model.addAttribute("specialClothEmployeeList", specialClothEmployeeList);
-        model.addAttribute("employee", employee);
+        Users users = usersRepository.findByUserName(userDetails.getUsername()).orElseThrow();
+        model.addAttribute("employee", employeeService.findEmployeeById(id));
+        model.addAttribute("userName", userDetails.getUsername());
+        model.addAttribute("adminAccept", users.getRolesSet().contains(roleRepository
+                .findRolesByRoleName("ROLE_ADMIN")));
+        model.addAttribute("personalAccept", users.getRolesSet().contains(roleRepository
+                .findRolesByRoleName("ROLE_EMPLOYEE_PERSONAL")));
+        model.addAttribute("financeAccept", users.getRolesSet().contains(roleRepository
+                .findRolesByRoleName("ROLE_EMPLOYEE_FINANCE")));
         return "employee/employee-view";
     }
 
@@ -48,8 +59,7 @@ public class EmployeeController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE_CREATE')")
     public String createEmployeeForm(@ModelAttribute Employee employee,
                                      Model model) {
-        List<Profession> professionList = professionService.findAllProfessions();
-        model.addAttribute("professionList", professionList);
+        model.addAttribute("professionList", professionService.findAllProfessions());
         return "employee/employee-create";
     }
 
@@ -59,11 +69,10 @@ public class EmployeeController {
                                  BindingResult bindingResult,
                                  Model model) {
         if (bindingResult.hasErrors()) {
-            List<Profession> professionList = professionService.findAllProfessions();
-            model.addAttribute("professionList", professionList);
+            model.addAttribute("professionList", professionService.findAllProfessions());
             return "employee/employee-create";
         } else {
-            employee.setEmpStatus(employeeStatusService.findEmployeeStatusByStatusName("Действующий"));
+            employee.setEmployeeStatusENUM(EmployeeStatusENUM.ACTIVE);
             employeeService.saveEmployee(employee);
             return "redirect:/general/employee";
         }
@@ -75,8 +84,7 @@ public class EmployeeController {
         try {
             employeeService.deleteEmployeeById(id);
         } catch (Exception e) {
-            Employee employee = employeeService.findEmployeeById(id);
-            model.addAttribute("employee", employee);
+            model.addAttribute("employee", employeeService.findEmployeeById(id));
             model.addAttribute("error", DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE);
             return "error/employee-error";
         }
@@ -88,19 +96,17 @@ public class EmployeeController {
     public String updateEmployeeForm(@PathVariable("id") int id,
                                      Model model) {
         Employee employee = employeeService.findEmployeeById(id);
-        if(employee.getEmpStatus().getStatusName().equals("Закрыт")){
+        if(employee.getEmployeeStatusENUM().getTitle().equals(EmployeeStatusENUM.CLOTHED.getTitle())){
             return "redirect:/general/employee/employeeView/%d".formatted(employee.getEmpId());
         }
         List<Profession> professionList = professionService.findAllProfessions();
         List<DriverLicense> driverLicenseList = new ArrayList<>(driverLicenseService.findAllDriverLicense().stream()
                 .sorted(Comparator.comparingInt((DriverLicense::getDrLiId)))
                 .toList());
-        List<EmployeeStatus> employeeStatus = employeeStatusService.findAllEmployeeStatus();
-        employeeStatus.remove(employeeStatusService.findEmployeeStatusByStatusName("В отпуске"));
         model.addAttribute("employee", employee);
         model.addAttribute("professionList", professionList);
         model.addAttribute("driverLicenseList", driverLicenseList);
-        model.addAttribute("employeeStatus", employeeStatus);
+        model.addAttribute("employeeStatus", EmployeeStatusENUM.values());
         return "employee/employee-update";
     }
 
@@ -113,32 +119,30 @@ public class EmployeeController {
         List<DriverLicense> driverLicenseList = new ArrayList<>(driverLicenseService.findAllDriverLicense().stream()
                 .sorted(Comparator.comparingInt((DriverLicense::getDrLiId)))
                 .toList());
-        List<EmployeeStatus> employeeStatus = employeeStatusService.findAllEmployeeStatus();
-        employeeStatus.remove(employeeStatusService.findEmployeeStatusByStatusName("В отпуске"));
         if (bindingResult.hasErrors()) {
             model.addAttribute("professionList", professionList);
             model.addAttribute("driverLicenseList", driverLicenseList);
-            model.addAttribute("employeeStatus", employeeStatus);
+            model.addAttribute("employeeStatus", EmployeeStatusENUM.values());
             return "employee/employee-update";
         } else {
             Employee empById = employeeService.findEmployeeById(employee.getEmpId());
-            if (!empById.getPersonalInstrumentList().isEmpty() && employee.getEmpStatus().getStatusName()
+            if (!empById.getPersonalInstrumentList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                     .equals("Закрыт") ||
-                    !empById.getWorkInstrumentList().isEmpty() && employee.getEmpStatus().getStatusName()
+                    !empById.getWorkInstrumentList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getMeasInstrumentList().isEmpty() && employee.getEmpStatus().getStatusName()
+                    !empById.getMeasInstrumentList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getSpecialClothEmployeeList().isEmpty() && employee.getEmpStatus().getStatusName()
+                    !empById.getSpecialClothEmployeeList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getWorkObjectChiefList().isEmpty() && employee.getEmpStatus().getStatusName()
+                    !empById.getWorkObjectChiefList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getWorkObjectPTOList().isEmpty() && employee.getEmpStatus().getStatusName()
+                    !empById.getWorkObjectPTOList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getWorkObjectSupplierList().isEmpty() && employee.getEmpStatus().getStatusName()
+                    !empById.getWorkObjectSupplierList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getWorkObjectStoreKeeperList().isEmpty() && employee.getEmpStatus().getStatusName()
+                    !empById.getWorkObjectStoreKeeperList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getConstrControlEmpDutyList().isEmpty() && employee.getEmpStatus().getStatusName()
+                    !empById.getConstrControlEmpDutyList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт")) {
                 model.addAttribute("employee", empById);
                 model.addAttribute("error", DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE);

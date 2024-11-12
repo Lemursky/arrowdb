@@ -14,9 +14,7 @@ import java.util.List;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
 @Table(name = "professions")
 public class Profession {
@@ -55,8 +53,7 @@ public class Profession {
 
     private String suffix;
 
-    @Audited(targetAuditMode = NOT_AUDITED)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profession", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "profession", fetch = FetchType.LAZY)
     private List<Employee> employeeList = new ArrayList<>();
 
     public void setProfessionName(String professionName) {

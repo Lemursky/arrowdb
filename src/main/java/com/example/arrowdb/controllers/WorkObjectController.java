@@ -100,7 +100,7 @@ public class WorkObjectController {
             return "redirect:/general/workobject/workobjectView/%d".formatted(workObject.getWorkObjectId());
         }
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
         List<WorkObjectStatus> workObjectStatusList = workObjectStatusService.findAllWorkObjectStatus();
         workObjectStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Не начат"));
         List<WorkInstrument> workInstrumentList = workInstrumentService.findAllWorkInstruments();
@@ -110,19 +110,19 @@ public class WorkObjectController {
         List<Employee> supplierList = workObject.getSupplierList();
         List<Employee> PTOList = workObject.getPTOList();
         List<Employee> employeeForStoreKeeper = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .filter(e -> e.getProfession().getProfessionName().contains("Кладовщик"))
                 .toList());
         List<Employee> employeeForSupplier = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .filter(e -> e.getProfession().getProfessionName().contains("МТР"))
                 .toList());
         List<Employee> employeeForPTO = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .filter(e -> e.getProfession().getProfessionName().contains("ПТО"))
                 .toList());
         List<Employee> employeeForChief = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .filter(e -> e.getProfession().getProfessionName().contains("Руководитель"))
                 .toList());
         model.addAttribute("workObject", workObject);
@@ -147,7 +147,7 @@ public class WorkObjectController {
                                    @NotNull BindingResult bindingResult,
                                    Model model) {
         List<Employee> employeeList = new java.util.ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
         List<WorkObjectStatus> workObjectStatusList = workObjectStatusService.findAllWorkObjectStatus();
         workObjectStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Не начат"));
         List<WorkInstrument> workInstrumentList = workInstrumentService.findAllWorkInstruments();
@@ -157,19 +157,19 @@ public class WorkObjectController {
         List<Employee> supplierList = workObject.getSupplierList();
         List<Employee> PTOList = workObject.getPTOList();
         List<Employee> employeeForStoreKeeper = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .filter(e -> e.getProfession().getProfessionName().contains("Кладовщик"))
                 .toList());
         List<Employee> employeeForSupplier = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .filter(e -> e.getProfession().getProfessionName().contains("МТР"))
                 .toList());
         List<Employee> employeeForPTO = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .filter(e -> e.getProfession().getProfessionName().contains("ПТО"))
                 .toList());
         List<Employee> employeeForChief = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .filter(e -> e.getProfession().getProfessionName().contains("Руководитель"))
                 .toList());
         if (bindingResult.hasErrors()) {

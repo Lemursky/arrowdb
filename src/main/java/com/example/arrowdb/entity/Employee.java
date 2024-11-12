@@ -1,4 +1,5 @@
 package com.example.arrowdb.entity;
+import com.example.arrowdb.enums.EmployeeStatusENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -15,59 +16,52 @@ import java.util.*;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "employees")
-@AuditTable(value = "employee_aud", schema = "history")
 public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "emp_id")
+    @OrderBy
     private Integer empId;
 
-    @Audited
+    @Column(name = "login")
+    private String login;
+
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 45, message = "Кол-во символов от 2 до 45")
     @Pattern(regexp = "^[а-яА-ЯёЁ]+$", message = "только - алфавит: Кириллица")
     @Column(name = "sur_name")
     private String surName;
 
-    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 45, message = "Кол-во символов от 2 до 45")
     @Pattern(regexp = "^[а-яА-ЯёЁ]+$", message = "только - алфавит: Кириллица")
     @Column(name = "name")
     private String name;
 
-    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 45, message = "Кол-во символов от 2 до 45")
     @Pattern(regexp = "^[а-яА-ЯёЁ]+$", message = "только - алфавит: Кириллица")
     @Column(name = "middle_name")
     private String middleName;
 
-    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "profession")
     private Profession profession;
 
-    @Audited
     @Pattern(regexp = "[+7]{0,}[(]{0,}[0-9]{0,}[)]{0,}[0-9]{0,}[-]{0,}[0-9]{0,}[-]{0,}[0-9]{0,}",
             message = "Номер телефона должен состоять из 16 знаков в формате '+7(000)000-00-00'")
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Audited
     @Email(regexp = "([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9_-]+){0,1}",
             message = "только - формат ввода: name@example.com")
     @Column(name = "email")
     private String email;
 
-    @Audited
     @PastOrPresent
     @Column(name = "hire_date")
     private LocalDate hireDate;
@@ -78,27 +72,22 @@ public class Employee {
 
     private String timeExperience;
 
-    @Audited
     @Min(100)
     @Max(300)
     @Column(name = "height")
     private Integer height;
-
-    @Audited
+    
     @Pattern(regexp = "([-/()\\da-zA-Z\\s]+)?", message = "только - алфавит: Латинский; цифры; символы: -/()")
     @Column(name = "cloth_size")
     private String clothSize;
 
-    @Audited
     @Min(15)
     @Max(60)
     @Column(name = "shoes_size")
     private Integer shoesSize;
 
-    @Audited
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "employee_status")
-    private EmployeeStatus empStatus;
+    @Column(name = "employee_status")
+    private EmployeeStatusENUM employeeStatusENUM;
 
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "employee", fetch = FetchType.LAZY)
     private List<PersonalInstrument> personalInstrumentList = new ArrayList<>();
@@ -115,7 +104,6 @@ public class Employee {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObjectChief", fetch = FetchType.LAZY)
     private List<WorkObject> workObjectChiefList = new ArrayList<>();
 
-    @Audited
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "employees_driver_license_join",
             joinColumns = @JoinColumn(name = "join_emp_id"),
@@ -178,7 +166,7 @@ public class Employee {
         if (getHireDate() == null) {
             return "";
         } else {
-            if (empStatus.getStatusName().equals("Закрыт") && closeDate != null) {
+            if (employeeStatusENUM.getTitle().equals("Закрыт") && closeDate != null) {
                 LocalDate hireDate = getHireDate();
                 Period period = hireDate.until(closeDate);
                 int year = period.getYears();

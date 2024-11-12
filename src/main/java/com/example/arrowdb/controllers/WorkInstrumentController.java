@@ -40,7 +40,7 @@ public class WorkInstrumentController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_VIEW')")
     public String getPersonalInstrumentListEmployee(Model model) {
         List<Employee> employee = employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt((Employee::getEmpId)))
                 .toList();
         model.addAttribute("employee", employee);
@@ -111,7 +111,7 @@ public class WorkInstrumentController {
         List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
                 .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
         List<ConditionForWork> conditionForWork = conditionForWorkService.findAllConditionForWork();
         List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
         if(!workInstrument.getConditionForTechn().getTConditionName().equals("Исправен")){
@@ -137,7 +137,7 @@ public class WorkInstrumentController {
         List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
                 .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmpStatus().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
         List<ConditionForWork> conditionForWork = conditionForWorkService.findAllConditionForWork();
         List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
         if (bindingResult.hasErrors()) {

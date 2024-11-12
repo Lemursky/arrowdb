@@ -21,10 +21,12 @@
                 .table {
                     width: 100%;
                 }
+
                 .head, .body {
                     display: table;
                     width: 100%;
                 }
+
                 .body {
                     display: block;
                     width: 100%;
@@ -45,15 +47,16 @@
                     <th style="text-align: left" scope="row"></th>
                     <th style="text-align: left"><label>Техн. состояние:</label></th>
                     <td style="text-align: left; width: 400px">
-                        <select class="form-select form-select-sm" name="conditionForTechn" id="status" onchange="i()">
+                        <select class="form-select form-select-sm" name="technicalConditionENUM"
+                                id="status" onchange="i()">
                             <option th:each="condTechn:${conditionForTechn}"
-                                    th:field="*{conditionForTechn}"
-                                    th:value="${condTechn.tCondId}"
-                                    th:text="${condTechn}">
+                                    th:field="*{technicalConditionENUM}"
+                                    th:value="${condTechn}"
+                                    th:text="${condTechn.getTitle()}">
                             </option>
                         </select>
                         <br>
-                        <div style="display: none; text-align: right" id="brokenDate" >
+                        <div style="display: none; text-align: right" id="brokenDate">
                             <p style=" text-align: right">
                                 Дата выявления неисправности: <input type="date"
                                                                      th:field="${personalInstrument.brokenDate}"
@@ -77,9 +80,11 @@
                                 Комментарий: <textarea rows="1" cols="40" type="text"
                                                        th:field="${personalInstrument.repairAnnotation}"></textarea></p>
                             <p if="${#fields.hasErrors('startRepairDate')}"
-                               th:errors="${personalInstrument.startRepairDate}" style="font-size: 13px; color: brown"></p>
+                               th:errors="${personalInstrument.startRepairDate}"
+                               style="font-size: 13px; color: brown"></p>
                             <p if="${#fields.hasErrors('endRepairDate')}"
-                               th:errors="${personalInstrument.endRepairDate}" style="font-size: 13px; color: brown"></p>
+                               th:errors="${personalInstrument.endRepairDate}"
+                               style="font-size: 13px; color: brown"></p>
                             <script th:inline="javascript">
                                 const inputDate3 = String([[${personalInstrument.startRepairDate}]]);
                                 document.getElementById("date3").valueAsDate = new Date(inputDate3);
@@ -93,7 +98,8 @@
                             <p style="text-align: right">
                                 Дата списания: <input type="date" th:field="${personalInstrument.closeDate}" id="date1"><br>
                                 Акт списания: <textarea rows="1" cols="40" type="text"
-                                                        th:field="${personalInstrument.deleteAct}" id="deleteAct"></textarea></p>
+                                                        th:field="${personalInstrument.deleteAct}"
+                                                        id="deleteAct"></textarea></p>
                             <p if="${#fields.hasErrors('closeDate')}" th:errors="${personalInstrument.closeDate}"
                                style="font-size: 13px; color: brown"></p>
                             <script th:inline="javascript">
@@ -109,17 +115,35 @@
                     <th style="text-align: left"><label>Статус:</label></th>
                     <td style="text-align: left">
                         <div id="issuePanel">
-                            <select class="form-select form-select-sm" name="conditionForPersonal" id="statusIssue" onchange="j()">
+                            <select class="form-select form-select-sm" name="personalConditionENUM"
+                                    id="statusIssue" onchange="j()">
                                 <option th:each="condPers:${conditionForPersonal}"
-                                        th:field="*{conditionForPersonal}"
-                                        th:value="${condPers.pCondId}"
-                                        th:text="${condPers}">
+                                        th:field="*{personalConditionENUM}"
+                                        th:value="${condPers}"
+                                        th:text="${condPers.getTitle()}">
                                 </option>
                             </select>
-                            <p style="font-size: 13px; color: #112970">* при пустом списке Работников инструмент выдать нельзя</p>
+                            <p style="font-size: 13px; color: #112970">
+                                * при пустом списке 'Действующих' pаботников инструмент выдать нельзя</p>
+                            <div id="issuePanelEmp">
+                                <hr>
+                                <select class="livesearch" style="width:430px;" name="employee" required>
+                                    <option th:each="emp:${employeeList}"
+                                            th:field="*{employee}"
+                                            th:value="${emp.empId}"
+                                            th:text="${emp} +
+                                    ((${emp.profession} == null)? '' : ${', ' + emp.profession.professionName})">
+                                    </option>
+                                </select>
+                                <script>
+                                    $(".livesearch").chosen();
+                                </script>
+                            </div>
                             <div style="display: none; text-align: right" id="issueDate">
+                                <hr>
                                 <p style="text-align: right">
-                                    Дата выдачи: <input type="date" th:field="${personalInstrument.issueDate}" id="date5"></p>
+                                    Дата выдачи: <input type="date" th:field="${personalInstrument.issueDate}"
+                                                        id="date5"></p>
                                 <p if="${#fields.hasErrors('issueDate')}" th:errors="${personalInstrument.issueDate}"
                                    style="font-size: 13px; color: brown"></p>
                                 <script th:inline="javascript">
@@ -135,7 +159,7 @@
 
                                 let isBroken = selectStatus === "Не исправен (на складе, не в ремонте)"
                                 let brokenDate = document.getElementById("brokenDate");
-                                if(isBroken){
+                                if (isBroken) {
                                     brokenDate.style.display = 'block';
                                     document.getElementById('date2').setAttribute('required', 'true');
                                     document.getElementById('date2').removeAttribute('disabled');
@@ -148,7 +172,7 @@
 
                                 let inRepair = selectStatus === "В ремонте (текущем или гарантийном)"
                                 let repairDates = document.getElementById("repairDates");
-                                if(inRepair){
+                                if (inRepair) {
                                     repairDates.style.display = 'block';
                                     document.getElementById('date3').setAttribute('required', 'true');
                                     document.getElementById('date4').setAttribute('required', 'true');
@@ -165,7 +189,7 @@
 
                                 let isClosed = selectStatus === "Списан (выведен из строя)"
                                 let closeDate = document.getElementById("closeDate");
-                                if(isClosed){
+                                if (isClosed) {
                                     closeDate.style.display = 'block';
                                     document.getElementById('date1').setAttribute('required', 'true');
                                     document.getElementById('deleteAct').setAttribute('required', 'true');
@@ -187,7 +211,7 @@
 
                             let isBroken = selectStatus === "Не исправен (на складе, не в ремонте)"
                             let brokenDate = document.getElementById("brokenDate");
-                            if(isBroken){
+                            if (isBroken) {
                                 brokenDate.style.display = 'block';
                                 document.getElementById('date2').setAttribute('required', 'true');
                                 document.getElementById('date5').removeAttribute('required');
@@ -198,7 +222,7 @@
 
                             let inRepair = selectStatus === "В ремонте (текущем или гарантийном)"
                             let repairDates = document.getElementById("repairDates");
-                            if(inRepair){
+                            if (inRepair) {
                                 repairDates.style.display = 'block';
                                 document.getElementById('date3').setAttribute('required', 'true');
                                 document.getElementById('date4').setAttribute('required', 'true');
@@ -211,7 +235,7 @@
 
                             let isClosed = selectStatus === "Списан (выведен из строя)"
                             let closeDate = document.getElementById("closeDate");
-                            if(isClosed){
+                            if (isClosed) {
                                 closeDate.style.display = 'block';
                                 document.getElementById('date1').setAttribute('required', 'true');
                                 document.getElementById('deleteAct').setAttribute('required', 'true');
@@ -228,86 +252,56 @@
                         </script>
                     <td>
                 </tr>
-                <tr>
-                    <th style="text-align: left" scope="row"></th>
-                    <th style="text-align: left"><label>Выдать Работнику: </label></th>
-                    <td style="text-align: left">
-                        <div id="issuePanelEmp">
-                            <select class="livesearch" style="width:400px;" name="employee">
-                                <option th:each="emp:${employeeList}"
-                                        th:field="*{employee}"
-                                        th:value="${emp.empId}"
-                                        th:text="${emp} +
-                                    ((${emp.profession} == null)? '' : ${', ' + emp.profession.professionName})">
-                                </option>
-                            </select>
-                            <script>
-                                $(".livesearch").chosen();
-                            </script>
-                        </div>
-                        <script>
-                            function j() {
-                                let statusIssue = document.getElementById("statusIssue");
-                                let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
-                                let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
-                                let issueDate = document.getElementById("issueDate");
-                                if(isIssued){
-                                    issueDate.style.display = 'block';
-                                    document.getElementById('date5').setAttribute('required', 'true');
-                                    document.getElementById('issuePanelEmp').style.display = 'block';
-                                } else {
-                                    issueDate.style.display = 'none';
-                                    document.getElementById('date5').removeAttribute('required');
-                                    document.getElementById('issuePanelEmp').style.display = 'none';
-                                }
-                            }
-                        </script>
-                        <script>
-                            let statusIssue = document.getElementById("statusIssue");
-                            let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
-                            let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
-                            let issueDate = document.getElementById("issueDate");
-                            if(isIssued){
-                                issueDate.style.display = 'block';
-                                document.getElementById('date5').setAttribute('required', 'true');
-                                document.getElementById('issuePanelEmp').style.display = 'block';
-                            } else {
-                                issueDate.style.display = 'none';
-                                document.getElementById('date5').removeAttribute('required');
-                                document.getElementById('issuePanelEmp').style.display = 'none';
-                            }
-                        </script>
-                        <script>
-                            $('#status').change(function () {
-                                if ($('#status').val() === "1") {
-                                    $('#issuePanel').css('display', 'block');
-                                } else {
-                                    $('#issuePanel').css('display', 'none');
-                                }
-                            });
-                        </script>
-                        <script>
-                            if ($('#status').val() === "1") {
-                                $('#issuePanel').css('display', 'block');
-                            } else {
-                                $('#issuePanel').css('display', 'none');
-                            }
-                        </script>
-
-                        <script>
-                            $('#status').change(function () {
-                                if ($('#status').val() !== "1") {
-                                    $('#issuePanelEmp').css('display', 'none');
-                                }
-                            });
-                        </script>
-                        <script>
-                            if ($('#status').val() !== "1") {
-                                $('#issuePanelEmp').css('display', 'none');
-                            }
-                        </script>
-                    <th>
-                </tr>
+                <script>
+                    function j() {
+                        let statusIssue = document.getElementById("statusIssue");
+                        let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                        let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
+                        let issueDate = document.getElementById("issueDate");
+                        let issuePanelEmp = document.getElementById("issuePanelEmp");
+                        if (isIssued) {
+                            issueDate.style.display = 'block';
+                            document.getElementById('date5').setAttribute('required', 'true');
+                            issuePanelEmp.style.display = 'block';
+                        } else {
+                            issueDate.style.display = 'none';
+                            document.getElementById('date5').removeAttribute('required');
+                            issuePanelEmp.style.display = 'none';
+                        }
+                    }
+                </script>
+                <script>
+                    let statusIssue = document.getElementById("statusIssue");
+                    let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                    let isIssued = selectStatusIssue === "Выдан (на руки работнику)"
+                    let issueDate = document.getElementById("issueDate");
+                    let issuePanelEmp = document.getElementById("issuePanelEmp");
+                    if (isIssued) {
+                        issueDate.style.display = 'block';
+                        document.getElementById('date5').setAttribute('required', 'true');
+                        issuePanelEmp.style.display = 'block';
+                    } else {
+                        issueDate.style.display = 'none';
+                        document.getElementById('date5').removeAttribute('required');
+                        issuePanelEmp.style.display = 'none';
+                    }
+                </script>
+                <script>
+                    $('#status').change(function () {
+                        if ($('#status').val() === "OK") {
+                            $('#issuePanel').css('display', 'block');
+                        } else {
+                            $('#issuePanel').css('display', 'none');
+                        }
+                    });
+                </script>
+                <script>
+                    if ($('#status').val() === "OK") {
+                        $('#issuePanel').css('display', 'block');
+                    } else {
+                        $('#issuePanel').css('display', 'none');
+                    }
+                </script>
                 <tr>
                     <th style="text-align: left" scope="row">001</th>
                     <td style="text-align: left">#ID (изм. не подлежит)</td>
@@ -320,7 +314,8 @@
                     <td style="text-align: left">
                         <input type="text" th:field="${personalInstrument.personalOneCNumber}" placeholder="СТ-000...">
                         <p if="${#fields.hasErrors('personalOneCNumber')}"
-                           th:errors="${personalInstrument.personalOneCNumber}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalOneCNumber}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">003</th>
@@ -329,7 +324,8 @@
                         <input style="width: 400px; text-align: left;" type="text"
                                th:field="${personalInstrument.personalInventNumber}">
                         <p if="${#fields.hasErrors('personalInventNumber')}"
-                           th:errors="${personalInstrument.personalInventNumber}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalInventNumber}"
+                           style="font-size: 13px; color: brown"></p>
                         <p th:text="${errorInv}" style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
@@ -339,7 +335,8 @@
                         <input style="width: 400px; text-align: left;" type="text"
                                th:field="${personalInstrument.personalSerialNumber}">
                         <p if="${#fields.hasErrors('personalSerialNumber')}"
-                           th:errors="${personalInstrument.personalSerialNumber}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalSerialNumber}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">005</th>
@@ -348,7 +345,8 @@
                         <input style="width: 400px; text-align: left;" type="text"
                                th:field="${personalInstrument.personalInstrManufacturer}">
                         <p if="${#fields.hasErrors('personalInstrManufacturer')}"
-                           th:errors="${personalInstrument.personalInstrManufacturer}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalInstrManufacturer}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">006</th>
@@ -357,7 +355,8 @@
                         <input style="width: 400px; text-align: left;" type="text"
                                th:field="${personalInstrument.personalInstrModel}">
                         <p if="${#fields.hasErrors('personalInstrModel')}"
-                           th:errors="${personalInstrument.personalInstrModel}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalInstrModel}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">007</th>
@@ -366,7 +365,8 @@
                         <input style="width: 400px; text-align: left;" type="text"
                                th:field="${personalInstrument.personalInstrName}">
                         <p if="${#fields.hasErrors('personalInstrName')}"
-                           th:errors="${personalInstrument.personalInstrName}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalInstrName}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">008</th>
@@ -378,7 +378,8 @@
                             document.getElementById("date").valueAsDate = new Date(inputDate);
                         </script>
                         <p if="${#fields.hasErrors('personalDateOfPurchase')}"
-                           th:errors="${personalInstrument.personalDateOfPurchase}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalDateOfPurchase}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">009</th>
@@ -387,7 +388,8 @@
                         <input type="number" th:field="${personalInstrument.personalGuaranteePeriod}"
                                min="1" max="100">
                         <p if="${#fields.hasErrors('personalGuaranteePeriod')}"
-                           th:errors="${personalInstrument.personalGuaranteePeriod}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalGuaranteePeriod}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">010</th>
@@ -396,7 +398,8 @@
                         <input type="number" th:field="${personalInstrument.personalServicePeriod}"
                                min="1" max="50">
                         <p if="${#fields.hasErrors('personalServicePeriod')}"
-                           th:errors="${personalInstrument.personalServicePeriod}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalServicePeriod}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">011</th>
@@ -406,7 +409,8 @@
                                   th:field="${personalInstrument.personalInstrComment}"
                                   placeholder="только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#{}№"></textarea>
                         <p if="${#fields.hasErrors('personalInstrComment')}"
-                           th:errors="${personalInstrument.personalInstrComment}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${personalInstrument.personalInstrComment}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 </tbody>
             </table>

@@ -1,6 +1,7 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.WorkConditionENUM;
 import com.example.arrowdb.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,27 +19,27 @@ public class WorkInstrumentEmployeeController {
 
     private final WorkInstrumentService workInstrumentService;
     private final EmployeeService employeeService;
-    private final ConditionForWorkService conditionForWorkService;
     private final WorkObjectService workObjectService;
 
     @GetMapping("/general/w_instrument/w_instrument-emp_update/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_UPDATE')")
     public String updatePersonalInstrumentEmployee(@PathVariable("id") int id,
-                                                   @ModelAttribute TempIssueDate tempIssueDate,
                                                    @ModelAttribute WorkInstrument workInstrument,
+                                                   @ModelAttribute TempIssueDate tempIssueDate,
                                                    Model model) {
         Employee employee = employeeService.findEmployeeById(id);
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().contains("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList());
         employeeList.remove(employee);
-        List<WorkInstrument> workInstrumentList = workInstrumentService.findAllWorkInstruments().stream()
-                .filter(e -> e.getConditionForTechn().getTConditionName().equals("Исправен"))
-                .filter(e -> e.getConditionForWork().getWConditionName().equals("Не закреплен"))
+        List<WorkInstrument> workInstrumentList = workInstrumentService
+                .findAllWorkInstruments().stream()
+                .filter(e -> e.getTechnicalConditionENUM().getTitle().contains("Исправен"))
+                .filter(e -> e.getWorkConditionENUM().getTitle().contains("Не закреплен"))
                 .toList();
         List<WorkObject> workObjectList = workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий"))
+                .filter(e -> e.getWorkObjectStat().getStatusName().contains("Действующий"))
                 .sorted(Comparator.comparingInt(WorkObject::getWorkObjectId))
                 .toList();
         model.addAttribute("workInstrumentList", workInstrumentList);
@@ -51,15 +52,11 @@ public class WorkInstrumentEmployeeController {
     @PostMapping("/general/w_instrument/w_instrumentCreate_employee/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_UPDATE')")
     public String createSpecialClothEmployeeForm(@PathVariable("id") int id,
-                                                 @ModelAttribute
-                                                 @RequestParam
-                                                 List<WorkInstrument> workInstrumentListAdd,
+                                                 @RequestParam @ModelAttribute List<WorkInstrument> workInstrumentListAdd,
                                                  @ModelAttribute WorkObject workObject,
                                                  TempIssueDate tempIssueDate) {
         Employee employee = employeeService.findEmployeeById(id);
-        ConditionForWork conditionForWork = conditionForWorkService
-                .findConditionForWorkBywConditionName("Закреплен");
-        workInstrumentListAdd.forEach(e -> e.setConditionForWork(conditionForWork));
+        workInstrumentListAdd.forEach(e -> e.setWorkConditionENUM(WorkConditionENUM.INVOLVED));
         workInstrumentListAdd.forEach(e -> e.setEmployee(employee));
         workInstrumentListAdd.forEach(e -> e.setWorkObject(workObject));
         workInstrumentListAdd.forEach(e -> e.setIssueDate(tempIssueDate.getTIssueDate()));
@@ -72,9 +69,7 @@ public class WorkInstrumentEmployeeController {
     public String deletePersonalInstrumentEmployee(@PathVariable("id") int id) {
         Integer localId = workInstrumentService.findEmployeeIdByWorkInstId(id);
         WorkInstrument workInstrument = workInstrumentService.findWorkInstrumentById(id);
-        ConditionForWork conditionForWork = conditionForWorkService
-                .findConditionForWorkBywConditionName("Не закреплен");
-        workInstrument.setConditionForWork(conditionForWork);
+        workInstrument.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED);
         workInstrument.setWorkObject(null);
         workInstrument.setEmployee(null);
         workInstrument.setIssueDate(null);
@@ -87,9 +82,7 @@ public class WorkInstrumentEmployeeController {
     public String deleteAllPersonalInstrumentEmployee(@PathVariable("id") int id) {
         Employee employee = employeeService.findEmployeeById(id);
         List<WorkInstrument> workInstrumentListCurrent = employee.getWorkInstrumentList();
-        ConditionForWork conditionForWork = conditionForWorkService
-                .findConditionForWorkBywConditionName("Не закреплен");
-        workInstrumentListCurrent.forEach(e -> e.setConditionForWork(conditionForWork));
+        workInstrumentListCurrent.forEach(e -> e.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED));
         workInstrumentListCurrent.forEach(e -> e.setWorkObject(null));
         workInstrumentListCurrent.forEach(e -> e.setEmployee(null));
         workInstrumentListCurrent.forEach(e -> e.setIssueDate(null));

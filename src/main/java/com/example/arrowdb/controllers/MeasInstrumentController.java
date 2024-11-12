@@ -1,6 +1,8 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.TechnicalConditionENUM;
+import com.example.arrowdb.enums.WorkConditionENUM;
 import com.example.arrowdb.services.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,28 +29,24 @@ public class MeasInstrumentController {
     private final EmployeeService employeeService;
     private final WorkObjectService workObjectService;
     private final MeasInstrumentService measInstrumentService;
-    private final ConditionForWorkService conditionForWorkService;
-    private final ConditionForTechnService conditionForTechnService;
     private final DepartmentService departmentService;
 
     @GetMapping("/general/m_instrument/catalog")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')")
     public String getMeasInstrumentList(Model model) {
-        List<MeasInstrument> measInstrument = measInstrumentService.findAllMeasInstruments().stream()
+        model.addAttribute("measInstrument", measInstrumentService.findAllMeasInstruments().stream()
                 .sorted(Comparator.comparingInt((MeasInstrument::getMeasInstrId)))
-                .toList();
-        model.addAttribute("measInstrument", measInstrument);
+                .toList());
         return "stock/m_instrument-catalog";
     }
 
     @GetMapping("/general/m_instrument")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')")
     public String getPersonalInstrumentListEmployee(Model model) {
-        List<Employee> employee = employeeService.findAllEmployees().stream()
+        model.addAttribute("employee", employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt((Employee::getEmpId)))
-                .toList();
-        model.addAttribute("employee", employee);
+                .toList());
         return "stock/m_instrument-com_table";
     }
 
@@ -55,8 +54,7 @@ public class MeasInstrumentController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_VIEW')")
     public String findMeasInstrumentById(@PathVariable("id") int id,
                                          Model model) {
-        MeasInstrument measInstrument = measInstrumentService.findMeasInstrumentById(id);
-        model.addAttribute("measInstrument", measInstrument);
+        model.addAttribute("measInstrument", measInstrumentService.findMeasInstrumentById(id));
         return "stock/m_instrument-view";
     }
 
@@ -80,12 +78,9 @@ public class MeasInstrumentController {
             return "stock/m_instrument-create";
         } else {
             try {
-                measInstrument.setConditionForTechn(conditionForTechnService
-                        .findConditionForTechnBytConditionName("Исправен"));
-                measInstrument.setConditionForWork(conditionForWorkService
-                        .findConditionForWorkBywConditionName("Не закреплен"));
-                List<Department> departmentList = departmentService.findAllDepartments();
-                model.addAttribute("departmentList", departmentList);
+                measInstrument.setTechnicalConditionENUM(TechnicalConditionENUM.OK);
+                measInstrument.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED);
+                model.addAttribute("departmentList", departmentService.findAllDepartments());
                 measInstrumentService.saveMeasInstrument(measInstrument);
                 return "redirect:/general/m_instrument/catalog";
             } catch (Exception e) {
@@ -114,30 +109,30 @@ public class MeasInstrumentController {
     public String updateMeasInstrumentForm(@PathVariable("id") int id,
                                            Model model) {
         MeasInstrument measInstrument = measInstrumentService.findMeasInstrumentById(id);
-        if(measInstrument.getConditionForTechn().getTConditionName().equals("Списан")){
+        if(measInstrument.getTechnicalConditionENUM().getTitle().contains("Списан")){
             return "redirect:/general/m_instrument/m_instrumentView/%d"
                     .formatted(measInstrument.getMeasInstrId());
         }
         List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
                 .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
-        List<ConditionForWork> conditionForWork = conditionForWorkService.findAllConditionForWork();
-        List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
-        if(!measInstrument.getConditionForTechn().getTConditionName().equals("Исправен")){
-            measInstrument.setConditionForWork(conditionForWorkService
-                    .findConditionForWorkBywConditionName("Не закреплен"));
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().contains("Действующий")).toList());
+        if(!measInstrument.getTechnicalConditionENUM().getTitle().contains("Исправен")){
+            measInstrument.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED);
         }
         List<Department> departmentList = departmentService.findAllDepartments();
-        if (workObjectList.isEmpty() || employeeList.isEmpty()) {
-            conditionForWork.remove(conditionForWorkService.findConditionForWorkBywConditionName("Закреплен"));
-        }
         model.addAttribute("employeeList", employeeList);
         model.addAttribute("workObjectList", workObjectList);
         model.addAttribute("measInstrument", measInstrument);
-        model.addAttribute("conditionForWork", conditionForWork);
-        model.addAttribute("conditionForTechn", conditionForTechn);
         model.addAttribute("departmentList", departmentList);
+        if(employeeList.isEmpty() || workObjectList.isEmpty()){
+            model.addAttribute("conditionForWork", Arrays.stream(WorkConditionENUM.values())
+                    .filter(e -> e.getTitle().contains("Не закреплен (на складе г. Пермь)"))
+                    .toList());
+        } else {
+            model.addAttribute("conditionForWork", WorkConditionENUM.values());
+        }
+        model.addAttribute("conditionForTechn", TechnicalConditionENUM.values());
         return "stock/m_instrument-update";
     }
 
@@ -150,40 +145,37 @@ public class MeasInstrumentController {
                 .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
-        List<ConditionForWork> conditionForWork = conditionForWorkService.findAllConditionForWork();
-        List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
         List<Department> departmentList = departmentService.findAllDepartments();
         if (bindingResult.hasErrors()) {
             model.addAttribute("employeeList", employeeList);
-            model.addAttribute("workObjectList", workObjectList);;
-            model.addAttribute("conditionForWork", conditionForWork);
-            model.addAttribute("conditionForTechn", conditionForTechn);
+            model.addAttribute("workObjectList", workObjectList);
             model.addAttribute("departmentList", departmentList);
+            model.addAttribute("conditionForWork", WorkConditionENUM.values());
+            model.addAttribute("conditionForTechn", TechnicalConditionENUM.values());
             return "stock/m_instrument-update";
         } else {
-            if (!measInstrument.getConditionForTechn().getTConditionName().equals("Списан")) {
+            if (!measInstrument.getTechnicalConditionENUM().getTitle().contains("Списан")) {
                 measInstrument.setCloseDate(null);
             }
-            if (!measInstrument.getConditionForWork().getWConditionName().equals("Закреплен")) {
+            if (!measInstrument.getWorkConditionENUM().getTitle().contains("Закреплен")) {
                 measInstrument.setIssueDate(null);
-                measInstrument.setConditionForWork(conditionForWorkService
-                        .findConditionForWorkBywConditionName("Не закреплен"));
+                measInstrument.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED);
             }
             try {
-                if (!measInstrument.getConditionForWork().getWConditionName().equals("Закреплен") ||
-                        !measInstrument.getConditionForTechn().getTConditionName().equals("Исправен")) {
+                if (!measInstrument.getWorkConditionENUM().getTitle().contains("Закреплен") ||
+                        !measInstrument.getTechnicalConditionENUM().getTitle().contains("Исправен")) {
                     measInstrument.setEmployee(null);
                 }
-                if (!measInstrument.getConditionForWork().getWConditionName().equals("Закреплен") ||
-                        measInstrument.getConditionForTechn().getTConditionName().equals("Списан")) {
+                if (!measInstrument.getWorkConditionENUM().getTitle().contains("Закреплен") ||
+                        measInstrument.getTechnicalConditionENUM().getTitle().contains("Списан")) {
                     measInstrument.setWorkObject(null);
                     measInstrument.setEmployee(null);
                 }
                 model.addAttribute("employeeList", employeeList);
                 model.addAttribute("workObjectList", workObjectList);
-                model.addAttribute("conditionForWork", conditionForWork);
-                model.addAttribute("conditionForTechn", conditionForTechn);
                 model.addAttribute("departmentList", departmentList);
+                model.addAttribute("conditionForWork", WorkConditionENUM.values());
+                model.addAttribute("conditionForTechn", TechnicalConditionENUM.values());
                 measInstrumentService.saveMeasInstrument(measInstrument);
                 return "redirect:/general/m_instrument/m_instrumentView/%d"
                         .formatted(measInstrument.getMeasInstrId());

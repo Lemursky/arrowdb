@@ -1,6 +1,7 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.QualityENUM;
 import com.example.arrowdb.services.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -24,15 +25,13 @@ import static com.example.arrowdb.message.Message.*;
 public class ProfessionController {
 
     private final ProfessionService professionService;
-    private final QualityService qualityService;
 
     @GetMapping("/general/profession")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFESSION_VIEW')")
     public String getProfessionsList(@NotNull Model model) {
-        List<Profession> profession = professionService.findAllProfessions().stream()
+        model.addAttribute("profession", professionService.findAllProfessions().stream()
                 .sorted(Comparator.comparingInt((Profession::getProfId)))
-                .toList();
-        model.addAttribute("profession", profession);
+                .toList());
         return "profession/profession-menu";
     }
 
@@ -40,8 +39,7 @@ public class ProfessionController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFESSION_VIEW')")
     public String findProfessionById(@PathVariable("id") int id,
                                      Model model) {
-        Profession profession = professionService.findProfessionById(id);
-        model.addAttribute("profession", profession);
+        model.addAttribute("profession", professionService.findProfessionById(id));
         return "profession/profession-view";
     }
 
@@ -49,8 +47,7 @@ public class ProfessionController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFESSION_CREATE')")
     public String createProfessionForm(@ModelAttribute Profession profession,
                                        Model model) {
-        List<Quality> quality = qualityService.getAllQualities();
-        model.addAttribute("quality", quality);
+        model.addAttribute("qualityList", QualityENUM.values());
         return "profession/profession-create";
     }
 
@@ -64,8 +61,6 @@ public class ProfessionController {
         } else {
             try {
                 professionService.saveProfession(profession);
-                List<Quality> quality = qualityService.getAllQualities();
-                model.addAttribute("quality", quality);
                 return "redirect:/general/profession";
             } catch (Exception e) {
                 model.addAttribute("error", UNIQUE_PROFESSION);
@@ -93,10 +88,8 @@ public class ProfessionController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFESSION_UPDATE')")
     public String updateProfessionForm(@PathVariable("id") int id,
                                        Model model) {
-        Profession profession = professionService.findProfessionById(id);
-        List<Quality> qualityList = qualityService.getAllQualities();
-        model.addAttribute("profession", profession);
-        model.addAttribute("qualityList", qualityList);
+        model.addAttribute("profession", professionService.findProfessionById(id));
+        model.addAttribute("qualityList", QualityENUM.values());
         return "profession/profession-update";
     }
 
@@ -105,13 +98,12 @@ public class ProfessionController {
     public String updateProfession(@Valid @ModelAttribute Profession profession,
                                    BindingResult bindingResult,
                                    Model model) {
-        List<Quality> qualityList = qualityService.getAllQualities();
         if (bindingResult.hasErrors()) {
-            model.addAttribute("qualityList", qualityList);
+            model.addAttribute("qualityList", QualityENUM.values());
             return "profession/profession-update";
         } else {
             try {
-                model.addAttribute("qualityList", qualityList);
+                model.addAttribute("qualityList", QualityENUM.values());
                 professionService.saveProfession(profession);
                 return "redirect:/general/profession/professionView/%d".formatted(profession.getProfId());
             } catch (Exception e) {

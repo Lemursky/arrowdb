@@ -21,12 +21,14 @@
             <th>
                 <div>
                     <a th:href="@{/general/m_instrument}">
-                        <button type="button" class="btn btn-outline-primary btn-sm">Сводная таблица Измерительного инструмента по Работникам</button></a>
+                        <button type="button" class="btn btn-outline-primary btn-sm">
+                            Сводная таблица Измерительного инструмента по Работникам</button></a>
                 </div>
             </th>
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_CREATE')">
-                    <a th:href="@{/general/m_instrument/m_instrumentCreate}" class="btn btn-outline-success btn-sm">Создать новый Измерительный инструмент</a>
+                    <a th:href="@{/general/m_instrument/m_instrumentCreate}" class="btn btn-outline-success btn-sm">
+                        Создать новый Измерительный инструмент</a>
                 </div>
             </th>
             </tbody>
@@ -117,7 +119,7 @@
                 <td th:text="${measInstr.measInstrModel}"/>
                 <td th:text="${measInstr.department}"/>
                 <td th:text="${measInstr.certificateStat}"/>
-                <td th:text="${measInstr.conditionForTechn.tConditionName}"/>
+                <td th:text="${measInstr.technicalConditionENUM.getTitle()}"/>
                 <td th:text="${measInstr.workObject}"/>
                 <td th:text="${measInstr.employee}"/>
                 <td><a th:href="@{/general/m_instrument/m_instrumentView/{id}(id=${measInstr.measInstrId})}">

@@ -17,7 +17,7 @@ public class MeasInstrumentServiceImpl implements MeasInstrumentService {
     private final MeasInstrumentRepository measInstrumentRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public MeasInstrument findMeasInstrumentById(Integer id) {
         MeasInstrument measInstrument = null;
         Optional<MeasInstrument> optional = measInstrumentRepository.findById(id);
@@ -28,7 +28,7 @@ public class MeasInstrumentServiceImpl implements MeasInstrumentService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Integer> findAllIdEmployees(Integer id) {
         return measInstrumentRepository.findAllIdEmployees(id);
     }
@@ -46,35 +46,37 @@ public class MeasInstrumentServiceImpl implements MeasInstrumentService {
     }
 
     @Override
+    @Transactional
     public void saveAllMeasInstrument(List<MeasInstrument> measInstrumentList) {
         measInstrumentRepository.saveAll(measInstrumentList);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<MeasInstrument> findAllMeasInstruments() {
         return measInstrumentRepository.findAll();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Integer> findAllMeasInstrumentByWorkObjectId(Integer id) {
         return measInstrumentRepository.findAllMeasInstrumentByWorkObjectId(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<MeasInstrument> findAllMeasInstrumentById(List<Integer> id) {
         return measInstrumentRepository.findAllById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Integer findEmployeeIdByMeasInstId(Integer id) {
         return measInstrumentRepository.findEmployeeIdByMeasInstId(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MeasInstrument> findAllMeasInstrumentById(Integer id) {
         return measInstrumentRepository.findAllMeasInstrumentById(id);
     }

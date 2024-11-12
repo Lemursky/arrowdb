@@ -16,13 +16,13 @@ public class WorkInstrumentServiceImpl implements WorkInstrumentService{
     private final WorkInstrumentRepository workInstrumentRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<WorkInstrument> findAllWorkInstruments() {
         return workInstrumentRepository.findAll();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public WorkInstrument findWorkInstrumentById(Integer id) {
         WorkInstrument workInstrument = null;
         Optional<WorkInstrument> optional = workInstrumentRepository.findById(id);
@@ -39,6 +39,7 @@ public class WorkInstrumentServiceImpl implements WorkInstrumentService{
     }
 
     @Override
+    @Transactional
     public void saveAllWorkInstrument(List<WorkInstrument> workInstrumentList) {
         workInstrumentRepository.saveAll(workInstrumentList);
     }
@@ -50,25 +51,25 @@ public class WorkInstrumentServiceImpl implements WorkInstrumentService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Integer> findAllIdEmployees(Integer id) {
         return workInstrumentRepository.findAllIdEmployees(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Integer> findAllWorkInstrumentByWorkObjectId(Integer id) {
         return workInstrumentRepository.findAllWorkInstrumentByWorkObjectId(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Integer findEmployeeIdByWorkInstId(Integer id) {
         return workInstrumentRepository.findEmployeeIdByWorkInstId(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<WorkInstrument> findAllWorkInstrumentById(Integer id) {
         return workInstrumentRepository.findAllWorkInstrumentById(id);
     }

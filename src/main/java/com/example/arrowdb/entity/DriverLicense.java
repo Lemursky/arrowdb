@@ -31,8 +31,8 @@ public class DriverLicense {
     @Column(name = "annotation")
     private String annotation;
 
-    @ManyToMany(mappedBy = "driverLicenseEmpList", cascade = CascadeType.REFRESH)
-    private List<Employee> employeeList = new ArrayList<>();
+//    @ManyToMany(mappedBy = "driverLicenseEmpList", cascade = CascadeType.REFRESH)
+//    private List<Employee> employeeList = new ArrayList<>();
 
     public void setDrLiName(String drLiName) {
         try {

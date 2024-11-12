@@ -13,7 +13,7 @@
         <h4>Меню создания новой должности</h4>
     </div>
     <br>
-    <form th:action="@{/general/profession/professionCreate}" th:method="post">
+    <form th:action="@{/general/profession/professionCreate}" th:method="post" th:object="${profession}">
         <div>
             <table class="table table-hover table-sm" style="width: 730px">
                 <thead>
@@ -38,6 +38,18 @@
                         <p if="${#fields.hasErrors('professionName')}" th:errors="${profession.professionName}"
                            style="font-size: 13px; color: brown"></p>
                         <p th:text="${error}"></p>
+                </tr>
+                <tr>
+                    <th style="text-align: left" scope="row">003</th>
+                    <td style="text-align: left"><label>Требуемый уровень образования</label></td>
+                    <td style="text-align: left">
+                        <select class="form-select form-select-sm" name="qualityENUM">
+                            <option th:each="qty:${qualityList}"
+                                    th:field="*{qualityENUM}"
+                                    th:value="${qty}"
+                                    th:text="${qty.getTitle()}">
+                            </option>
+                        </select>
                 </tr>
                 </tbody>
             </table>

@@ -1,5 +1,6 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.QualityENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -30,9 +31,8 @@ public class Profession {
     @Column(name = "profession_name", unique=true)
     private String professionName;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "quality")
-    private Quality quality;
+    @Column(name = "quality")
+    private QualityENUM qualityENUM;
 
     @Size(max = 1000, message = "Кол-во символов максимум 1000")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",

@@ -1,6 +1,7 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.DriverLicenseENUM;
 import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.repositories.RoleRepository;
 import com.example.arrowdb.repositories.UsersRepository;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -96,16 +98,13 @@ public class EmployeeController {
     public String updateEmployeeForm(@PathVariable("id") int id,
                                      Model model) {
         Employee employee = employeeService.findEmployeeById(id);
-        if(employee.getEmployeeStatusENUM().getTitle().equals(EmployeeStatusENUM.CLOTHED.getTitle())){
+        if(employee.getEmployeeStatusENUM().getTitle().equals(EmployeeStatusENUM.CLOTHED.getTitle()) ||
+                employee.getEmployeeStatusENUM().getTitle().equals(EmployeeStatusENUM.IN_VOCATION.getTitle())){
             return "redirect:/general/employee/employeeView/%d".formatted(employee.getEmpId());
         }
-        List<Profession> professionList = professionService.findAllProfessions();
-        List<DriverLicense> driverLicenseList = new ArrayList<>(driverLicenseService.findAllDriverLicense().stream()
-                .sorted(Comparator.comparingInt((DriverLicense::getDrLiId)))
-                .toList());
         model.addAttribute("employee", employee);
-        model.addAttribute("professionList", professionList);
-        model.addAttribute("driverLicenseList", driverLicenseList);
+        model.addAttribute("professionList", professionService.findAllProfessions());
+        model.addAttribute("driverLicenseList", DriverLicenseENUM.values());
         model.addAttribute("employeeStatus", EmployeeStatusENUM.values());
         return "employee/employee-update";
     }
@@ -115,13 +114,9 @@ public class EmployeeController {
     public String updateEmployee(@Valid @ModelAttribute Employee employee,
                                  BindingResult bindingResult,
                                  Model model) {
-        List<Profession> professionList = professionService.findAllProfessions();
-        List<DriverLicense> driverLicenseList = new ArrayList<>(driverLicenseService.findAllDriverLicense().stream()
-                .sorted(Comparator.comparingInt((DriverLicense::getDrLiId)))
-                .toList());
         if (bindingResult.hasErrors()) {
-            model.addAttribute("professionList", professionList);
-            model.addAttribute("driverLicenseList", driverLicenseList);
+            model.addAttribute("professionList", professionService.findAllProfessions());
+            model.addAttribute("driverLicenseList", DriverLicenseENUM.values());
             model.addAttribute("employeeStatus", EmployeeStatusENUM.values());
             return "employee/employee-update";
         } else {

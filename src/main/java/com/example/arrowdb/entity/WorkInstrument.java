@@ -1,5 +1,7 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.TechnicalConditionENUM;
+import com.example.arrowdb.enums.WorkConditionENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -128,13 +130,11 @@ public class WorkInstrument {
 
     private String issueDateVariants;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "w_status")
-    private ConditionForWork conditionForWork;
-    
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "t_status")
-    private ConditionForTechn conditionForTechn;
+    @Column(name = "t_status")
+    private TechnicalConditionENUM technicalConditionENUM;
+
+    @Column(name = "w_status")
+    private WorkConditionENUM workConditionENUM;
 
     @Size(max = 1000, message = "Кол-во символов максимум 1000")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",

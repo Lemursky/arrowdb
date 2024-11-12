@@ -1,5 +1,7 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.TechnicalConditionENUM;
+import com.example.arrowdb.enums.WorkConditionENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -102,11 +104,11 @@ public class MeasInstrument {
     @Column(name = "broken_annotation")
     private String brokenAnnotation;
 
-//    @PastOrPresent
+    @PastOrPresent
     @Column(name = "start_rep_date")
     private LocalDate startRepairDate;
 
-//    @FutureOrPresent
+    @FutureOrPresent
     @Column(name = "end_rep_date")
     private LocalDate endRepairDate;
 
@@ -137,13 +139,11 @@ public class MeasInstrument {
 
     private String certificateStat;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "w_status")
-    private ConditionForWork conditionForWork;
+    @Column(name = "t_status")
+    private TechnicalConditionENUM technicalConditionENUM;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "t_status")
-    private ConditionForTechn conditionForTechn;
+    @Column(name = "w_status")
+    private WorkConditionENUM workConditionENUM;
 
     @Size(max = 1000, message = "Кол-во символов максимум 1000")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",

@@ -15,7 +15,8 @@
             <th>
                 <div>
                     <a th:href="@{/general/profession}">
-                        <button type="button" class="btn btn-outline-warning btn-sm" aria-pressed="true">меню Должности</button>
+                        <button type="button" class="btn btn-outline-warning btn-sm" aria-pressed="true">
+                            меню Должности</button>
                     </a>
                 </div>
             </th>
@@ -67,13 +68,12 @@
             <tr>
                 <th style="text-align: left" scope="row">003</th>
                 <td style="text-align: left">Требуемый уровень образования</td>
-                <td style="text-align: left"><span th:text="${profession.quality}"></span>
+                <td style="text-align: left"><span th:text="${profession.qualityENUM.getTitle() ?: ''}"></span>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">004</th>
                 <td style="text-align: left">Подходящие специальности</td>
-                <td style="text-align: left"><span style="white-space: pre-wrap"
-                                                   th:text="${profession.speciality}"></span>
+                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${profession.speciality}"></span>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">005</th>

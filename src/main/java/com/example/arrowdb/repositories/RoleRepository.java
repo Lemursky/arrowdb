@@ -13,11 +13,11 @@ import java.util.Set;
 @Repository
 public interface RoleRepository extends JpaRepository<Roles, Integer> {
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Query(nativeQuery = true, value = "select * from roles  where menu_name=:name")
     List<Roles> findRolesByMenuName(String name);
 
-    @Transactional
+    @Transactional(readOnly = true)
     Roles findRolesByRoleName(String name);
 
 }

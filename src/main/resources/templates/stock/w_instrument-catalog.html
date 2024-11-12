@@ -21,12 +21,14 @@
             <th>
                 <div>
                     <a th:href="@{/general/w_instrument}">
-                        <button type="button" class="btn btn-outline-primary btn-sm">Сводная таблица Строительного инструмента по Работникам</button></a>
+                        <button type="button" class="btn btn-outline-primary btn-sm">
+                            Сводная таблица Строительного инструмента по Работникам</button></a>
                 </div>
             </th>
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_CREATE')">
-                    <a th:href="@{/general/w_instrument/w_instrumentCreate}" class="btn btn-outline-success btn-sm">Создать новый Строительный инструмент</a>
+                    <a th:href="@{/general/w_instrument/w_instrumentCreate}" class="btn btn-outline-success btn-sm">
+                        Создать новый Строительный инструмент</a>
                 </div>
             </th>
             </tbody>
@@ -110,7 +112,7 @@
                 <td th:text="${workInstr.workInstrManufacturer}"/>
                 <td th:text="${workInstr.workInstrModel}"/>
                 <td th:text="${workInstr.workInstrName}"/>
-                <td th:text="${workInstr.conditionForTechn.tConditionName}"/>
+                <td th:text="${workInstr.technicalConditionENUM.getTitle()}"/>
                 <td th:text="${workInstr.workObject}"/>
                 <td th:text="${workInstr.employee}"/>
                 <td><a th:href="@{/general/w_instrument/w_instrumentView/{id}(id=${workInstr.workInstrId})}">

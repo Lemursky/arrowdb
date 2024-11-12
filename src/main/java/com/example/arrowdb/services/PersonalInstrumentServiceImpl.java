@@ -16,13 +16,13 @@ public class PersonalInstrumentServiceImpl implements PersonalInstrumentService 
     private final PersonalInstrumentRepository personalInstrumentRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<PersonalInstrument> findAllPersonalInstruments() {
         return personalInstrumentRepository.findAll();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public PersonalInstrument findPersonalInstrumentById(Integer id) {
         PersonalInstrument instruments = null;
         Optional<PersonalInstrument> optional = personalInstrumentRepository.findById(id);
@@ -45,13 +45,13 @@ public class PersonalInstrumentServiceImpl implements PersonalInstrumentService 
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Integer> findAllIdEmployees(Integer id) {
         return personalInstrumentRepository.findAllIdEmployees(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Integer findPersonalInstIdByEmployeeId(Integer id) {
         return personalInstrumentRepository.findPersonalInstIdByEmployeeId(id);
     }

@@ -29,7 +29,8 @@
             </th>
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_CREATE')">
-                    <a th:href="@{/general/p_instrument/p_instrumentCreate}" class="btn btn-outline-success btn-sm">Создать новый Персональный инструмент</a>
+                    <a th:href="@{/general/p_instrument/p_instrumentCreate}" class="btn btn-outline-success btn-sm">
+                        Создать новый Персональный инструмент</a>
                 </div>
             </th>
             </tbody>
@@ -105,7 +106,7 @@
                 <td th:text="${persInstr.personalInstrManufacturer}"/>
                 <td th:text="${persInstr.personalInstrModel}"/>
                 <td th:text="${persInstr.personalInstrName}"/>
-                <td th:text="${persInstr.conditionForTechn.tConditionName}"/>
+                <td th:text="${persInstr.technicalConditionENUM.getTitle()}"/>
                 <td th:text="${persInstr.employee}"/>
                 <td><a th:href="@{/general/p_instrument/p_instrumentView/{id}(id=${persInstr.personalInstrId})}">
                     <button type="button" class="btn btn-outline-primary btn-sm">Просмотр</button>

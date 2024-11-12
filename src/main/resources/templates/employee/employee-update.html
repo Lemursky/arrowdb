@@ -166,11 +166,11 @@
                 <th style="text-align: left" scope="row">009</th>
                 <td style="text-align: left"><label>Категории ВУ</label></td>
                 <td style="text-align: left">
-                    <span th:each="drli:${driverLicenseList}" name="driverLicenseEmpList">
+                    <span th:each="drli:${driverLicenseList}" name="driverLicenseENUM">
                         <span><label>
                             <input th:type="checkbox"
-                                   th:field="*{driverLicenseEmpList}"
-                                   th:value="${drli.getDrLiId()}"
+                                   th:field="*{driverLicenseENUM}"
+                                   th:value="${drli}"
                                    th:text="${drli}">
                         </label></span>
                     </span>

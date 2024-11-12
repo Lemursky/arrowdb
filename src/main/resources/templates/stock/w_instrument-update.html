@@ -21,10 +21,12 @@
                 .table {
                     width: 100%;
                 }
+
                 .head, .body {
                     display: table;
                     width: 100%;
                 }
+
                 .body {
                     display: block;
                     width: 100%;
@@ -45,11 +47,12 @@
                     <th style="text-align: left" scope="row"></th>
                     <th style="text-align: left"><label>Техн. состояние:</label></th>
                     <td style="text-align: left; width: 400px">
-                        <select class="form-select form-select-sm" name="conditionForTechn" id="status" onchange="i()">
+                        <select class="form-select form-select-sm" name="technicalConditionENUM" id="status"
+                                onchange="i()">
                             <option th:each="condTechn:${conditionForTechn}"
-                                    th:field="*{conditionForTechn}"
-                                    th:value="${condTechn.tCondId}"
-                                    th:text="${condTechn}">
+                                    th:field="*{technicalConditionENUM}"
+                                    th:value="${condTechn}"
+                                    th:text="${condTechn.getTitle()}">
                             </option>
                         </select>
                         <br>
@@ -110,18 +113,48 @@
                     <th style="text-align: left"><label>Статус:</label></th>
                     <td style="text-align: left">
                         <div id="issuePanel">
-                            <select class="form-select form-select-sm" name="conditionForWork" id="statusIssue" onchange="j()">
+                            <select class="form-select form-select-sm" name="workConditionENUM" id="statusIssue"
+                                    onchange="j()">
                                 <option th:each="condWork:${conditionForWork}"
-                                        th:field="*{conditionForWork}"
-                                        th:value="${condWork.wCondId}"
-                                        th:text="${condWork}">
+                                        th:field="*{workConditionENUM}"
+                                        th:value="${condWork}"
+                                        th:text="${condWork.getTitle()}">
                                 </option>
                             </select>
-                            <p style="font-size: 13px; color: #112970">* при пустом списке Работников или Объектов
-                                строительства инструмент выдать нельзя</p>
+                            <p style="font-size: 13px; color: #112970">* при пустом списке 'Действующих' работников или
+                                'Действующих' объектов строительства инструмент выдать нельзя</p>
+                            <div id="issuePanelObj">
+                                <hr>
+                                <select class="livesearch" style="width:400px;" name="workObject">
+                                    <option th:each="wObj:${workObjectList}"
+                                            th:field="*{workObject}"
+                                            th:value="${wObj.workObjectId}"
+                                            th:text="${wObj}">
+                                    </option>
+                                </select>
+                                <script>
+                                    $(".livesearch").chosen();
+                                </script>
+                            </div>
+                            <div id="issuePanelEmp">
+                                <hr>
+                                <select class="livesearch" style="width:400px;" name="employee">
+                                    <option th:each="emp:${employeeList}"
+                                            th:field="*{employee}"
+                                            th:value="${emp.empId}"
+                                            th:text="${emp} +
+                                    ((${emp.profession} == null)? '' : ${', ' + emp.profession.professionName})">
+                                    </option>
+                                </select>
+                                <script>
+                                    $(".livesearch").chosen();
+                                </script>
+                            </div>
                             <div style="display: none; text-align: right" id="issueDate">
+                                <hr>
                                 <p style="text-align: right">
-                                    Дата выдачи: <input type="date" th:field="${workInstrument.issueDate}" id="date5"></p>
+                                    Дата выдачи: <input type="date" th:field="${workInstrument.issueDate}" id="date5">
+                                </p>
                                 <p if="${#fields.hasErrors('issueDate')}" th:errors="${workInstrument.issueDate}"
                                    style="font-size: 13px; color: brown"></p>
                                 <p><span th:text="${errorStatus}" style="font-size: 13px; color: brown"></span></p>
@@ -130,212 +163,163 @@
                                     document.getElementById("date5").valueAsDate = new Date(inputDate5);
                                 </script>
                             </div>
-                            <script>
-                                function i() {
-                                    let status = document.getElementById("status");
-                                    let selectStatus = status.options[status.selectedIndex].textContent;
-
-                                    let isBroken = selectStatus === "Не исправен (на складе, не в ремонте)"
-                                    let brokenDate = document.getElementById("brokenDate");
-                                    if(isBroken){
-                                        brokenDate.style.display = 'block';
-                                        document.getElementById('date2').setAttribute('required', 'true');
-                                        document.getElementById('date2').removeAttribute('disabled');
-                                        document.getElementById('date5').removeAttribute('required');
-                                    } else {
-                                        brokenDate.style.display = 'none';
-                                        document.getElementById('date2').removeAttribute('required');
-                                        document.getElementById('date2').setAttribute('disabled', 'true');
-                                    }
-
-                                    let inRepair = selectStatus === "В ремонте (текущем или гарантийном)"
-                                    let repairDates = document.getElementById("repairDates");
-                                    if(inRepair){
-                                        repairDates.style.display = 'block';
-                                        document.getElementById('date3').setAttribute('required', 'true');
-                                        document.getElementById('date4').setAttribute('required', 'true');
-                                        document.getElementById('date3').removeAttribute('disabled');
-                                        document.getElementById('date4').removeAttribute('disabled');
-                                        document.getElementById('date5').removeAttribute('required');
-                                    } else {
-                                        repairDates.style.display = 'none';
-                                        document.getElementById('date3').setAttribute('disabled', 'true');
-                                        document.getElementById('date4').setAttribute('disabled', 'true');
-                                        document.getElementById('date3').removeAttribute('required');
-                                        document.getElementById('date4').removeAttribute('required');
-                                    }
-
-                                    let isClosed = selectStatus === "Списан (выведен из строя)"
-                                    let closeDate = document.getElementById("closeDate");
-                                    if(isClosed){
-                                        closeDate.style.display = 'block';
-                                        document.getElementById('date1').setAttribute('required', 'true');
-                                        document.getElementById('deleteAct').setAttribute('required', 'true');
-                                        document.getElementById('date1').removeAttribute('disabled');
-                                        document.getElementById('deleteAct').removeAttribute('disabled');
-                                        document.getElementById('date5').removeAttribute('required');
-                                    } else {
-                                        closeDate.style.display = 'none';
-                                        document.getElementById('date1').removeAttribute('required');
-                                        document.getElementById('deleteAct').removeAttribute('required');
-                                        document.getElementById('date1').setAttribute('disabled', 'true');
-                                        document.getElementById('deleteAct').setAttribute('disabled', 'true');
-                                    }
-                                }
-                            </script>
-                            <script>
-                                let status = document.getElementById("status");
-                                let selectStatus = status.options[status.selectedIndex].textContent;
-
-                                let isBroken = selectStatus === "Не исправен (на складе, не в ремонте)"
-                                let brokenDate = document.getElementById("brokenDate");
-                                if(isBroken){
-                                    brokenDate.style.display = 'block';
-                                    document.getElementById('date2').setAttribute('required', 'true');
-                                    document.getElementById('date5').removeAttribute('required');
-                                } else {
-                                    brokenDate.style.display = 'none';
-                                    document.getElementById('date2').removeAttribute('required');
-                                }
-
-                                let inRepair = selectStatus === "В ремонте (текущем или гарантийном)"
-                                let repairDates = document.getElementById("repairDates");
-                                if(inRepair){
-                                    repairDates.style.display = 'block';
-                                    document.getElementById('date3').setAttribute('required', 'true');
-                                    document.getElementById('date4').setAttribute('required', 'true');
-                                    document.getElementById('date5').removeAttribute('required');
-                                } else {
-                                    repairDates.style.display = 'none';
-                                    document.getElementById('date3').removeAttribute('required');
-                                    document.getElementById('date4').removeAttribute('required');
-                                }
-
-                                let isClosed = selectStatus === "Списан (выведен из строя)"
-                                let closeDate = document.getElementById("closeDate");
-                                if(isClosed){
-                                    closeDate.style.display = 'block';
-                                    document.getElementById('date1').setAttribute('required', 'true');
-                                    document.getElementById('deleteAct').setAttribute('required', 'true');
-                                    document.getElementById('date1').removeAttribute('disabled');
-                                    document.getElementById('deleteAct').removeAttribute('disabled');
-                                    document.getElementById('date5').removeAttribute('required');
-                                } else {
-                                    closeDate.style.display = 'none';
-                                    document.getElementById('date1').removeAttribute('required');
-                                    document.getElementById('deleteAct').removeAttribute('required');
-                                    document.getElementById('date1').setAttribute('disabled', 'true');
-                                    document.getElementById('deleteAct').setAttribute('disabled', 'true');
-                                }
-                            </script>
                         </div>
                     <td>
                 </tr>
-                <tr>
-                    <th style="text-align: left" scope="row"></th>
-                    <th style="text-align: left"><label>Закрепить за объектом:</label></th>
-                    <td style="text-align: left">
-                        <div id="issuePanelObj">
-                            <select class="livesearch" style="width:400px;" name="workObject">
-                                <option th:each="wObj:${workObjectList}"
-                                        th:field="*{workObject}"
-                                        th:value="${wObj.workObjectId}"
-                                        th:text="${wObj}">
-                                </option>
-                            </select>
-                            <script>
-                                $(".livesearch").chosen();
-                            </script>
-                        </div>
-                    <th>
-                </tr>
-                <tr>
-                    <th style="text-align: left" scope="row"></th>
-                    <th style="text-align: left"><label>Ответственный:</label></th>
-                    <td style="text-align: left">
-                        <div id="issuePanelEmp">
-                            <select class="livesearch" style="width:400px;" name="employee">
-                                <option th:each="emp:${employeeList}"
-                                        th:field="*{employee}"
-                                        th:value="${emp.empId}"
-                                        th:text="${emp} +
-                                    ((${emp.profession} == null)? '' : ${', ' + emp.profession.professionName})">
-                                </option>
-                            </select>
-                            <script>
-                                $(".livesearch").chosen();
-                            </script>
-                        </div>
-                        <script>
-                            function j() {
-                                let statusIssue = document.getElementById("statusIssue");
-                                let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
-                                let isIssued = selectStatusIssue === "Закреплен (за объектом строительства)"
-                                let issueDate = document.getElementById("issueDate");
-                                if(isIssued){
-                                    issueDate.style.display = 'block';
-                                    document.getElementById('date5').setAttribute('required', 'true');
-                                    document.getElementById('issuePanelEmp').style.display = 'block';
-                                    document.getElementById('issuePanelObj').style.display = 'block';
-                                } else {
-                                    issueDate.style.display = 'none';
-                                    document.getElementById('date5').removeAttribute('required');
-                                    document.getElementById('issuePanelEmp').style.display = 'none';
-                                    document.getElementById('issuePanelObj').style.display = 'none';
-                                }
-                            }
-                        </script>
-                        <script>
-                            let statusIssue = document.getElementById("statusIssue");
-                            let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
-                            let isIssued = selectStatusIssue === "Закреплен (за объектом строительства)"
-                            let issueDate = document.getElementById("issueDate");
-                            if(isIssued){
-                                issueDate.style.display = 'block';
-                                document.getElementById('date5').setAttribute('required', 'true');
-                                document.getElementById('issuePanelEmp').style.display = 'block';
-                                document.getElementById('issuePanelObj').style.display = 'block';
-                            } else {
-                                issueDate.style.display = 'none';
-                                document.getElementById('date5').removeAttribute('required');
-                                document.getElementById('issuePanelEmp').style.display = 'none';
-                                document.getElementById('issuePanelObj').style.display = 'none';
-                            }
-                        </script>
+                <script>
+                    function i() {
+                        let status = document.getElementById("status");
+                        let selectStatus = status.options[status.selectedIndex].textContent;
 
-                        <script>
-                            $('#status').change(function () {
-                                if ($('#status').val() === "1") {
-                                    $('#issuePanel').css('display', 'block');
-                                } else {
-                                    $('#issuePanel').css('display', 'none');
-                                }
-                            });
-                        </script>
-                        <script>
-                            if ($('#status').val() === "1") {
-                                $('#issuePanel').css('display', 'block');
-                            } else {
-                                $('#issuePanel').css('display', 'none');
-                            }
-                        </script>
+                        let isBroken = selectStatus === "Не исправен (на складе, не в ремонте)"
+                        let brokenDate = document.getElementById("brokenDate");
+                        if (isBroken) {
+                            brokenDate.style.display = 'block';
+                            document.getElementById('date2').setAttribute('required', 'true');
+                            document.getElementById('date2').removeAttribute('disabled');
+                            document.getElementById('date5').removeAttribute('required');
+                        } else {
+                            brokenDate.style.display = 'none';
+                            document.getElementById('date2').removeAttribute('required');
+                            document.getElementById('date2').setAttribute('disabled', 'true');
+                        }
 
-                        <script>
-                            $('#status').change(function () {
-                                if ($('#status').val() !== "1") {
-                                    $('#issuePanelObj').css('display', 'none');
-                                    $('#issuePanelEmp').css('display', 'none');
-                                }
-                            });
-                        </script>
-                        <script>
-                            if ($('#status').val() !== "1") {
-                                $('#issuePanelObj').css('display', 'none');
-                                $('#issuePanelEmp').css('display', 'none');
-                            }
-                        </script>
-                    <th>
-                </tr>
+                        let inRepair = selectStatus === "В ремонте (текущем или гарантийном)"
+                        let repairDates = document.getElementById("repairDates");
+                        if (inRepair) {
+                            repairDates.style.display = 'block';
+                            document.getElementById('date3').setAttribute('required', 'true');
+                            document.getElementById('date4').setAttribute('required', 'true');
+                            document.getElementById('date3').removeAttribute('disabled');
+                            document.getElementById('date4').removeAttribute('disabled');
+                            document.getElementById('date5').removeAttribute('required');
+                        } else {
+                            repairDates.style.display = 'none';
+                            document.getElementById('date3').setAttribute('disabled', 'true');
+                            document.getElementById('date4').setAttribute('disabled', 'true');
+                            document.getElementById('date3').removeAttribute('required');
+                            document.getElementById('date4').removeAttribute('required');
+                        }
+
+                        let isClosed = selectStatus === "Списан (выведен из строя)"
+                        let closeDate = document.getElementById("closeDate");
+                        if (isClosed) {
+                            closeDate.style.display = 'block';
+                            document.getElementById('date1').setAttribute('required', 'true');
+                            document.getElementById('deleteAct').setAttribute('required', 'true');
+                            document.getElementById('date1').removeAttribute('disabled');
+                            document.getElementById('deleteAct').removeAttribute('disabled');
+                            document.getElementById('date5').removeAttribute('required');
+                        } else {
+                            closeDate.style.display = 'none';
+                            document.getElementById('date1').removeAttribute('required');
+                            document.getElementById('deleteAct').removeAttribute('required');
+                            document.getElementById('date1').setAttribute('disabled', 'true');
+                            document.getElementById('deleteAct').setAttribute('disabled', 'true');
+                        }
+                    }
+                </script>
+                <script>
+                    let status = document.getElementById("status");
+                    let selectStatus = status.options[status.selectedIndex].textContent;
+
+                    let isBroken = selectStatus === "Не исправен (на складе, не в ремонте)"
+                    let brokenDate = document.getElementById("brokenDate");
+                    if (isBroken) {
+                        brokenDate.style.display = 'block';
+                        document.getElementById('date2').setAttribute('required', 'true');
+                        document.getElementById('date5').removeAttribute('required');
+                    } else {
+                        brokenDate.style.display = 'none';
+                        document.getElementById('date2').removeAttribute('required');
+                    }
+
+                    let inRepair = selectStatus === "В ремонте (текущем или гарантийном)"
+                    let repairDates = document.getElementById("repairDates");
+                    if (inRepair) {
+                        repairDates.style.display = 'block';
+                        document.getElementById('date3').setAttribute('required', 'true');
+                        document.getElementById('date4').setAttribute('required', 'true');
+                        document.getElementById('date5').removeAttribute('required');
+                    } else {
+                        repairDates.style.display = 'none';
+                        document.getElementById('date3').removeAttribute('required');
+                        document.getElementById('date4').removeAttribute('required');
+                    }
+
+                    let isClosed = selectStatus === "Списан (выведен из строя)"
+                    let closeDate = document.getElementById("closeDate");
+                    if (isClosed) {
+                        closeDate.style.display = 'block';
+                        document.getElementById('date1').setAttribute('required', 'true');
+                        document.getElementById('deleteAct').setAttribute('required', 'true');
+                        document.getElementById('date1').removeAttribute('disabled');
+                        document.getElementById('deleteAct').removeAttribute('disabled');
+                        document.getElementById('date5').removeAttribute('required');
+                    } else {
+                        closeDate.style.display = 'none';
+                        document.getElementById('date1').removeAttribute('required');
+                        document.getElementById('deleteAct').removeAttribute('required');
+                        document.getElementById('date1').setAttribute('disabled', 'true');
+                        document.getElementById('deleteAct').setAttribute('disabled', 'true');
+                    }
+                </script>
+                <script>
+                    function j() {
+                        let statusIssue = document.getElementById("statusIssue");
+                        let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                        let isIssued = selectStatusIssue === "Закреплен (за объектом строительства)"
+                        let issueDate = document.getElementById("issueDate");
+                        let issuePanelObj = document.getElementById("issuePanelObj");
+                        let issuePanelEmp = document.getElementById("issuePanelEmp");
+                        if (isIssued) {
+                            issueDate.style.display = 'block';
+                            document.getElementById('date5').setAttribute('required', 'true');
+                            issuePanelObj.style.display = 'block';
+                            issuePanelEmp.style.display = 'block';
+                        } else {
+                            issueDate.style.display = 'none';
+                            document.getElementById('date5').removeAttribute('required');
+                            issuePanelObj.style.display = 'none';
+                            issuePanelEmp.style.display = 'none';
+                        }
+                    }
+                </script>
+                <script>
+                    let statusIssue = document.getElementById("statusIssue");
+                    let selectStatusIssue = statusIssue.options[statusIssue.selectedIndex].textContent;
+                    let isIssued = selectStatusIssue === "Закреплен (за объектом строительства)"
+                    let issueDate = document.getElementById("issueDate");
+                    let issuePanelObj = document.getElementById("issuePanelObj");
+                    let issuePanelEmp = document.getElementById("issuePanelEmp");
+                    if (isIssued) {
+                        issueDate.style.display = 'block';
+                        document.getElementById('date5').setAttribute('required', 'true');
+                        issuePanelObj.style.display = 'block';
+                        issuePanelEmp.style.display = 'block';
+                    } else {
+                        issueDate.style.display = 'none';
+                        document.getElementById('date5').removeAttribute('required');
+                        issuePanelObj.style.display = 'none';
+                        issuePanelEmp.style.display = 'none';
+                    }
+                </script>
+                <script>
+                    $('#status').change(function () {
+                        if ($('#status').val() === "OK") {
+                            $('#issuePanel').css('display', 'block');
+                        } else {
+                            $('#issuePanel').css('display', 'none');
+                        }
+                    });
+                </script>
+                <script>
+                    if ($('#status').val() === "OK") {
+                        $('#issuePanel').css('display', 'block');
+                    } else {
+                        $('#issuePanel').css('display', 'none');
+                    }
+                </script>
                 <tr>
                     <th style="text-align: left" scope="row">001</th>
                     <td style="text-align: left">#ID (изм. не подлежит)</td>
@@ -376,7 +360,8 @@
                         <input style="width: 400px; text-align: left;" type="text"
                                th:field="${workInstrument.workInstrManufacturer}">
                         <p if="${#fields.hasErrors('workInstrManufacturer')}"
-                           th:errors="${workInstrument.workInstrManufacturer}" style="font-size: 13px; color: brown"></p>
+                           th:errors="${workInstrument.workInstrManufacturer}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">006</th>
@@ -412,7 +397,8 @@
                     <th style="text-align: left" scope="row">009</th>
                     <td style="text-align: left"><label>Гарантийный период, мес</label></td>
                     <td style="text-align: left">
-                        <input type="number" th:field="${workInstrument.workGuaranteePeriod}" placeholder="" min="1" max="100">
+                        <input type="number" th:field="${workInstrument.workGuaranteePeriod}" placeholder="" min="1"
+                               max="100">
                         <p if="${#fields.hasErrors('workGuaranteePeriod')}"
                            th:errors="${workInstrument.workGuaranteePeriod}" style="font-size: 13px; color: brown"></p>
                 </tr>
@@ -420,7 +406,8 @@
                     <th style="text-align: left" scope="row">010</th>
                     <td style="text-align: left"><label>Срок службы, лет</label></td>
                     <td style="text-align: left">
-                        <input type="number" th:field="${workInstrument.workServicePeriod}" placeholder="" min="1" max="50">
+                        <input type="number" th:field="${workInstrument.workServicePeriod}" placeholder="" min="1"
+                               max="50">
                         <p if="${#fields.hasErrors('workServicePeriod')}"
                            th:errors="${workInstrument.workServicePeriod}" style="font-size: 13px; color: brown"></p>
                 </tr>

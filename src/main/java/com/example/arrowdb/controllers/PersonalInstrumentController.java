@@ -1,6 +1,8 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.PersonalConditionENUM;
+import com.example.arrowdb.enums.TechnicalConditionENUM;
 import com.example.arrowdb.services.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,27 +29,24 @@ public class PersonalInstrumentController {
 
     private final EmployeeService employeeService;
     private final PersonalInstrumentService personalInstrumentService;
-    private final ConditionForPersonalService conditionForPersonalService;
-    private final ConditionForTechnService conditionForTechnService;
 
     @GetMapping("/general/p_instrument/catalog")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_VIEW')")
     public String getPersonalInstrumentList(Model model) {
-        List<PersonalInstrument> personalInstrument = personalInstrumentService.findAllPersonalInstruments().stream()
+        model.addAttribute("personalInstrument", personalInstrumentService
+                .findAllPersonalInstruments().stream()
                 .sorted(Comparator.comparingInt((PersonalInstrument::getPersonalInstrId)))
-                .toList();
-        model.addAttribute("personalInstrument", personalInstrument);
+                .toList());
         return "stock/p_instrument_catalog";
     }
 
     @GetMapping("/general/p_instrument")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_VIEW')")
     public String getPersonalInstrumentListEmployee(Model model) {
-        List<Employee> employee = employeeService.findAllEmployees().stream()
+        model.addAttribute("employee", employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt((Employee::getEmpId)))
-                .toList();
-        model.addAttribute("employee", employee);
+                .toList());
         return "stock/p_instrument-com_table";
     }
 
@@ -54,8 +54,8 @@ public class PersonalInstrumentController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_VIEW')")
     public String findPersonalInstrumentById(@PathVariable("id") int id,
                                              Model model) {
-        PersonalInstrument personalInstrument = personalInstrumentService.findPersonalInstrumentById(id);
-        model.addAttribute("personalInstrument", personalInstrument);
+        model.addAttribute("personalInstrument", personalInstrumentService
+                .findPersonalInstrumentById(id));
         return "stock/p_instrument-view";
     }
 
@@ -74,14 +74,12 @@ public class PersonalInstrumentController {
             return "stock/p_instrument-create";
         } else {
             try {
-                personalInstrument.setConditionForTechn(conditionForTechnService
-                        .findConditionForTechnBytConditionName("Исправен"));
-                personalInstrument.setConditionForPersonal(conditionForPersonalService
-                        .findConditionForPersonalBypConditionName("Не выдан"));
+                personalInstrument.setTechnicalConditionENUM(TechnicalConditionENUM.OK);
+                personalInstrument.setPersonalConditionENUM(PersonalConditionENUM.NOT_ISSUED);
                 personalInstrumentService.savePersonalInstrument(personalInstrument);
                 return "redirect:/general/p_instrument/catalog";
             } catch (Exception e) {
-                model.addAttribute("errorInv", new StringBuilder(UNIQUE_INSTR_INV));
+                model.addAttribute("errorInv", UNIQUE_INSTR_INV);
                 return "stock/p_instrument-create";
             }
         }
@@ -93,7 +91,7 @@ public class PersonalInstrumentController {
                                            Model model) {
         PersonalInstrument personalInstrument = personalInstrumentService.findPersonalInstrumentById(id);
         model.addAttribute("personalInstrument", personalInstrument);
-        model.addAttribute("error", new StringBuilder(DELETE_INSTRUMENT_MESSAGE));
+        model.addAttribute("error", DELETE_INSTRUMENT_MESSAGE);
         if (personalInstrument.getEmployee() != null) {
             return "error/p_instrument-error";
         } else {
@@ -106,26 +104,25 @@ public class PersonalInstrumentController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_PERS_INSTR_UPDATE')")
     public String updateInstrumentForm(@PathVariable("id") int id, Model model) {
         PersonalInstrument personalInstrument = personalInstrumentService.findPersonalInstrumentById(id);
-        if (personalInstrument.getConditionForTechn().getTConditionName().equals("Списан")) {
+        if (personalInstrument.getTechnicalConditionENUM().getTitle().contains("Списан")) {
             return "redirect:/general/p_instrument/p_instrumentView/%d"
                     .formatted(personalInstrument.getPersonalInstrId());
         }
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
-        List<ConditionForPersonal> conditionForPersonal = conditionForPersonalService.findAllConditionForPersonal();
-        List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
-        if (!personalInstrument.getConditionForTechn().getTConditionName().equals("Исправен")) {
-            personalInstrument.setConditionForPersonal(conditionForPersonalService
-                    .findConditionForPersonalBypConditionName("Не выдан"));
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
+                .toList());
+        if (!personalInstrument.getTechnicalConditionENUM().getTitle().contains("Исправен")) {
+            personalInstrument.setPersonalConditionENUM(PersonalConditionENUM.NOT_ISSUED);
         }
-        if (employeeList.isEmpty()) {
-            conditionForPersonal.remove(conditionForPersonalService
-                    .findConditionForPersonalBypConditionName("Выдан"));
-        }
-        model.addAttribute("personalInstrument", personalInstrument);
-        model.addAttribute("conditionForPersonal", conditionForPersonal);
-        model.addAttribute("conditionForTechn", conditionForTechn);
         model.addAttribute("employeeList", employeeList);
+        model.addAttribute("personalInstrument", personalInstrument);
+        if(employeeList.isEmpty()) {
+            model.addAttribute("conditionForPersonal", Arrays.stream(PersonalConditionENUM.values())
+                    .filter(e -> e.getTitle().contains("Не выдан (на складе)")).toList());
+        } else {
+            model.addAttribute("conditionForPersonal", PersonalConditionENUM.values());
+        }
+        model.addAttribute("conditionForTechn", TechnicalConditionENUM.values());
         return "stock/p_instrument-update";
     }
 
@@ -136,34 +133,30 @@ public class PersonalInstrumentController {
                                    Model model) {
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
-        List<ConditionForPersonal> conditionForPersonal = conditionForPersonalService.findAllConditionForPersonal();
-        List<ConditionForTechn> conditionForTechn = conditionForTechnService.findAllConditionForTechn();
         if (bindingResult.hasErrors()) {
             model.addAttribute("employeeList", employeeList);
-            model.addAttribute("conditionForTechn", conditionForTechn);
+            model.addAttribute("conditionForTechn", TechnicalConditionENUM.values());
             return "stock/p_instrument-update";
         } else {
-            if (!personalInstrument.getConditionForTechn().getTConditionName().equals("Списан")) {
+            if (!personalInstrument.getTechnicalConditionENUM().getTitle().contains("Списан")) {
                 personalInstrument.setCloseDate(null);
             }
-            if (!personalInstrument.getConditionForPersonal().getPConditionName().equals("Выдан")) {
+            if (!personalInstrument.getPersonalConditionENUM().getTitle().contains("Выдан")) {
                 personalInstrument.setIssueDate(null);
-                personalInstrument.setConditionForPersonal(conditionForPersonalService
-                        .findConditionForPersonalBypConditionName("Не выдан"));
+                personalInstrument.setPersonalConditionENUM(PersonalConditionENUM.NOT_ISSUED);
             }
-            if (!personalInstrument.getConditionForTechn().getTConditionName().equals("Исправен")) {
+            if (!personalInstrument.getTechnicalConditionENUM().getTitle().contains("Исправен")) {
                 personalInstrument.setIssueDate(null);
-                personalInstrument.setConditionForPersonal(conditionForPersonalService
-                        .findConditionForPersonalBypConditionName("Не выдан"));
+                personalInstrument.setPersonalConditionENUM(PersonalConditionENUM.NOT_ISSUED);
             }
-            if (!personalInstrument.getConditionForPersonal().getPConditionName().equals("Выдан") ||
-                    !personalInstrument.getConditionForTechn().getTConditionName().equals("Исправен")) {
+            if (!personalInstrument.getPersonalConditionENUM().getTitle().contains("Выдан") ||
+                    !personalInstrument.getTechnicalConditionENUM().getTitle().contains("Исправен")) {
                 personalInstrument.setEmployee(null);
             }
             try {
                 model.addAttribute("employeeList", employeeList);
-                model.addAttribute("conditionForPersonal", conditionForPersonal);
-                model.addAttribute("conditionForTechn", conditionForTechn);
+                model.addAttribute("conditionForPersonal", PersonalConditionENUM.values());
+                model.addAttribute("conditionForTechn", TechnicalConditionENUM.values());
                 personalInstrumentService.savePersonalInstrument(personalInstrument);
                 return "redirect:/general/p_instrument/p_instrumentView/%d"
                         .formatted(personalInstrument.getPersonalInstrId());

@@ -1,5 +1,7 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.PersonalConditionENUM;
+import com.example.arrowdb.enums.TechnicalConditionENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -126,14 +128,12 @@ public class PersonalInstrument {
     private LocalDate issueDate;
 
     private String issueDateVariants;
-    
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "p_status")
-    private ConditionForPersonal conditionForPersonal;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "t_status")
-    private ConditionForTechn conditionForTechn;
+    @Column(name = "t_status")
+    private TechnicalConditionENUM technicalConditionENUM;
+
+    @Column(name = "p_status")
+    private PersonalConditionENUM personalConditionENUM;
     
     @Size(max = 1000, message = "Кол-во символов максимум 1000")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -217,7 +217,7 @@ public class PersonalInstrument {
         if (getPersonalDateOfPurchase() == null) {
             return "";
         } else {
-            if (getConditionForTechn().getTConditionName().equals("Списан") && closeDate != null) {
+            if (technicalConditionENUM.getTitle().contains("Списан") && closeDate != null) {
                 LocalDate dateOfPurchase = getPersonalDateOfPurchase();
                 Period period = dateOfPurchase.until(closeDate);
                 int year = period.getYears();

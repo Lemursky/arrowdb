@@ -1,6 +1,7 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.WorkConditionENUM;
 import com.example.arrowdb.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +19,6 @@ public class MeasInstrumentEmployeeController {
 
     private final MeasInstrumentService measInstrumentService;
     private final EmployeeService employeeService;
-    private final ConditionForWorkService conditionForWorkService;
     private final WorkObjectService workObjectService;
 
     @GetMapping("/general/m_instrument/m_instrument-emp_update/{id}")
@@ -29,16 +29,17 @@ public class MeasInstrumentEmployeeController {
                                                    Model model) {
         Employee employee = employeeService.findEmployeeById(id);
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().contains("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList());
         employeeList.remove(employee);
-        List<MeasInstrument> measInstrumentList = measInstrumentService.findAllMeasInstruments().stream()
-                .filter(e -> e.getConditionForTechn().getTConditionName().equals("Исправен"))
-                .filter(e -> e.getConditionForWork().getWConditionName().equals("Не закреплен"))
+        List<MeasInstrument> measInstrumentList = measInstrumentService
+                .findAllMeasInstruments().stream()
+                .filter(e -> e.getTechnicalConditionENUM().getTitle().contains("Исправен"))
+                .filter(e -> e.getWorkConditionENUM().getTitle().contains("Не закреплен"))
                 .toList();
         List<WorkObject> workObjectList = workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий"))
+                .filter(e -> e.getWorkObjectStat().getStatusName().contains("Действующий"))
                 .sorted(Comparator.comparingInt(WorkObject::getWorkObjectId))
                 .toList();
         model.addAttribute("measInstrumentList", measInstrumentList);
@@ -51,15 +52,11 @@ public class MeasInstrumentEmployeeController {
     @PostMapping("/general/m_instrument/m_instrumentCreate_employee/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_UPDATE')")
     public String createSpecialClothEmployeeForm(@PathVariable("id") int id,
-                                                 @RequestParam
-                                                 @ModelAttribute
-                                                 List<MeasInstrument> measInstrumentListAdd,
+                                                 @RequestParam @ModelAttribute List<MeasInstrument> measInstrumentListAdd,
                                                  @ModelAttribute WorkObject workObject,
                                                  TempIssueDate tempIssueDate) {
         Employee employee = employeeService.findEmployeeById(id);
-        ConditionForWork conditionForWork = conditionForWorkService
-                .findConditionForWorkBywConditionName("Закреплен");
-        measInstrumentListAdd.forEach(e -> e.setConditionForWork(conditionForWork));
+        measInstrumentListAdd.forEach(e -> e.setWorkConditionENUM(WorkConditionENUM.INVOLVED));
         measInstrumentListAdd.forEach(e -> e.setEmployee(employee));
         measInstrumentListAdd.forEach(e -> e.setWorkObject(workObject));
         measInstrumentListAdd.forEach(e -> e.setIssueDate(tempIssueDate.getTIssueDate()));
@@ -72,9 +69,7 @@ public class MeasInstrumentEmployeeController {
     public String deletePersonalInstrumentEmployee(@PathVariable("id") int id) {
         Integer localId = measInstrumentService.findEmployeeIdByMeasInstId(id);
         MeasInstrument measInstrument = measInstrumentService.findMeasInstrumentById(id);
-        ConditionForWork conditionForWork = conditionForWorkService
-                .findConditionForWorkBywConditionName("Не закреплен");
-        measInstrument.setConditionForWork(conditionForWork);
+        measInstrument.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED);
         measInstrument.setWorkObject(null);
         measInstrument.setEmployee(null);
         measInstrument.setIssueDate(null);
@@ -87,9 +82,7 @@ public class MeasInstrumentEmployeeController {
     public String deleteAllPersonalInstrumentEmployee(@PathVariable("id") int id) {
         Employee employee = employeeService.findEmployeeById(id);
         List<MeasInstrument> measInstrumentListCurrent = employee.getMeasInstrumentList();
-        ConditionForWork conditionForWork = conditionForWorkService
-                .findConditionForWorkBywConditionName("Не закреплен");
-        measInstrumentListCurrent.forEach(e -> e.setConditionForWork(conditionForWork));
+        measInstrumentListCurrent.forEach(e -> e.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED));
         measInstrumentListCurrent.forEach(e -> e.setWorkObject(null));
         measInstrumentListCurrent.forEach(e -> e.setEmployee(null));
         measInstrumentListCurrent.forEach(e -> e.setIssueDate(null));

@@ -1,4 +1,5 @@
 package com.example.arrowdb.entity;
+import com.example.arrowdb.enums.DriverLicenseENUM;
 import com.example.arrowdb.enums.EmployeeStatusENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -104,11 +105,8 @@ public class Employee {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObjectChief", fetch = FetchType.LAZY)
     private List<WorkObject> workObjectChiefList = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(name = "employees_driver_license_join",
-            joinColumns = @JoinColumn(name = "join_emp_id"),
-            inverseJoinColumns = @JoinColumn(name = "join_dl_id"))
-    private List<DriverLicense> driverLicenseEmpList = new ArrayList<>();
+    @Column(name = "driver_license")
+    private List<DriverLicenseENUM> driverLicenseENUM;
 
     @ManyToMany(mappedBy = "storeKeeperList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<WorkObject> workObjectStoreKeeperList = new ArrayList<>();

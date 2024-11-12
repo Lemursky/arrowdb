@@ -29,7 +29,8 @@
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE_UPDATE')">
                     <a th:href="@{/general/employee/employeeUpdate/{id}(id=${employee.empId})}"
-                       th:unless="${employee.employeeStatusENUM.getTitle() == 'Закрыт'}">
+                       th:unless="${employee.employeeStatusENUM.getTitle() == 'Закрыт'} OR
+                       ${employee.employeeStatusENUM.getTitle() == 'В отпуске'}">
                         <button type="button" class="btn btn-outline-primary btn-sm" id="updateButton">Править</button>
                     </a>
                 </div>
@@ -143,8 +144,8 @@
             <tr>
                 <th style="text-align: left" scope="row">009</th>
                 <td style="text-align: left">Категории ВУ</td>
-                <th style="text-align: left"><span th:each="drl:${employee.driverLicenseEmpList}">
-                    <span th:text="${drl.getDrLiName() + ' '}"></span>
+                <th style="text-align: left"><span th:each="drl:${employee.driverLicenseENUM}">
+                    <span th:text="${drl + ' '}"></span>
                 </span>
             </tr>
             <tr>

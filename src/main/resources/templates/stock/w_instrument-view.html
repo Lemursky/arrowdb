@@ -29,7 +29,7 @@
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_UPDATE')">
                     <a th:href="@{/general/w_instrument/w_instrumentUpdate/{id}(id=${workInstrument.workInstrId})}"
-                       th:unless="${workInstrument.conditionForTechn.tConditionName == 'Списан'}">
+                       th:unless="${workInstrument.technicalConditionENUM.getTitle() == 'Списан (выведен из строя)'}">
                         <button type="button" class="btn btn-outline-primary btn-sm">Править</button>
                     </a>
                 </div>
@@ -78,23 +78,32 @@
                 <th style="text-align: left">
                 <th style="text-align: left"><label>Техн. состояние:</label></th>
                 <td style="text-align: left; width: 400px">
-                    <span th:text="${workInstrument.conditionForTechn}"
-                          th:if="${workInstrument.conditionForTechn.tConditionName == 'Исправен'}"></span>
+                    <span th:text="${workInstrument.technicalConditionENUM.getTitle()}"
+                          th:if="${workInstrument.technicalConditionENUM.getTitle()
+                          == 'Исправен (готов к выдаче)'}"></span>
 
-                    <span th:text="${workInstrument.conditionForTechn} + ${' ' + workInstrument.closeDate}
+                    <span th:text="${workInstrument.technicalConditionENUM.getTitle()}
+                    + ${' ' + workInstrument.closeDate}
                     + ${'; Акт: ' + workInstrument.deleteAct}"
-                          th:if="${workInstrument.conditionForTechn.tConditionName == 'Списан'}"></span>
+                          th:if="${workInstrument.technicalConditionENUM.getTitle()
+                          == 'Списан (выведен из строя)'}"></span>
 
-                    <span th:text="${workInstrument.conditionForTechn} + ${' ' + workInstrument.brokenDate}"
-                          th:if="${workInstrument.conditionForTechn.tConditionName == 'Не исправен'}"></span>
+                    <span th:text="${workInstrument.technicalConditionENUM.getTitle()}
+                    + ${' ' + workInstrument.brokenDate}"
+                          th:if="${workInstrument.technicalConditionENUM.getTitle()
+                          == 'Не исправен (на складе, не в ремонте)'}"></span>
                     <p style="white-space: pre-wrap" th:text="${'Комментарий: ' + workInstrument.brokenAnnotation}"
-                       th:if="${workInstrument.conditionForTechn.tConditionName == 'Не исправен'}"></p>
+                       th:if="${workInstrument.technicalConditionENUM.getTitle()
+                       == 'Не исправен (на складе, не в ремонте)'}"></p>
 
-                    <span th:text="${workInstrument.conditionForTechn} + ${' с ' + workInstrument.startRepairDate}
+                    <span th:text="${workInstrument.technicalConditionENUM.getTitle()}
+                    + ${' с ' + workInstrument.startRepairDate}
                     + ${' по ' + workInstrument.endRepairDate}"
-                          th:if="${workInstrument.conditionForTechn.tConditionName == 'В ремонте'}"></span>
+                          th:if="${workInstrument.technicalConditionENUM.getTitle()
+                          == 'В ремонте (текущем или гарантийном)'}"></span>
                     <p style="white-space: pre-wrap" th:text="${'Комментарий: ' + workInstrument.repairAnnotation}"
-                       th:if="${workInstrument.conditionForTechn.tConditionName == 'В ремонте'}"></p>
+                       th:if="${workInstrument.technicalConditionENUM.getTitle()
+                       == 'В ремонте (текущем или гарантийном)'}"></p>
             </tr>
             <tr>
                 <th style="text-align: left">

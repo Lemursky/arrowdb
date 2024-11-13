@@ -1,10 +1,10 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.ConstructionControlStatusENUM;
 import com.example.arrowdb.services.ConstructionControlService;
 import com.example.arrowdb.services.EmployeeService;
 import com.example.arrowdb.services.WorkObjectService;
-import com.example.arrowdb.services.WorkObjectStatusService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,17 +30,15 @@ public class ConstructionControlController {
 
     private final EmployeeService employeeService;
     private final WorkObjectService workObjectService;
-    private final WorkObjectStatusService workObjectStatusService;
     private final ConstructionControlService constructionControlService;
 
     @GetMapping("/general/constr_control")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_VIEW')")
     public String findAllConstructionControl(Model model) {
-        List<WorkObject> workObjectList = workObjectService.findWorkObjectByStatus(
-                workObjectStatusService.findWorkObjectStatusIdByStatusName("Действующий"),
-                workObjectStatusService.findWorkObjectStatusIdByStatusName("Приостановлен"),
-                workObjectStatusService.findWorkObjectStatusIdByStatusName("Закрыт"));
-        model.addAttribute("workObjectList", workObjectList);
+        model.addAttribute("workObjectList", workObjectService.findAllWorkObjects()
+                .stream()
+                .filter(e -> !e.getWorkObjectStatusENUM().getTitle().contains("Не начат"))
+                .toList());
         return "constr_control/constr_control-menu";
     }
 
@@ -48,11 +47,10 @@ public class ConstructionControlController {
     public String findAllWarningsControl(@PathVariable("id") int id,
                                          Model model) {
         WorkObject workObject = workObjectService.findWorkObjectById(id);
-        List<ConstructionControl> constructionControlList = workObject.getConstructionControlList().stream()
-                .sorted(Comparator.comparingInt(ConstructionControl::getConstrControlId))
-                .toList();
         model.addAttribute("workObject", workObject);
-        model.addAttribute("constructionControlList", constructionControlList);
+        model.addAttribute("constructionControlList", workObject.getConstructionControlList().stream()
+                .sorted(Comparator.comparingInt(ConstructionControl::getConstrControlId))
+                .toList());
         return "constr_control/constr_control-warnings";
     }
 
@@ -60,23 +58,17 @@ public class ConstructionControlController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_CREATE')")
     public String createConstructionControlForm(@ModelAttribute ConstructionControl constructionControl,
                                                 Model model) {
-        List<Employee> employeeList = employeeService.findAllEmployees().stream()
+        model.addAttribute("employeeList", employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
-                .toList();
-        List<WorkObjectStatus> warningStatusList = new ArrayList<>(workObjectStatusService
-                .findAllWorkObjectStatus().stream()
-                .sorted(Comparator.comparingInt(WorkObjectStatus::getWObjStatId))
                 .toList());
-        warningStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Не начат"));
-        warningStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Приостановлен"));
-        List<WorkObject> workObjectsList = workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий"))
+        model.addAttribute("workObjectsList", workObjectService.findAllWorkObjects().stream()
+                .filter(e -> e.getWorkObjectStatusENUM().getTitle().contains("Действующий"))
                 .sorted(Comparator.comparingInt(WorkObject::getWorkObjectId))
-                .toList();
-        model.addAttribute("employeeList", employeeList);
-        model.addAttribute("workObjectsList", workObjectsList);
-        model.addAttribute("warningStatusList", warningStatusList);
+                .toList());
+        model.addAttribute("warningStatusList", Arrays.stream(ConstructionControlStatusENUM.values())
+                .filter(e -> !e.getTitle().contains("Закрыт"))
+                .toList());
         return "constr_control/constr_control-create";
     }
 
@@ -89,20 +81,14 @@ public class ConstructionControlController {
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList());
-        List<WorkObjectStatus> warningStatusList = new ArrayList<>(workObjectStatusService
-                .findAllWorkObjectStatus().stream()
-                .sorted(Comparator.comparingInt(WorkObjectStatus::getWObjStatId))
-                .toList());
-        warningStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Не начат"));
-        warningStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Приостановлен"));
         List<WorkObject> workObjectsList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий"))
+                .filter(e -> e.getWorkObjectStatusENUM().getTitle().contains("Действующий"))
                 .sorted(Comparator.comparingInt(WorkObject::getWorkObjectId))
                 .toList());
         if (bindingResult.hasErrors()) {
             model.addAttribute("employeeList", employeeList);
             model.addAttribute("workObjectsList", workObjectsList);
-            model.addAttribute("warningStatusList", warningStatusList);
+            model.addAttribute("warningStatusList", ConstructionControlStatusENUM.values());
             return "constr_control/constr_control-create";
         } else {
             try {
@@ -111,7 +97,7 @@ public class ConstructionControlController {
             } catch (Exception e) {
                 model.addAttribute("employeeList", employeeList);
                 model.addAttribute("workObjectsList", workObjectsList);
-                model.addAttribute("warningStatusList", warningStatusList);
+                model.addAttribute("warningStatusList", ConstructionControlStatusENUM.values());
                 model.addAttribute("errorUniq", UNIQUE_CONST_CONTROL);
                 return "constr_control/constr_control-create";
             }
@@ -123,28 +109,31 @@ public class ConstructionControlController {
     public String updateConstructionControlForm(@PathVariable("id") int id,
                                                 Model model) {
         ConstructionControl constructionControl = constructionControlService.findConstructionControlById(id);
-        if (constructionControl.getWarningStatus().getStatusName().equals("Закрыт")) {
+        if (constructionControl.getConstructionControlStatusENUM().getTitle().equals("Закрыт")) {
             return "redirect:/general/constr_control/constr_controlWarnings/%d"
                     .formatted(constructionControl.getWorkObject().getWorkObjectId());
         }
-        List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
+        model.addAttribute("constructionControl", constructionControl);
+        model.addAttribute("employeeList", new ArrayList<>(employeeService.findAllEmployees()
+                .stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
-                .toList());
-        List<WorkObjectStatus> warningStatusList = new ArrayList<>(workObjectStatusService
-                .findAllWorkObjectStatus().stream()
-                .sorted(Comparator.comparingInt(WorkObjectStatus::getWObjStatId))
-                .toList());
-        warningStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Не начат"));
-        warningStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Приостановлен"));
-        List<WorkObject> workObjectsList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий"))
+                .toList()));
+        model.addAttribute("workObjectsList", new ArrayList<>(workObjectService.findAllWorkObjects()
+                .stream()
+                .filter(e -> e.getWorkObjectStatusENUM().getTitle().contains("Действующий"))
                 .sorted(Comparator.comparingInt(WorkObject::getWorkObjectId))
-                .toList());
-        model.addAttribute("constructionControl", constructionControl);
-        model.addAttribute("employeeList", employeeList);
-        model.addAttribute("workObjectsList", workObjectsList);
-        model.addAttribute("warningStatusList", warningStatusList);
+                .toList()));
+        if(constructionControl.getConstructionControlStatusENUM().getTitle().contains("Действующий")){
+            model.addAttribute("warningStatusList", Arrays.stream(ConstructionControlStatusENUM
+                            .values()).filter(e -> !e.getTitle().contains("Черновик")));
+        }
+        else if(constructionControl.getConstructionControlStatusENUM().getTitle().contains("Черновик")){
+            model.addAttribute("warningStatusList", Arrays.stream(ConstructionControlStatusENUM
+                            .values()).filter(e -> !e.getTitle().contains("Закрыт")));
+        } else {
+            model.addAttribute("warningStatusList", ConstructionControlStatusENUM.values());
+        }
         return "constr_control/constr_control-update";
     }
 
@@ -157,23 +146,26 @@ public class ConstructionControlController {
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList());
-        List<WorkObjectStatus> warningStatusList = new ArrayList<>(workObjectStatusService
-                .findAllWorkObjectStatus().stream()
-                .sorted(Comparator.comparingInt(WorkObjectStatus::getWObjStatId))
-                .toList());
-        warningStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Не начат"));
-        warningStatusList.remove(workObjectStatusService.findWorkObjectStatusByStatusName("Приостановлен"));
         List<WorkObject> workObjectsList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий"))
+                .filter(e -> e.getWorkObjectStatusENUM().getTitle().contains("Действующий"))
                 .sorted(Comparator.comparingInt(WorkObject::getWorkObjectId))
                 .toList());
         if (bindingResult.hasErrors()) {
             model.addAttribute("employeeList", employeeList);
             model.addAttribute("workObjectsList", workObjectsList);
-            model.addAttribute("warningStatusList", warningStatusList);
+            if(constructionControl.getConstructionControlStatusENUM().getTitle().contains("Действующий")){
+                model.addAttribute("warningStatusList", Arrays.stream(ConstructionControlStatusENUM
+                                .values()).filter(e -> !e.getTitle().contains("Черновик")));
+            }
+            else if(constructionControl.getConstructionControlStatusENUM().getTitle().contains("Черновик")){
+                model.addAttribute("warningStatusList", Arrays.stream(ConstructionControlStatusENUM
+                                .values()).filter(e -> !e.getTitle().contains("Закрыт")));
+            } else {
+                model.addAttribute("warningStatusList", ConstructionControlStatusENUM.values());
+            }
             return "constr_control/constr_control-update";
         } else {
-            if (constructionControl.getWarningStatus().getStatusName().equals("Закрыт")) {
+            if (constructionControl.getConstructionControlStatusENUM().getTitle().contains("Закрыт")) {
                 constructionControl.setResponsibleFromContractor(null);
                 constructionControl.setResponsibleFromCustomer(null);
                 constructionControl.getEmpDutyList().clear();
@@ -185,11 +177,19 @@ public class ConstructionControlController {
             } catch (Exception e) {
                 model.addAttribute("employeeList", employeeList);
                 model.addAttribute("workObjectsList", workObjectsList);
-                model.addAttribute("warningStatusList", warningStatusList);
+                if(constructionControl.getConstructionControlStatusENUM().getTitle().contains("Действующий")){
+                    model.addAttribute("warningStatusList", Arrays.stream(ConstructionControlStatusENUM
+                                    .values()).filter(p -> !p.getTitle().contains("Черновик")));
+                }
+                else if(constructionControl.getConstructionControlStatusENUM().getTitle().contains("Черновик")){
+                    model.addAttribute("warningStatusList", Arrays.stream(ConstructionControlStatusENUM
+                                    .values()).filter(p -> p.getTitle().contains("Закрыт")));
+                } else {
+                    model.addAttribute("warningStatusList", ConstructionControlStatusENUM.values());
+                }
                 model.addAttribute("errorUniq", UNIQUE_CONST_CONTROL);
                 return "constr_control/constr_control-update";
             }
         }
     }
-
 }

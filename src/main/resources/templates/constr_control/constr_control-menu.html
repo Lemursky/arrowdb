@@ -22,24 +22,22 @@
         <h4>Акты-предупреждения</h4>
     </div>
     <style>
-        table {
-            width: 100%;}
-        thead, tbody {
-            display: table;
-            width: 100%;}
-        .body {
+        .mainTable{
             display: block;
             width: 100%;
-            height: 550px;
-            overflow-y: scroll;}
-        .bodySearch {
-            display: block;
-            width: 100%;
-            overflow-y: scroll;}
-        .head {
-            display: block;
-            width: 100%;
-            overflow-y: scroll;}
+            height: 650px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow-y: scroll;
+            -moz-hyphens: auto;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
+        .head{
+            position: sticky;
+            top: 0;
+            text-align: left; vertical-align: top;
+        }
     </style>
     <form th:action="@{/general/constr_control}" th:method="get">
         <table class="table-sm" style="width: 1800px">
@@ -68,10 +66,10 @@
             </tbody>
         </table>
     </form>
-    <div>
+    <div class="mainTable">
         <table class="table table-hover table-sm" style="width: 1800px;" id="prof-table">
             <thead class="head">
-            <tr>
+            <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
                 <th style="width: 100px; text-align: left;">#ID</th>
                 <th onclick="sortTable(0)" style="width: 400px; text-align: left;">Наименование объекта строительства</th>
                 <th onclick="sortTable(1)" style="width: 300px; text-align: left;">Заказчик</th>
@@ -85,14 +83,14 @@
             </thead>
             <tbody class="body">
             <tr th:each="w_obj:${workObjectList}">
-                <th th:text="${w_obj.workObjectId}" style="width: 100px"/>
-                <td th:text="${w_obj.workObjectName}" style="width: 400px"/>
-                <td th:text="${w_obj.workObjectCustomer}" style="width: 300px"/>
-                <td th:text="${w_obj.workObjectOrder}" style="width: 150px"/>
-                <td th:text="${w_obj.workObjectLot}" style="width: 150px"/>
-                <td th:text="${w_obj.getConstructionControlActive}" style="width: 200px"/>
-                <td th:text="${w_obj.getConstructionControlClosed}" style="width: 200px"/>
-                <td th:text="${#lists.size(w_obj.constructionControlList)}" style="width: 200px"/>
+                <th th:text="${w_obj.workObjectId}"/>
+                <td th:text="${w_obj.workObjectName}"/>
+                <td th:text="${w_obj.workObjectCustomer}"/>
+                <td th:text="${w_obj.workObjectOrder}"/>
+                <td th:text="${w_obj.workObjectLot}"/>
+                <td th:text="${w_obj.getConstructionControlActive}"/>
+                <td th:text="${w_obj.getConstructionControlClosed}"/>
+                <td th:text="${#lists.size(w_obj.constructionControlList)}"/>
                 <td style="width: 100px">
                     <a th:href="@{/general/constr_control/constr_controlWarnings/{id}(id=${w_obj.workObjectId})}">
                         <button type="button" class="btn btn-outline-primary btn-sm">Просмотр</button>
@@ -103,7 +101,7 @@
     </div>
     <script>
         function sortTable(n) {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
             table = document.getElementById("prof-table");
             switching = true;
             dir = "asc";
@@ -114,12 +112,12 @@
                     shouldSwitch = false;
                     x = rows[i].getElementsByTagName("TD")[n];
                     y = rows[i + 1].getElementsByTagName("TD")[n];
-                    if (dir == "asc") {
+                    if (dir === "asc") {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                             shouldSwitch= true;
                             break;
                         }
-                    } else if (dir == "desc") {
+                    } else if (dir === "desc") {
                         if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
                             shouldSwitch = true;
                             break;
@@ -131,7 +129,7 @@
                     switching = true;
                     switchcount ++;
                 } else {
-                    if (switchcount == 0 && dir == "asc") {
+                    if (switchcount === 0 && dir === "asc") {
                         dir = "desc";
                         switching = true;
                     }

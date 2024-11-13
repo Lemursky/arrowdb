@@ -17,24 +17,22 @@
     <hr>
     <h4>Акты-предупреждения по объекту <span th:text="${'«' + workObject.workObjectLot + ' ' + workObject.workObjectOrder + '»'}"></span></h4>
     <style>
-        table {
-            width: 100%;}
-        thead, tbody {
-            display: table;
-            width: 100%;}
-        .body {
+        .mainTable{
             display: block;
             width: 100%;
-            height: 550px;
-            overflow-y: scroll;}
-        .bodySearch {
-            display: block;
-            width: 100%;
-            overflow-y: scroll;}
-        .head {
-            display: block;
-            width: 100%;
-            overflow-y: scroll;}
+            height: 650px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow-y: scroll;
+            -moz-hyphens: auto;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
+        .head{
+            position: sticky;
+            top: 0;
+            text-align: left; vertical-align: top;
+        }
     </style>
     <form th:action="@{/general/constr_control/constr_controlWarnings/{id}(id=${workObject.workObjectId})}"
           th:method="get">
@@ -67,10 +65,10 @@
             </tbody>
         </table>
     </form>
-    <div>
+    <div class="mainTable">
         <table class="table table-hover table-sm" style="width: 1800px;" id="prof-table">
             <thead class="head">
-            <tr>
+            <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
                 <th style="width: 100px; text-align: left;">#ID</th>
                 <th onclick="sortTable(1)" style="width: 150px; text-align: left;">№ предупр.</th>
                 <th onclick="sortTable(2)" style="width: 100px; text-align: left;">Дата выдачи</th>
@@ -85,25 +83,25 @@
             </thead>
             <tbody class="body">
             <tr th:each="const_cont:${constructionControlList}">
-                <td th:text="${const_cont.constrControlId}" style="width: 100px"/>
-                <td th:text="${const_cont.numOfWarning}" style="width: 150px; font-size: 13px; word-break: break-all"/>
-                <td th:text="${#temporals.format(const_cont.dateOfIssue, 'dd-MM-yyyy')}" style="width: 100px"/>
-                <td th:text="${const_cont.warningName}" style="width: 450px; font-size: 13px"/>
-                <td th:text="${#temporals.format(const_cont.deadLine, 'dd-MM-yyyy')}" style="width: 100px"/>
-                <td th:text="${const_cont.responsibleFromCustomer}" style="width: 200px"/>
-                <td style="width: 350px; text-align: left">
+                <td th:text="${const_cont.constrControlId}"/>
+                <td th:text="${const_cont.numOfWarning}"/>
+                <td th:text="${#temporals.format(const_cont.dateOfIssue, 'dd-MM-yyyy')}"/>
+                <td th:text="${const_cont.warningName}"/>
+                <td th:text="${#temporals.format(const_cont.deadLine, 'dd-MM-yyyy')}"/>
+                <td th:text="${const_cont.responsibleFromCustomer}"/>
+                <td>
                     <span th:each="emp:${const_cont.empDutyList}">
                     <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
                         <button style="text-align: left; width: 340px" type="button" class="btn btn-outline-dark btn-sm">
                             <span th:text="(${emp} == null)? '' : ((${emp.profession} == null)? ${emp} :
                 (${emp} + ${', ' + emp.profession.getProfessionName}?: ''))"></span></button></a><br></span>
                     <span th:text="${const_cont.responsibleFromContractor}"></span></td>
-                <td th:text="${#temporals.format(const_cont.dateOfExtension, 'dd-MM-yyyy')}" style="width: 100px"/>
-                <td th:text="${const_cont.warningStatus}" style="width: 100px"/>
-                <td style="width: 100px">
+                <td th:text="${#temporals.format(const_cont.dateOfExtension, 'dd-MM-yyyy')}"/>
+                <td th:text="${const_cont.constructionControlStatusENUM.getTitle()}"/>
+                <td>
                     <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_UPDATE')">
                         <a th:href="@{/general/constr_control/constr_controlUpdate/{id}(id=${const_cont.constrControlId})}"
-                           th:unless="${const_cont.warningStatus.statusName == 'Закрыт'}">
+                           th:unless="${const_cont.constructionControlStatusENUM.getTitle() == 'Закрыт'}">
                             <button type="button" class="btn btn-outline-primary btn-sm">Править</button>
                         </a>
                     </div>
@@ -113,7 +111,7 @@
     </div>
     <script>
         function sortTable(n) {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
             table = document.getElementById("prof-table");
             switching = true;
             dir = "asc";
@@ -124,12 +122,12 @@
                     shouldSwitch = false;
                     x = rows[i].getElementsByTagName("TD")[n];
                     y = rows[i + 1].getElementsByTagName("TD")[n];
-                    if (dir == "asc") {
+                    if (dir === "asc") {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                             shouldSwitch = true;
                             break;
                         }
-                    } else if (dir == "desc") {
+                    } else if (dir === "desc") {
                         if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
                             shouldSwitch = true;
                             break;
@@ -141,7 +139,7 @@
                     switching = true;
                     switchcount++;
                 } else {
-                    if (switchcount == 0 && dir == "asc") {
+                    if (switchcount === 0 && dir === "asc") {
                         dir = "desc";
                         switching = true;
                     }

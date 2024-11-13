@@ -46,18 +46,18 @@
                     <th style="text-align: left" scope="row"></th>
                     <th style="text-align: left"><label>Статус предупреждения</label></th>
                     <td style="text-align: left; width: 600px">
-                        <select style="width: 200px"; class="form-select form-select-sm" name="warningStatus">
+                        <select style="width: 200px"; class="form-select form-select-sm" name="constructionControlStatusENUM">
                             <option th:each="w_obj_stat:${warningStatusList}"
-                                    th:field="*{warningStatus}"
-                                    th:value="${w_obj_stat.wObjStatId}"
-                                    th:text="${w_obj_stat}">
+                                    th:field="*{constructionControlStatusENUM}"
+                                    th:value="${w_obj_stat}"
+                                    th:text="${w_obj_stat.getTitle()}">
                             </option>
                         </select>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">001</th>
                     <td style="text-align: left">#ID</td>
-                    <td style="text-align: left"><span>(Задется автоматически)</span></td>
+                    <td style="text-align: left"><span>(Задается автоматически)</span></td>
                 </tr>
                 <div>
                     <tr>
@@ -92,7 +92,8 @@
                     <th style="text-align: left" scope="row">004</th>
                     <td style="text-align: left"><label>Дата выдачи</label></td>
                     <td style="text-align: left">
-                        <input type="date" style="width: 150px" th:field="${constructionControl.dateOfIssue}" id="dateOfIssue" required>
+                        <input type="date" style="width: 150px" th:field="${constructionControl.dateOfIssue}"
+                               id="dateOfIssue" required>
                         <script th:inline="javascript">
                             const inputDate1 = String([[${constructionControl.dateOfIssue}]]);
                             document.getElementById("dateOfIssue").valueAsDate = new Date(inputDate1);
@@ -104,7 +105,7 @@
                     <th style="text-align: left" scope="row">005</th>
                     <td style="text-align: left"><label>Выявленные несоответствия</label></td>
                     <td style="text-align: left">
-                        <textarea rows="4" cols="40" type="text" style="width: 600px" ;
+                        <textarea rows="4" cols="40" type="text" style="width: 600px";
                                   th:field="${constructionControl.warningName}"></textarea>
                         <p if="${#fields.hasErrors('warningName')}" th:errors="${constructionControl.warningName}"
                            style="font-size: 13px; color: brown"></p>
@@ -113,7 +114,8 @@
                     <th style="text-align: left" scope="row">006</th>
                     <td style="text-align: left"><label>Крайняя дата устранения</label></td>
                     <td style="text-align: left">
-                        <input type="date" style="width: 150px" th:field="${constructionControl.deadLine}" id="deadLine" required>
+                        <input type="date" style="width: 150px" th:field="${constructionControl.deadLine}"
+                               id="deadLine" required>
                         <script th:inline="javascript">
                             const inputDate2 = String([[${constructionControl.deadLine}]]);
                             document.getElementById("deadLine").valueAsDate = new Date(inputDate2);
@@ -125,9 +127,11 @@
                     <th style="text-align: left" scope="row">007</th>
                     <td style="text-align: left"><label>СК Заказчика</label></td>
                     <td style="text-align: left">
-                        <input type="text" style="width: 400px" th:field="${constructionControl.responsibleFromCustomer}"
-                               placeholder="Ф.И.О., Должность">
-                        <p if="${#fields.hasErrors('responsibleFromCustomer')}" th:errors="${constructionControl.responsibleFromCustomer}"
+                        <textarea rows="3" cols="40" type="text" style="width: 400px";
+                                  th:field="${constructionControl.responsibleFromCustomer}"
+                                  placeholder="> Ф.И.О.&#10;> Должность&#10;> Контакты"></textarea>
+                        <p if="${#fields.hasErrors('responsibleFromCustomer')}"
+                           th:errors="${constructionControl.responsibleFromCustomer}"
                            style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
@@ -154,9 +158,11 @@
                     <th style="text-align: left" scope="row">008.2</th>
                     <td style="text-align: left">Отв. предст. подрядчика</td>
                     <td style="text-align: left">
-                        <input type="text" style="width: 400px" th:field="${constructionControl.responsibleFromContractor}"
-                               placeholder="Ф.И.О., Должность">
-                        <p if="${#fields.hasErrors('responsibleFromContractor')}" th:errors="${constructionControl.responsibleFromContractor}"
+                        <textarea rows="3" cols="40" type="text" style="width: 400px";
+                                  th:field="${constructionControl.responsibleFromContractor}"
+                                  placeholder="> Ф.И.О.&#10;> Должность&#10;> Контакты"></textarea>
+                        <p if="${#fields.hasErrors('responsibleFromContractor')}"
+                           th:errors="${constructionControl.responsibleFromContractor}"
                            style="font-size: 13px; color: brown"></p>
                 </tr>
                 </tbody>

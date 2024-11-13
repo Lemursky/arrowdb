@@ -43,11 +43,11 @@
                     <th style="text-align: left" scope="row"></th>
                     <th style="text-align: left"><label>Статус: </label></th>
                     <td style="text-align: left">
-                        <select style="width: 300px" ; class="form-select form-select-sm" name="workObjectStat" id="1">
+                        <select style="width: 300px" ; class="form-select form-select-sm" name="workObjectStatusENUM" id="1">
                             <option th:each="wObjStat:${workObjectStatusList}"
-                                    th:field="*{workObjectStat}"
-                                    th:value="${wObjStat.wObjStatId}"
-                                    th:text="${wObjStat}">
+                                    th:field="*{workObjectStatusENUM}"
+                                    th:value="${wObjStat}"
+                                    th:text="${wObjStat.getTitle()}">
                         </select>
                     <td>
                 </tr>
@@ -170,7 +170,6 @@
                     <th style="text-align: left" scope="row">012</th>
                     <td style="text-align: left"><label>Срок контракта</label></td>
                     <td style="text-align: left">
-
                         <span>Начало </span><input type="date" style="width: 150px;"
                                                    th:field="${workObject.dateOfStart}" id="dateOfStart" required>
                         <script th:inline="javascript">
@@ -224,8 +223,9 @@
                     <th style="text-align: left" scope="row">015</th>
                     <td style="text-align: left"><label>Куратор от Заказчика</label></td>
                     <td style="text-align: left">
-                        <textarea rows="2" cols="40" type="text" style="width: 600px" ;
-                                  th:field="${workObject.chiefOfCustomer}"></textarea>
+                        <textarea rows="3" cols="40" type="text" style="width: 600px" ;
+                                  th:field="${workObject.chiefOfCustomer}"
+                                  placeholder="> Ф.И.О.&#10;> Должность&#10;> Контакты"></textarea>
                         <p if="${#fields.hasErrors('chiefOfCustomer')}" th:errors="${workObject.chiefOfCustomer}"
                            style="font-size: 13px; color: brown"></p>
                 </tr>

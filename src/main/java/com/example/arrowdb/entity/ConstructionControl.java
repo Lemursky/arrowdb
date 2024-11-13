@@ -1,5 +1,6 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.ConstructionControlStatusENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -67,9 +68,8 @@ public class ConstructionControl {
     @Column(name = "date_of_extension")
     private LocalDate dateOfExtension;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "constr_control_status")
-    private WorkObjectStatus warningStatus;
+    @Column(name = "constr_control_status")
+    private ConstructionControlStatusENUM constructionControlStatusENUM;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "work_object")

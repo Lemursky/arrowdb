@@ -51,7 +51,8 @@
                     <th style="text-align: left" scope="row">004</th>
                     <td style="text-align: left"><label>Объект</label></td>
                     <td style="text-align: left">
-                        <textarea rows="4" cols="40" type="text" style="width: 600px"; th:field="${workObject.workObjectName}"></textarea>
+                        <textarea rows="4" cols="40" type="text" style="width: 600px";
+                                  th:field="${workObject.workObjectName}"></textarea>
                         <p if="${#fields.hasErrors('workObjectName')}" th:errors="${workObject.workObjectName}"
                            style="font-size: 13px; color: brown"></p>
                         <p th:text="${errorName}" style="font-size: 13px; color: brown"></p>

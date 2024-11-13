@@ -1,8 +1,8 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.UserStatusENUM;
 import com.example.arrowdb.repositories.*;
-import com.example.arrowdb.services.UserStatusService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +25,6 @@ public class UsersController {
     private final UsersRepository usersRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserStatusService userStatusService;
 
     @GetMapping("/general/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -54,7 +53,7 @@ public class UsersController {
             model.addAttribute("roles", roles);
             return "user/user-create";
         } else {
-            users.setUserStatus(userStatusService.findStatusById(2));
+            users.setUserStatusENUM(UserStatusENUM.OFF);
             model.addAttribute("roles", roles);
             users.setPassword(passwordEncoder.encode(users.getPassword()));
             usersRepository.save(users);
@@ -78,7 +77,7 @@ public class UsersController {
         model.addAttribute("rolesPersonal", roleRepository.findRolesByMenuName("personal"));
         model.addAttribute("rolesStore", roleRepository.findRolesByMenuName("store"));
         model.addAttribute("rolesActivity", roleRepository.findRolesByMenuName("activity"));
-        model.addAttribute("statusList", userStatusService.findAllUserStatus());
+        model.addAttribute("statusList", UserStatusENUM.values());
         return "user/user-update";
     }
 

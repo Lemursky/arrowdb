@@ -12,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,6 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final ProfessionService professionService;
-    private final DriverLicenseService driverLicenseService;
     private final UsersRepository usersRepository;
     private final RoleRepository roleRepository;
 

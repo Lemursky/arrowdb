@@ -24,7 +24,7 @@ public class MyUserDetailService implements UserDetailsService {
                     .map(user -> User.builder()
                             .username(user.getUserName())
                             .password(user.getPassword())
-                            .disabled(user.getUserStatus().isStatValue())
+                            .disabled(user.getUserStatusENUM().isStatValue())
                             .authorities(user.getRolesSet().stream()
                                     .map(Roles::getRoleName)
                                     .map(SimpleGrantedAuthority::new)

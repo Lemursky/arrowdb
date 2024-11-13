@@ -39,7 +39,7 @@ public class MeasInstrumentEmployeeController {
                 .filter(e -> e.getWorkConditionENUM().getTitle().contains("Не закреплен"))
                 .toList();
         List<WorkObject> workObjectList = workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().contains("Действующий"))
+                .filter(e -> e.getWorkObjectStatusENUM().getTitle().contains("Действующий"))
                 .sorted(Comparator.comparingInt(WorkObject::getWorkObjectId))
                 .toList();
         model.addAttribute("measInstrumentList", measInstrumentList);

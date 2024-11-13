@@ -42,7 +42,6 @@
         <tr>
             <th style="width: 100px; text-align: left;">#ID</th>
             <th style="width: 300px; text-align: left;">Пользователь</th>
-<!--            <th style="width: 300px; text-align: left;">Роли</th>-->
             <th style="width: 200px; text-align: left;">Статус</th>
             <th style="width: 200px; text-align: center;">Действие</th>
         </tr>
@@ -51,8 +50,7 @@
         <tr style="text-align: left" scope="row" th:each="usr:${users}">
             <th th:text="${usr.userId}" style="width: 100px"/>
             <td th:text="${usr.userName}" style="width: 300px"/>
-<!--            <td><span th:text="${usr.rolesSet}" style="width: 300px; font-size: 13px"><br></span></td>-->
-            <td th:text="${usr.userStatus}" style="width: 200px"/>
+            <td th:text="${usr.userStatusENUM}" style="width: 200px"/>
             <td style="width: 200px">
                 <div style="text-align: center;">
                     <a th:href="@{/general/users/userUpdate/{id}(id=${usr.userId})}">

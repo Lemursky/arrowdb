@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "p_instruments")
+@AuditTable(value = "p_instruments_aud", schema = "history")
 public class PersonalInstrument {
 
     @Id
@@ -26,6 +27,7 @@ public class PersonalInstrument {
     @Column(name = "instr_id")
     private Integer personalInstrId;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([-\\dа-яА-Я-a\\s]+)?",
@@ -33,13 +35,15 @@ public class PersonalInstrument {
     @Column(name = "onec_number")
     private String personalOneCNumber;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "invent_number", unique=true)
     private String personalInventNumber;
-    
+
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -47,6 +51,7 @@ public class PersonalInstrument {
     @Column(name = "serial_number")
     private String personalSerialNumber;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 200, message = "Кол-во символов от 2 до 200")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -54,13 +59,15 @@ public class PersonalInstrument {
     @Column(name = "instr-name")
     private String personalInstrName;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 200, message = "Кол-во символов от 2 до 200")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "instr-model")
     private String personalInstrModel;
-    
+
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 200, message = "Кол-во символов от 2 до 200")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -68,30 +75,37 @@ public class PersonalInstrument {
     @Column(name = "instr_manufacturer")
     private String personalInstrManufacturer;
 
+    @Audited
     @PastOrPresent
     @Column(name = "date_of_purchase")
     private LocalDate personalDateOfPurchase;
 
+    @Audited
     @PastOrPresent
     @Column(name = "date_of_events")
     private LocalDate personalDateOfEvents;
 
+    @Audited
     @Column(name = "time_exp")
     private String personalTimeExperience;
 
+    @Audited
     @Min(1)
     @Max(100)
     @Column(name = "guarantee_period")
     private Integer personalGuaranteePeriod;
-    
+
+    @Audited
     @Column(name = "time_of_guarantee")
     private String personalTimeOfGuarantee;
-    
+
+    @Audited
     @Min(1)
     @Max(50)
     @Column(name = "service_period")
     private Integer personalServicePeriod;
-    
+
+    @Audited
     @Column(name = "time_of_service")
     private String personalTimeOfService;
 
@@ -102,6 +116,7 @@ public class PersonalInstrument {
     @Column(name = "close_date")
     private LocalDate closeDate;
 
+    @Audited
     @PastOrPresent
     @Column(name = "broken_date")
     private LocalDate brokenDate;
@@ -110,11 +125,13 @@ public class PersonalInstrument {
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "broken_annotation")
     private String brokenAnnotation;
-    
+
+    @Audited
     @PastOrPresent
     @Column(name = "start_rep_date")
     private LocalDate startRepairDate;
-    
+
+    @Audited
     @FutureOrPresent
     @Column(name = "end_rep_date")
     private LocalDate endRepairDate;
@@ -124,23 +141,28 @@ public class PersonalInstrument {
     @Column(name = "repair_annotation")
     private String repairAnnotation;
 
+    @Audited
     @Column(name = "issue_date")
     private LocalDate issueDate;
 
     private String issueDateVariants;
 
+    @Audited
     @Column(name = "t_status")
     private TechnicalConditionENUM technicalConditionENUM;
 
+    @Audited
     @Column(name = "p_status")
     private PersonalConditionENUM personalConditionENUM;
-    
+
+    @Audited
     @Size(max = 1000, message = "Кол-во символов максимум 1000")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "instr_comment")
     private String personalInstrComment;
 
+    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "employee")
     private Employee employee;

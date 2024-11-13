@@ -46,11 +46,11 @@
                     <th style="text-align: left" scope="row"></th>
                     <th style="text-align: left"><label>Статус предупреждения</label></th>
                     <td style="text-align: left; width: 600px">
-                        <select style="width: 200px"; class="form-select form-select-sm" name="warningStatus" required>
+                        <select style="width: 200px"; class="form-select form-select-sm" name="constructionControlStatusENUM" required>
                             <option th:each="w_obj_stat:${warningStatusList}"
-                                    th:field="*{warningStatus}"
-                                    th:value="${w_obj_stat.wObjStatId}"
-                                    th:text="${w_obj_stat}">
+                                    th:field="*{constructionControlStatusENUM}"
+                                    th:value="${w_obj_stat}"
+                                    th:text="${w_obj_stat.getTitle()}">
                             </option>
                         </select>
                 </tr>
@@ -127,9 +127,11 @@
                     <th style="text-align: left" scope="row">007</th>
                     <td style="text-align: left"><label>СК Заказчика</label></td>
                     <td style="text-align: left">
-                        <input type="text" style="width: 400px" th:field="${constructionControl.responsibleFromCustomer}"
-                               placeholder="Ф.И.О., Должность">
-                        <p if="${#fields.hasErrors('responsibleFromCustomer')}" th:errors="${constructionControl.responsibleFromCustomer}"
+                        <textarea rows="3" cols="40" type="text" style="width: 400px";
+                                  th:field="${constructionControl.responsibleFromCustomer}"
+                                  placeholder="> Ф.И.О.&#10;> Должность&#10;> Контакты"></textarea>
+                        <p if="${#fields.hasErrors('responsibleFromCustomer')}"
+                           th:errors="${constructionControl.responsibleFromCustomer}"
                            style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
@@ -153,16 +155,19 @@
                     <th style="text-align: left" scope="row">008.2</th>
                     <td style="text-align: left">Отв. предст. подрядчика</td>
                     <td style="text-align: left">
-                        <input type="text" style="width: 400px" th:field="${constructionControl.responsibleFromContractor}"
-                               placeholder="Ф.И.О., Должность">
-                        <p if="${#fields.hasErrors('responsibleFromContractor')}" th:errors="${constructionControl.responsibleFromContractor}"
+                        <textarea rows="3" cols="40" type="text" style="width: 400px";
+                                  th:field="${constructionControl.responsibleFromContractor}"
+                                  placeholder="> Ф.И.О.&#10;> Должность&#10;> Контакты"></textarea>
+                        <p if="${#fields.hasErrors('responsibleFromContractor')}"
+                           th:errors="${constructionControl.responsibleFromContractor}"
                            style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">009</th>
                     <td style="text-align: left"><label>Срок продления, до</label></td>
                     <td style="text-align: left">
-                        <input type="date" style="width: 150px"; th:field="${constructionControl.dateOfExtension}" id="dateOfExtension">
+                        <input type="date" style="width: 150px"; th:field="${constructionControl.dateOfExtension}"
+                               id="dateOfExtension">
                         <script th:inline="javascript">
                             const inputDate3 = String([[${constructionControl.dateOfExtension}]]);
                             document.getElementById("dateOfExtension").valueAsDate = new Date(inputDate3);

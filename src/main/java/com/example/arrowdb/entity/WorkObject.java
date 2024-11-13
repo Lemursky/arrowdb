@@ -1,11 +1,14 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.WorkObjectStatusENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,7 +18,9 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Getter @Setter @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "work_object")
+@AuditTable(value = "work_object_aud", schema = "history")
 public class WorkObject {
 
     @Id
@@ -113,6 +118,7 @@ public class WorkObject {
     @Column(name = "work_object_comment")
     private String workObjectComment;
 
+    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
     private List<WorkInstrument> workInstrumentList = new ArrayList<>();
 
@@ -126,9 +132,8 @@ public class WorkObject {
 
     private Integer constructionControlClosed;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "work_object_status")
-    private WorkObjectStatus workObjectStat;
+    @Column(name = "work_object_status")
+    private WorkObjectStatusENUM workObjectStatusENUM;
 
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "work_object_chief")
@@ -178,14 +183,14 @@ public class WorkObject {
 
     public Integer getConstructionControlActive() {
         return constructionControlActive = constructionControlList.stream()
-                .filter(e -> e.getWarningStatus().getStatusName().equals("Действующий"))
+                .filter(e -> e.getConstructionControlStatusENUM().getTitle().contains("Действующий"))
                 .toList()
                 .size();
     }
 
     public Integer getConstructionControlClosed() {
         return constructionControlClosed = constructionControlList.stream()
-                .filter(e -> e.getWarningStatus().getStatusName().equals("Закрыт"))
+                .filter(e -> e.getConstructionControlStatusENUM().getTitle().contains("Закрыт"))
                 .toList()
                 .size();
     }

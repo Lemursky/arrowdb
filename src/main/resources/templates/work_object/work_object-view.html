@@ -15,14 +15,15 @@
             <th>
                 <div>
                     <a th:href="@{/general/workobject}">
-                        <button type="button" class="btn btn-outline-warning btn-sm" aria-pressed="true">меню Объекты работ</button>
+                        <button type="button" class="btn btn-outline-warning btn-sm" aria-pressed="true">
+                            меню Объекты работ</button>
                     </a>
                 </div>
             </th>
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_UPDATE')">
                     <a th:href="@{/general/workobject/workobjectUpdate/{id}(id=${workObject.workObjectId})}"
-                       th:unless="${workObject.workObjectStat.statusName == 'Закрыт'}">
+                       th:unless="${workObject.workObjectStatusENUM.getTitle() == 'Закрыт'}">
                         <button type="button" class="btn btn-outline-primary btn-sm" aria-pressed="true">Править</button>
                     </a>
                 </div>
@@ -68,7 +69,7 @@
             <tr>
                 <th style="text-align: left">
                 <th style="text-align: left"><label>Статус:</label></th>
-                <td style="text-align: left; width: 600px"><span th:text="${workObject.workObjectStat}"></span>
+                <td style="text-align: left; width: 600px"><span th:text="${workObject.workObjectStatusENUM.getTitle()}"></span>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">001</th>
@@ -201,7 +202,7 @@
             </tr>
 <!--            <tr>-->
 <!--                <th style="text-align: left" scope="row">021.1</th>-->
-<!--                <td style="text-align: left">Задествованный инструмент строительный</td>-->
+<!--                <td style="text-align: left">Задействованный инструмент строительный</td>-->
 <!--                <td style="text-align: left"><span th:each="workInstr:${workObject.workInstrumentList}">-->
 <!--                    <a th:href="@{/general/w_instrument/w_instrumentView/{id}(id=${workInstr.workInstrId})}">-->
 <!--                        <button style="text-align: left; width: 450px" type="button" class="btn btn-outline-dark btn-sm"><span-->
@@ -209,7 +210,7 @@
 <!--            </tr>-->
 <!--            <tr>-->
 <!--                <th style="text-align: left" scope="row">021.2</th>-->
-<!--                <td style="text-align: left">Задествованный инструмент измерительный</td>-->
+<!--                <td style="text-align: left">Задействованный инструмент измерительный</td>-->
 <!--                <td style="text-align: left"><span th:each="measInstr:${workObject.measInstrumentList}">-->
 <!--                    <a th:href="@{/general/m_instrument/m_instrumentView/{id}(id=${measInstr.measInstrId})}">-->
 <!--                        <button style="text-align: left; width: 450px" type="button" class="btn btn-outline-dark btn-sm"><span-->

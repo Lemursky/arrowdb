@@ -46,10 +46,10 @@
                 <th style="text-align: left" scope="row">004</th>
                 <td style="text-align: left"><label>Статус</label></td>
                 <td style="text-align: left">
-                    <select style="width: 200px; text-align: left;" class="form-select form-select-sm" name="userStatus">
+                    <select style="width: 200px; text-align: left;" class="form-select form-select-sm" name="userStatusENUM">
                         <option th:each="usrStat:${statusList}"
-                                th:field="*{userStatus}"
-                                th:value="${usrStat.userStatId}"
+                                th:field="*{userStatusENUM}"
+                                th:value="${usrStat}"
                                 th:text="${usrStat}">
                         </option>
                     </select>

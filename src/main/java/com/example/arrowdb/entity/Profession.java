@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,9 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Getter @Setter @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "professions")
+@AuditTable(value = "professions_aud", schema = "history")
 public class Profession {
 
     @Id
@@ -53,6 +55,7 @@ public class Profession {
 
     private String suffix;
 
+    @Audited(targetAuditMode = NOT_AUDITED)
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "profession", fetch = FetchType.LAZY)
     private List<Employee> employeeList = new ArrayList<>();
 

@@ -2,7 +2,9 @@ package com.example.arrowdb.history;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.envers.*;
+import org.hibernate.envers.RevisionEntity;
+import org.hibernate.envers.RevisionNumber;
+import org.hibernate.envers.RevisionTimestamp;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

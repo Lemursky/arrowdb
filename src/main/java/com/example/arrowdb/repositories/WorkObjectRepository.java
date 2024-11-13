@@ -1,9 +1,6 @@
 package com.example.arrowdb.repositories;
 
-import com.example.arrowdb.entity.Employee;
-import com.example.arrowdb.entity.WorkInstrument;
 import com.example.arrowdb.entity.WorkObject;
-import com.example.arrowdb.entity.WorkObjectStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -15,7 +15,15 @@
             <th>
                 <div>
                     <a th:href="@{/general/m_instrument/catalog}">
-                        <button type="button" class="btn btn-outline-warning btn-sm">меню Измерительный инструмент</button>
+                        <button type="button" class="btn btn-outline-warning btn-sm">
+                            меню Измерительный инструмент</button>
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div>
+                    <a th:href="@{/general/m_instrument/m_instrumentJournal/{id}(id=${measInstrument.measInstrId})}">
+                        <button type="button" class="btn btn-outline-success btn-sm">Журнал изменений</button>
                     </a>
                 </div>
             </th>

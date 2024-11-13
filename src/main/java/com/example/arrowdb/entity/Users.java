@@ -1,5 +1,6 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.UserStatusENUM;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,9 +32,8 @@ public class Users {
             inverseJoinColumns = @JoinColumn(name = "join_role_id"))
     private Set<Roles> rolesSet = new HashSet<>();
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "user_stat")
-    private UserStatus userStatus;
+    @Column(name = "user_status_enum")
+    private UserStatusENUM userStatusENUM;
 
     public void addRolesToUsers() {
         rolesSet.forEach(e -> e.getUsers().add(this));

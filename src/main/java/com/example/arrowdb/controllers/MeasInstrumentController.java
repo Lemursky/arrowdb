@@ -114,7 +114,7 @@ public class MeasInstrumentController {
                     .formatted(measInstrument.getMeasInstrId());
         }
         List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getWorkObjectStatusENUM().getTitle().contains("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().contains("Действующий")).toList());
         if(!measInstrument.getTechnicalConditionENUM().getTitle().contains("Исправен")){
@@ -142,7 +142,7 @@ public class MeasInstrumentController {
                                        BindingResult bindingResult,
                                        Model model) {
         List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getWorkObjectStatusENUM().getTitle().contains("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
         List<Department> departmentList = departmentService.findAllDepartments();

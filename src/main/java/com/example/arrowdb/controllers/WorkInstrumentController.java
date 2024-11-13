@@ -105,7 +105,7 @@ public class WorkInstrumentController {
                     .formatted(workInstrument.getWorkInstrId());
         }
         List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getWorkObjectStatusENUM().getTitle().contains("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().contains("Действующий")).toList());
         if(!workInstrument.getTechnicalConditionENUM().getTitle().contains("Исправен")){
@@ -131,7 +131,7 @@ public class WorkInstrumentController {
                                        BindingResult bindingResult,
                                        Model model) {
         List<WorkObject> workObjectList = new ArrayList<>(workObjectService.findAllWorkObjects().stream()
-                .filter(e -> e.getWorkObjectStat().getStatusName().equals("Действующий")).toList());
+                .filter(e -> e.getWorkObjectStatusENUM().getTitle().contains("Действующий")).toList());
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий")).toList());
         if (bindingResult.hasErrors()) {

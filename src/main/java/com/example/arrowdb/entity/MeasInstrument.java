@@ -7,13 +7,19 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 @Getter @Setter @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "m_instruments")
+@AuditTable(value = "m_instruments_aud", schema = "history")
 public class MeasInstrument {
 
     @Id
@@ -21,6 +27,7 @@ public class MeasInstrument {
     @Column(name = "instr_id")
     private Integer measInstrId;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([-\\dа-яА-Я-a\\s]+)?",
@@ -28,6 +35,7 @@ public class MeasInstrument {
     @Column(name = "onec_number")
     private String measOneCNumber;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -35,6 +43,7 @@ public class MeasInstrument {
     @Column(name = "invent_number", unique=true)
     private String measInventNumber;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -42,6 +51,7 @@ public class MeasInstrument {
     @Column(name = "serial_number")
     private String measSerialNumber;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -49,6 +59,7 @@ public class MeasInstrument {
     @Column(name = "instr-name")
     private String measInstrName;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -56,6 +67,7 @@ public class MeasInstrument {
     @Column(name = "instr-model")
     private String measInstrModel;
 
+    @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 2, max = 100, message = "Кол-во символов от 2 до 100")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
@@ -63,39 +75,48 @@ public class MeasInstrument {
     @Column(name = "instr_manufacturer")
     private String measInstrManufacturer;
 
+    @Audited
     @PastOrPresent
     @Column(name = "date_of_purchase")
     private LocalDate measDateOfPurchase;
 
+    @Audited
     @PastOrPresent
     @Column(name = "date_of_events")
     private LocalDate measDateOfEvents;
 
+    @Audited
     @Column(name = "time_exp")
     private String measTimeExperience;
 
+    @Audited
     @Min(1)
     @Max(100)
     @Column(name = "guarantee_period")
     private Integer measGuaranteePeriod;
 
+    @Audited
     @Column(name = "time_of_guarantee")
     private String measTimeOfGuarantee;
 
+    @Audited
     @Min(1)
     @Max(50)
     @Column(name = "service_period")
     private Integer measServicePeriod;
 
+    @Audited
     @Column(name = "time_of_service")
     private String measTimeOfService;
 
     @Column(name = "delete_act")
     private String deleteAct;
 
+    @PastOrPresent
     @Column(name = "close_date")
     private LocalDate closeDate;
 
+    @Audited
     @Column(name = "broken_date")
     private LocalDate brokenDate;
 
@@ -104,10 +125,12 @@ public class MeasInstrument {
     @Column(name = "broken_annotation")
     private String brokenAnnotation;
 
+    @Audited
     @PastOrPresent
     @Column(name = "start_rep_date")
     private LocalDate startRepairDate;
 
+    @Audited
     @FutureOrPresent
     @Column(name = "end_rep_date")
     private LocalDate endRepairDate;
@@ -117,52 +140,64 @@ public class MeasInstrument {
     @Column(name = "repair_annotation")
     private String repairAnnotation;
 
+    @Audited
     @Column(name = "issue_date")
     private LocalDate issueDate;
 
     private String issueDateVariants;
 
+    @Audited
     @Pattern(regexp = "([,\\d\\s]+)?")
     @Column(name = "meas_price")
     private String measInstrumentPrice;
 
+    @Audited
     @PastOrPresent
     @Column(name = "date_first")
     private LocalDate measDateFirst;
 
+    @Audited
     @FutureOrPresent
     @Column(name = "date_second")
     private LocalDate measDateSecond;
 
+    @Audited
     @Column(name = "link_view")
     private String linkView;
 
     private String certificateStat;
 
+    @Audited
     @Column(name = "t_status")
     private TechnicalConditionENUM technicalConditionENUM;
 
+    @Audited
     @Column(name = "w_status")
     private WorkConditionENUM workConditionENUM;
 
+    @Audited
     @Size(max = 1000, message = "Кол-во символов максимум 1000")
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "instr_comment")
     private String measInstrComment;
 
+    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "work_object")
     private WorkObject workObject;
 
+    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "employee")
     private Employee employee;
 
+    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "dep_status")
     private Department department;
 
+    @Audited
     @Pattern(regexp = "([<>|/-_.,;:«»'()#\"{}№\\n\\-\\dа-яА-Я-a-zA-Z\\s]+)?",
             message = "только - алфавит: Кириллица, Латинский; цифры; символы: <>|/-_.,;:«»'()#\"{}№")
     @Column(name = "verification_history")

@@ -125,7 +125,7 @@
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">007</th>
-                    <td style="text-align: left"><label>СК Заказчика</label></td>
+                    <td style="text-align: left"><label>Представитель СК Заказчика</label></td>
                     <td style="text-align: left">
                         <textarea rows="3" cols="40" type="text" style="width: 400px";
                                   th:field="${constructionControl.responsibleFromCustomer}"
@@ -136,18 +136,15 @@
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">008.1</th>
-                    <td style="text-align: left"><label>Отв. представители НПП "ТИК"</label></td>
+                    <td style="text-align: left"><label>Представитель подрядчика по строительству</label></td>
                     <td style="text-align: left">
-                        <select class="livesearch" style="width:400px;" name="empDutyList" multiple>
+                        <select class="livesearch" style="width:400px;" name="responsibleFromContractor">
                             <option th:each="emp:${employeeList}"
-                                    th:field="*{empDutyList}"
+                                    th:field="*{responsibleFromContractor}"
                                     th:value="${emp.empId}"
                                     th:text="${emp} +
                                     ((${emp.profession} == null)? '' : ${', ' + emp.profession.professionName})">
                             </option>
-                            <script type="text/javascript">
-                                $(".livesearch").chosen();
-                            </script>
                         </select>
                         <script>
                             $(".livesearch").chosen();
@@ -156,13 +153,30 @@
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">008.2</th>
-                    <td style="text-align: left">Отв. предст. подрядчика</td>
+                    <td style="text-align: left"><label>Представитель СК подрядчика по строительству</label></td>
+                    <td style="text-align: left">
+                        <select class="livesearch" style="width:400px;" name="responsibleFromSKContractor">
+                            <option th:each="emp:${employeeList}"
+                                    th:field="*{responsibleFromSKContractor}"
+                                    th:value="${emp.empId}"
+                                    th:text="${emp} +
+                                    ((${emp.profession} == null)? '' : ${', ' + emp.profession.professionName})">
+                            </option>
+                        </select>
+                        <script>
+                            $(".livesearch").chosen();
+                        </script>
+                    <td>
+                </tr>
+                <tr>
+                    <th style="text-align: left" scope="row">008.3</th>
+                    <td style="text-align: left">Представитель субподрядчика</td>
                     <td style="text-align: left">
                         <textarea rows="3" cols="40" type="text" style="width: 400px";
-                                  th:field="${constructionControl.responsibleFromContractor}"
+                                  th:field="${constructionControl.responsibleFromSubContractor}"
                                   placeholder="> Ф.И.О.&#10;> Должность&#10;> Контакты"></textarea>
                         <p if="${#fields.hasErrors('responsibleFromContractor')}"
-                           th:errors="${constructionControl.responsibleFromContractor}"
+                           th:errors="${constructionControl.responsibleFromSubContractor}"
                            style="font-size: 13px; color: brown"></p>
                 </tr>
                 </tbody>

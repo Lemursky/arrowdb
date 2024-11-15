@@ -132,6 +132,8 @@ public class WorkObject {
 
     private Integer constructionControlClosed;
 
+    private Integer totalCount;
+
     @Column(name = "work_object_status")
     private WorkObjectStatusENUM workObjectStatusENUM;
 
@@ -181,6 +183,7 @@ public class WorkObject {
         }
     }
 
+    //TODO Переопределить в метод в контроллере
     public Integer getConstructionControlActive() {
         return constructionControlActive = constructionControlList.stream()
                 .filter(e -> e.getConstructionControlStatusENUM().getTitle().contains("Действующий"))
@@ -188,11 +191,17 @@ public class WorkObject {
                 .size();
     }
 
+    //TODO Переопределить в метод в контроллере
     public Integer getConstructionControlClosed() {
         return constructionControlClosed = constructionControlList.stream()
                 .filter(e -> e.getConstructionControlStatusENUM().getTitle().contains("Закрыт"))
                 .toList()
                 .size();
+    }
+
+    //TODO Переопределить в метод в контроллере
+    public Integer getTotalCount() {
+        return constructionControlActive + constructionControlClosed;
     }
 
     @Override

@@ -46,7 +46,8 @@
                     <th style="text-align: left" scope="row"></th>
                     <th style="text-align: left"><label>Статус предупреждения</label></th>
                     <td style="text-align: left; width: 600px">
-                        <select style="width: 200px"; class="form-select form-select-sm" name="constructionControlStatusENUM" required>
+                        <select style="width: 200px"; class="form-select form-select-sm" id="status"
+                                name="constructionControlStatusENUM" required>
                             <option th:each="w_obj_stat:${warningStatusList}"
                                     th:field="*{constructionControlStatusENUM}"
                                     th:value="${w_obj_stat}"
@@ -125,7 +126,7 @@
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">007</th>
-                    <td style="text-align: left"><label>СК Заказчика</label></td>
+                    <td style="text-align: left"><label>Представитель СК Заказчика</label></td>
                     <td style="text-align: left">
                         <textarea rows="3" cols="40" type="text" style="width: 400px";
                                   th:field="${constructionControl.responsibleFromCustomer}"
@@ -136,11 +137,11 @@
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">008.1</th>
-                    <td style="text-align: left"><label>Отв. представители НПП "ТИК"</label></td>
+                    <td style="text-align: left"><label>Представитель подрядчика по строительству</label></td>
                     <td style="text-align: left">
-                        <select class="livesearch" style="width:400px;" name="empDutyList" multiple>
+                        <select class="livesearch" style="width:400px;" name="responsibleFromContractor">
                             <option th:each="emp:${employeeList}"
-                                    th:field="*{empDutyList}"
+                                    th:field="*{responsibleFromContractor}"
                                     th:value="${emp.empId}"
                                     th:text="${emp} +
                                     ((${emp.profession} == null)? '' : ${', ' + emp.profession.professionName})">
@@ -153,28 +154,61 @@
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">008.2</th>
-                    <td style="text-align: left">Отв. предст. подрядчика</td>
+                    <td style="text-align: left"><label>Представитель СК подрядчика по строительству</label></td>
                     <td style="text-align: left">
-                        <textarea rows="3" cols="40" type="text" style="width: 400px";
-                                  th:field="${constructionControl.responsibleFromContractor}"
-                                  placeholder="> Ф.И.О.&#10;> Должность&#10;> Контакты"></textarea>
-                        <p if="${#fields.hasErrors('responsibleFromContractor')}"
-                           th:errors="${constructionControl.responsibleFromContractor}"
-                           style="font-size: 13px; color: brown"></p>
+                        <select class="livesearch" style="width:400px;" name="responsibleFromSKContractor">
+                            <option th:each="emp:${employeeList}"
+                                    th:field="*{responsibleFromSKContractor}"
+                                    th:value="${emp.empId}"
+                                    th:text="${emp} +
+                                    ((${emp.profession} == null)? '' : ${', ' + emp.profession.professionName})">
+                            </option>
+                        </select>
+                        <script>
+                            $(".livesearch").chosen();
+                        </script>
+                    <td>
                 </tr>
                 <tr>
-                    <th style="text-align: left" scope="row">009</th>
-                    <td style="text-align: left"><label>Срок продления, до</label></td>
+                    <th style="text-align: left" scope="row">008.3</th>
+                    <td style="text-align: left">Представитель субподрядчика</td>
                     <td style="text-align: left">
-                        <input type="date" style="width: 150px"; th:field="${constructionControl.dateOfExtension}"
-                               id="dateOfExtension">
-                        <script th:inline="javascript">
-                            const inputDate3 = String([[${constructionControl.dateOfExtension}]]);
-                            document.getElementById("dateOfExtension").valueAsDate = new Date(inputDate3);
-                        </script>
-                        <p if="${#fields.hasErrors('dateOfExtension')}"
-                           th:errors="${constructionControl.dateOfExtension}"></p>
+                        <textarea rows="3" cols="40" type="text" style="width: 400px";
+                                  th:field="${constructionControl.responsibleFromSubContractor}"
+                                  placeholder="> Ф.И.О.&#10;> Должность&#10;> Контакты"></textarea>
+                        <p if="${#fields.hasErrors('responsibleFromContractor')}"
+                           th:errors="${constructionControl.responsibleFromSubContractor}"
+                           style="font-size: 13px; color: brown"></p>
                 </tr>
+                    <tr>
+                        <th style="text-align: left" scope="row">009</th>
+                        <td style="text-align: left"><label>Срок продления, до</label></td>
+                        <td style="text-align: left">
+                            <input type="date" style="width: 150px"; th:field="${constructionControl.dateOfExtension}"
+                                   id="dateOfExtension">
+                            <script th:inline="javascript">
+                                const inputDate3 = String([[${constructionControl.dateOfExtension}]]);
+                                document.getElementById("dateOfExtension").valueAsDate = new Date(inputDate3);
+                            </script>
+                            <p if="${#fields.hasErrors('dateOfExtension')}"
+                               th:errors="${constructionControl.dateOfExtension}"></p>
+                    </tr>
+                    <script>
+                        $('#status').change(function () {
+                            if ($('#status').val() === "ACTIVE") {
+                                $('#dateOfExtension').css('display', 'block');
+                            } else {
+                                $('#dateOfExtension').css('display', 'none');
+                            }
+                        });
+                    </script>
+                    <script>
+                        if ($('#status').val() === "ACTIVE") {
+                            $('#dateOfExtension').css('display', 'block');
+                        } else {
+                            $('#dateOfExtension').css('display', 'none');
+                        }
+                    </script>
                 </tbody>
             </table>
         </div>

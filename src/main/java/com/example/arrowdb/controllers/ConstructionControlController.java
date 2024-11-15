@@ -2,6 +2,8 @@ package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
 import com.example.arrowdb.enums.ConstructionControlStatusENUM;
+import com.example.arrowdb.repositories.RoleRepository;
+import com.example.arrowdb.repositories.UsersRepository;
 import com.example.arrowdb.services.ConstructionControlService;
 import com.example.arrowdb.services.EmployeeService;
 import com.example.arrowdb.services.WorkObjectService;
@@ -9,6 +11,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,26 +35,46 @@ public class ConstructionControlController {
     private final EmployeeService employeeService;
     private final WorkObjectService workObjectService;
     private final ConstructionControlService constructionControlService;
+    private final UsersRepository usersRepository;
+    private final RoleRepository roleRepository;
 
     @GetMapping("/general/constr_control")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_VIEW')")
     public String findAllConstructionControl(Model model) {
-        model.addAttribute("workObjectList", workObjectService.findAllWorkObjects()
+        List<WorkObject> workObjectList = workObjectService.findAllWorkObjects()
                 .stream()
                 .filter(e -> !e.getWorkObjectStatusENUM().getTitle().contains("Не начат"))
-                .toList());
+                .toList();
+        model.addAttribute("workObjectList", workObjectList);
         return "constr_control/constr_control-menu";
     }
 
     @GetMapping("/general/constr_control/constr_controlWarnings/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_VIEW')")
     public String findAllWarningsControl(@PathVariable("id") int id,
+                                         @AuthenticationPrincipal UserDetails userDetails,
                                          Model model) {
         WorkObject workObject = workObjectService.findWorkObjectById(id);
+        Users users = usersRepository.findByUserName(userDetails.getUsername()).orElseThrow();
+        model.addAttribute("constructionControlStatus", ConstructionControlStatusENUM.DRAFT);
+        model.addAttribute("adminAccept", users.getRolesSet().contains(roleRepository
+                .findRolesByRoleName("ROLE_ADMIN")));
+        model.addAttribute("roleDraft", users.getRolesSet().contains(roleRepository
+                .findRolesByRoleName("ROLE_CONSTR_CONTROL_DRAFT")));
         model.addAttribute("workObject", workObject);
-        model.addAttribute("constructionControlList", workObject.getConstructionControlList().stream()
-                .sorted(Comparator.comparingInt(ConstructionControl::getConstrControlId))
-                .toList());
+        if(users.getRolesSet().contains(roleRepository.findRolesByRoleName("ROLE_CONSTR_CONTROL_DRAFT")) ||
+        users.getRolesSet().contains(roleRepository.findRolesByRoleName("ROLE_ADMIN"))){
+            model.addAttribute("constructionControlList", workObject.getConstructionControlList()
+                    .stream()
+                    .sorted(Comparator.comparingInt(ConstructionControl::getConstrControlId))
+                    .toList());
+        } else {
+            model.addAttribute("constructionControlList", workObject.getConstructionControlList()
+                    .stream()
+                    .filter(e -> !e.getConstructionControlStatusENUM().getTitle().contains("Черновик"))
+                    .sorted(Comparator.comparingInt(ConstructionControl::getConstrControlId))
+                    .toList());
+        }
         return "constr_control/constr_control-warnings";
     }
 
@@ -102,6 +126,15 @@ public class ConstructionControlController {
                 return "constr_control/constr_control-create";
             }
         }
+    }
+
+    @GetMapping("/general/constr_control/constr_controlDelete/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_DRAFT')")
+    public String deleteConstructionControl(@PathVariable("id") int id){
+        ConstructionControl constructionControl = constructionControlService.findConstructionControlById(id);
+        constructionControlService.deleteConstructionControlById(id);
+        return "redirect:/general/constr_control/constr_controlWarnings/%d"
+                .formatted(constructionControl.getWorkObject().getWorkObjectId());
     }
 
     @GetMapping("/general/constr_control/constr_controlUpdate/{id}")
@@ -166,9 +199,10 @@ public class ConstructionControlController {
             return "constr_control/constr_control-update";
         } else {
             if (constructionControl.getConstructionControlStatusENUM().getTitle().contains("Закрыт")) {
-                constructionControl.setResponsibleFromContractor(null);
                 constructionControl.setResponsibleFromCustomer(null);
-                constructionControl.getEmpDutyList().clear();
+                constructionControl.setResponsibleFromContractor(null);
+                constructionControl.setResponsibleFromSKContractor(null);
+                constructionControl.setResponsibleFromSubContractor(null);
             }
             try {
                 constructionControlService.saveConstructionControl(constructionControl);

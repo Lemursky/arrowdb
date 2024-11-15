@@ -5,6 +5,7 @@ import com.example.arrowdb.enums.EmployeeStatusENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.envers.AuditJoinTable;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -127,8 +128,18 @@ public class Employee {
     @ManyToMany(mappedBy = "PTOList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<WorkObject> workObjectPTOList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "empDutyList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    private List<ConstructionControl> constrControlEmpDutyList = new ArrayList<>();
+//    @ManyToMany(mappedBy = "empDutyList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+//    private List<ConstructionControl> constrControlEmpDutyList = new ArrayList<>();
+
+
+
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "responsibleFromContractor", fetch = FetchType.LAZY)
+    private List<ConstructionControl> responsibleFromContractorList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "responsibleFromSKContractor", fetch = FetchType.LAZY)
+    private List<ConstructionControl> responsibleFromSKContractorList = new ArrayList<>();
+
+
 
     public void setSurName(String surName) {
         try {

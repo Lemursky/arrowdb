@@ -1,5 +1,6 @@
 package com.example.arrowdb.history;
 
+import com.example.arrowdb.entity.PersonalInstrument;
 import com.example.arrowdb.entity.Profession;
 import com.example.arrowdb.enums.DriverLicenseENUM;
 import com.example.arrowdb.enums.EmployeeStatusENUM;

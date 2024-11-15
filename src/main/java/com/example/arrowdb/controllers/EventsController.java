@@ -1,21 +1,12 @@
 package com.example.arrowdb.controllers;
 
-import com.example.arrowdb.entity.Employee;
-import com.example.arrowdb.entity.MeasInstrument;
-import com.example.arrowdb.entity.PersonalInstrument;
-import com.example.arrowdb.entity.WorkInstrument;
+import com.example.arrowdb.entity.*;
 import com.example.arrowdb.history.EmployeeAUD;
 import com.example.arrowdb.history.MeasInstrumentAUD;
 import com.example.arrowdb.history.PersonalInstrumentAUD;
 import com.example.arrowdb.history.WorkInstrumentAUD;
-import com.example.arrowdb.repositories.EmployeeAUDRepository;
-import com.example.arrowdb.repositories.MeasInstrumentAUDRepository;
-import com.example.arrowdb.repositories.PersonalInstrumentAUDRepository;
-import com.example.arrowdb.repositories.WorkInstrumentAUDRepository;
-import com.example.arrowdb.services.EmployeeService;
-import com.example.arrowdb.services.MeasInstrumentService;
-import com.example.arrowdb.services.PersonalInstrumentService;
-import com.example.arrowdb.services.WorkInstrumentService;
+import com.example.arrowdb.repositories.*;
+import com.example.arrowdb.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +27,8 @@ public class EventsController {
     private final WorkInstrumentAUDRepository workInstrumentAUDRepository;
     private final MeasInstrumentService measInstrumentService;
     private final MeasInstrumentAUDRepository measInstrumentAUDRepository;
+    private final ConstructionControlService constructionControlService;
+    private final ConstructionControlAUDRepository constructionControlAUDRepository;
 
     @GetMapping("/general/employee/employeeJournal/{id}")
     public String getEmployeeJournal(@PathVariable("id") int id, Model model){
@@ -71,5 +64,14 @@ public class EventsController {
         model.addAttribute("measInstrumentAUDList", measInstrumentAUDRepository
                 .findAllMeasInstrumentAUDById(id));
         return "stock/m_instrument_event-journal";
+    }
+
+    @GetMapping("/general/constr_control/constr_controlJournal/{id}")
+    public String getConstructionControlJournal(@PathVariable("id") int id, Model model){
+        model.addAttribute("constructionControl", constructionControlService
+                .findConstructionControlById(id));
+        model.addAttribute("constructionControlAUDList", constructionControlAUDRepository
+                .findAllConstructionControlAUDById(id));
+        return "constr_control/c_control_event-journal";
     }
 }

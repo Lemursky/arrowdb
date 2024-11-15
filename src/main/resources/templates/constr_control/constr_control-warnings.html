@@ -15,9 +15,10 @@
         </a>
     </div>
     <hr>
-    <h4>Акты-предупреждения по объекту <span th:text="${'«' + workObject.workObjectLot + ' ' + workObject.workObjectOrder + '»'}"></span></h4>
+    <h4>Акты-предупреждения по объекту <span th:text="${'«' + workObject.workObjectLot + ' '
+    + workObject.workObjectOrder + '»'}"></span></h4>
     <style>
-        .mainTable{
+        .mainTable {
             display: block;
             width: 100%;
             height: 650px;
@@ -28,10 +29,12 @@
             -webkit-hyphens: auto;
             -ms-hyphens: auto;
         }
-        .head{
+
+        .head {
             position: sticky;
             top: 0;
-            text-align: left; vertical-align: top;
+            text-align: left;
+            vertical-align: top;
         }
     </style>
     <form th:action="@{/general/constr_control/constr_controlWarnings/{id}(id=${workObject.workObjectId})}"
@@ -41,24 +44,29 @@
             <tr>
                 <td style="width: 100px; text-align: left;">Поиск...</td>
                 <th style="width: 150px; text-align: left;">
-                    <input type="text" style="width: 120px; height: 27px;" id="byWarning" onkeyup="myFunctionWARNING()"></th>
+                    <input type="text" style="width: 120px; height: 27px;" id="byWarning"
+                           onkeyup="myFunctionWARNING()"></th>
                 </th>
                 <th style="width: 100px; text-align: left;">
                 </th>
-                <th style="width: 450px; text-align: left;">
-                    <input type="text" style="width: 180px; height: 27px;" id="byWarningName" onkeyup="myFunctionWARNINGNAME()"></th>
+                <th style="width: 400px; text-align: left;">
+                    <input type="text" style="width: 180px; height: 27px;" id="byWarningName"
+                           onkeyup="myFunctionWARNINGNAME()"></th>
                 </th>
                 <th style="width: 100px"></th>
                 <th style="width: 200px">
-                    <input type="text" style="width: 140px; height: 27px;" id="byCustomer" onkeyup="myFunctionCUSTOMER()"></th>
+                    <input type="text" style="width: 140px; height: 27px;" id="byCustomer"
+                           onkeyup="myFunctionCUSTOMER()"></th>
                 </th>
                 <th style="width: 350px">
-                    <input type="text" style="width: 180px; height: 27px;" id="byContractor" onkeyup="myFunctionCONTRACTOR()"></th>
+                    <input type="text" style="width: 180px; height: 27px;" id="byContractor"
+                           onkeyup="myFunctionCONTRACTOR()"></th>
                 </th>
                 <th style="width: 100px">
                 <th style="width: 100px">
-                    <input type="text" style="width: 80px; height: 27px;" id="byStatus" onkeyup="myFunctionSTATUS()"></th>
-                <th style="width: 100px">
+                    <input type="text" style="width: 80px; height: 27px;" id="byStatus"
+                           onkeyup="myFunctionSTATUS()"></th>
+                <th style="width: 150px">
                     <button class="btn btn-outline-dark btn-sm" id="resetButton">Очистить</button>
                 </th>
             </tr>
@@ -72,13 +80,15 @@
                 <th style="width: 100px; text-align: left;">#ID</th>
                 <th onclick="sortTable(1)" style="width: 150px; text-align: left;">№ предупр.</th>
                 <th onclick="sortTable(2)" style="width: 100px; text-align: left;">Дата выдачи</th>
-                <th onclick="sortTable(3)" style="width: 450px; text-align: left;">Выявленные несоответствия</th>
+                <th onclick="sortTable(3)" style="width: 400px; text-align: left;">Выявленные несоответствия</th>
                 <th onclick="sortTable(4)" style="width: 100px; text-align: left;">Срок устранения</th>
-                <th onclick="sortTable(5)" style="width: 200px; text-align: left;">СК Заказчика</th>
-                <th onclick="sortTable(6)" style="width: 350px; text-align: left;">- Отв. предст. НПП "ТИК"<br>- Отв. предст. подрядной орг.</th>
+                <th onclick="sortTable(5)" style="width: 200px; text-align: left;">Представитель СК Заказчика</th>
+                <th onclick="sortTable(6)" style="width: 350px; text-align: left;">Ответственные за устранение
+                    замечания
+                </th>
                 <th onclick="sortTable(7)" style="width: 100px; text-align: left;">Срок<br>продл., до</th>
                 <th onclick="sortTable(8)" style="width: 100px; text-align: left;">Статус предупр.</th>
-                <th style="width: 100px; text-align: left;"></th>
+                <th style="width: 150px; text-align: left;"></th>
             </tr>
             </thead>
             <tbody class="body">
@@ -90,12 +100,23 @@
                 <td th:text="${#temporals.format(const_cont.deadLine, 'dd-MM-yyyy')}"/>
                 <td th:text="${const_cont.responsibleFromCustomer}"/>
                 <td>
-                    <span th:each="emp:${const_cont.empDutyList}">
+                    <strong style="font-size: 13px">Представитель подрядчика по строительству:</strong>
+                    <span th:each="emp:${const_cont.responsibleFromContractor}">
                     <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
                         <button style="text-align: left; width: 340px" type="button" class="btn btn-outline-dark btn-sm">
                             <span th:text="(${emp} == null)? '' : ((${emp.profession} == null)? ${emp} :
-                (${emp} + ${', ' + emp.profession.getProfessionName}?: ''))"></span></button></a><br></span>
-                    <span th:text="${const_cont.responsibleFromContractor}"></span></td>
+                            (${emp} + ${', ' + emp.profession.getProfessionName}?: ''))"></span></button></a><br></span>
+                    <hr>
+                    <strong style="font-size: 13px">Представитель СК подрядчика по строительству:</strong>
+                    <span th:each="emp:${const_cont.responsibleFromSKContractor}">
+                    <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
+                        <button style="text-align: left; width: 340px" type="button" class="btn btn-outline-dark btn-sm">
+                            <span th:text="(${emp} == null)? '' : ((${emp.profession} == null)? ${emp} :
+                            (${emp} + ${', ' + emp.profession.getProfessionName}?: ''))"></span></button></a><br></span>
+                    <hr>
+                    <p><strong style="font-size: 13px">Представитель субподрядчика:</strong></p>
+                    <span th:text="${const_cont.responsibleFromSubContractor}"></span>
+                </td>
                 <td th:text="${#temporals.format(const_cont.dateOfExtension, 'dd-MM-yyyy')}"/>
                 <td th:text="${const_cont.constructionControlStatusENUM.getTitle()}"/>
                 <td>
@@ -103,6 +124,19 @@
                         <a th:href="@{/general/constr_control/constr_controlUpdate/{id}(id=${const_cont.constrControlId})}"
                            th:unless="${const_cont.constructionControlStatusENUM.getTitle() == 'Закрыт'}">
                             <button type="button" class="btn btn-outline-primary btn-sm">Править</button>
+                        </a>
+                    </div>
+                    <div>
+                        <a th:href="@{/general/constr_control/constr_controlJournal/{id}(id=${const_cont.constrControlId})}">
+                            <button type="button" class="btn btn-outline-success btn-sm">Журнал изменений</button>
+                        </a>
+                    </div>
+                    <div th:if="${constructionControlStatus == const_cont.constructionControlStatusENUM}
+                    AND ${roleDraft} OR ${constructionControlStatus == const_cont.constructionControlStatusENUM}
+                    AND ${adminAccept}">
+                        <a th:href="@{/general/constr_control/constr_controlDelete/{id}(id=${const_cont.constrControlId})}">
+                            <button onclick="return confirm('Вы действительно хотите безвозвратно удалить эти данные?');"
+                                    type="button" class="btn btn-outline-danger btn-sm">Удалить</button>
                         </a>
                     </div>
             </tr>

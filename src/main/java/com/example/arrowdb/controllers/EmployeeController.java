@@ -135,7 +135,9 @@ public class EmployeeController {
                             .equals("Закрыт") ||
                     !empById.getWorkObjectStoreKeeperList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getConstrControlEmpDutyList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
+                    !empById.getResponsibleFromContractorList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
+                            .equals("Закрыт") ||
+                    !empById.getResponsibleFromSKContractorList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт")) {
                 model.addAttribute("employee", empById);
                 model.addAttribute("error", DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE);

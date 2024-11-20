@@ -1,6 +1,7 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.ClothSizeENUM;
 import com.example.arrowdb.enums.DriverLicenseENUM;
 import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.repositories.RoleRepository;
@@ -72,6 +73,7 @@ public class EmployeeController {
             model.addAttribute("professionList", professionService.findAllProfessions());
             return "employee/employee-create";
         } else {
+            employee.setClothSizeENUM(null);
             employee.setEmployeeStatusENUM(EmployeeStatusENUM.ACTIVE);
             employeeService.saveEmployee(employee);
             return "redirect:/general/employee";
@@ -104,6 +106,7 @@ public class EmployeeController {
         model.addAttribute("professionList", professionService.findAllProfessions());
         model.addAttribute("driverLicenseList", DriverLicenseENUM.values());
         model.addAttribute("employeeStatus", EmployeeStatusENUM.values());
+        model.addAttribute("clothSize", ClothSizeENUM.values());
         return "employee/employee-update";
     }
 
@@ -116,6 +119,7 @@ public class EmployeeController {
             model.addAttribute("professionList", professionService.findAllProfessions());
             model.addAttribute("driverLicenseList", DriverLicenseENUM.values());
             model.addAttribute("employeeStatus", EmployeeStatusENUM.values());
+            model.addAttribute("clothSize", ClothSizeENUM.values());
             return "employee/employee-update";
         } else {
             Employee empById = employeeService.findEmployeeById(employee.getEmpId());

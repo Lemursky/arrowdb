@@ -1,7 +1,7 @@
 package com.example.arrowdb.history;
 
-import com.example.arrowdb.entity.PersonalInstrument;
 import com.example.arrowdb.entity.Profession;
+import com.example.arrowdb.enums.ClothSizeENUM;
 import com.example.arrowdb.enums.DriverLicenseENUM;
 import com.example.arrowdb.enums.EmployeeStatusENUM;
 import jakarta.persistence.*;
@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,9 +29,6 @@ public class EmployeeAUD {
 
     @Column(name = "rev_type")
     private Integer revisionType;
-
-    @Column(name = "cloth_size")
-    private String clothSize;
 
     @Column(name = "email")
     private String email;
@@ -67,6 +63,9 @@ public class EmployeeAUD {
 
     @Column(name = "driver_license")
     private List<DriverLicenseENUM> driverLicenseENUM;
+
+    @Column(name = "cloth_size")
+    private ClothSizeENUM clothSizeENUM;
 
     @OneToOne
     @JoinColumn(name = "rev")

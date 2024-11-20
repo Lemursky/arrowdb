@@ -4,6 +4,7 @@ import com.example.arrowdb.entity.ConstructionControl;
 import com.example.arrowdb.repositories.ConstructionControlRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class ConstructionControlServiceImpl implements ConstructionControlServic
     private final ConstructionControlRepository constructionControlRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public ConstructionControl findConstructionControlById(Integer id) {
         ConstructionControl constructionControl = null;
         Optional<ConstructionControl> optional = constructionControlRepository.findById(id);
@@ -27,19 +28,19 @@ public class ConstructionControlServiceImpl implements ConstructionControlServic
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<ConstructionControl> findAllConstructionControl() {
         return constructionControlRepository.findAll();
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void saveConstructionControl(ConstructionControl constructionControl) {
         constructionControlRepository.save(constructionControl);
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteConstructionControlById(Integer id) {
         constructionControlRepository.deleteById(id);
     }

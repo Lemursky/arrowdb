@@ -45,19 +45,19 @@
             }
         </style>
         <div class="mainTable">
-            <table class="table table-hover table-sm" style="width: 2200px;">
+            <table class="table table-hover table-sm" style="width: 1750px;">
                 <thead class="head">
                 <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
                     <th style="width: 150px;">Пользователь</th>
                     <th style="width: 100px;">Дата и время изм.</th>
                     <th style="width: 150px;">Объект строительства</th>
                     <th style="width: 200px;">№ предупр.</th>
-                    <th style="width: 150px;">Дата выдачи</th>
+                    <th style="width: 100px;">Дата выдачи</th>
                     <th style="width: 400px;">Выявленные несоответствия</th>
-                    <th style="width: 150px;">Срок устранения</th>
-                    <th style="width: 200px;">СК Заказчика</th>
-                    <th style="width: 400px;">Ответственные за устранение замечания</th>
-                    <th style="width: 150px;">Срок продл., до</th>
+                    <th style="width: 100px;">Срок устранения</th>
+                    <th style="width: 150px;">СК Заказчика</th>
+                    <th style="width: 150px;">Ответственные за устранение замечания</th>
+                    <th style="width: 100px;">Срок продл., до</th>
                     <th style="width: 150px;">Статус предупр.</th>
                 </tr>
                 </thead>
@@ -72,13 +72,11 @@
                     <td th:text="${c_contr.warningName}">
                     <td th:text="${#temporals.format(c_contr.deadLine, 'dd-MM-yyyy')}">
                     <td th:text="${c_contr.responsibleFromCustomer}">
-
                     <td>
                     <p th:text="${c_contr.responsibleFromContractor}"></p>
                     <p th:text="${c_contr.responsibleFromSKContractor}"></p>
                     <p th:text="${c_contr.responsibleFromSubContractor}"></p>
                 </td>
-
                     <td th:text="${#temporals.format(c_contr.dateOfExtension, 'dd-MM-yyyy')}">
                     <td th:text="${c_contr.constructionControlStatusENUM.getTitle()}">
                 </tr>

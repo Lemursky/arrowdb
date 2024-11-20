@@ -20,6 +20,13 @@
                     </a>
                 </div>
             </th>
+<!--            <th>-->
+<!--                <div>-->
+<!--                    <a th:href="@{/general/workobject/workobjectJournal/{id}(id=${workObject.workObjectId})}">-->
+<!--                        <button type="button" class="btn btn-outline-success btn-sm">Журнал изменений</button>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </th>-->
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_UPDATE')">
                     <a th:href="@{/general/workobject/workobjectUpdate/{id}(id=${workObject.workObjectId})}"
@@ -135,17 +142,19 @@
             <tr>
                 <th style="text-align: left" scope="row">012</th>
                 <td style="text-align: left">Срок контракта</td>
-                <td style="text-align: left"><span th:text="${'Начало: ' + workObject.dateOfStart + ' | Окончание: ' + workObject.dateOfEnd}"></span>
+                <td style="text-align: left"><span th:text="${'Начало: ' + workObject.dateOfStart
+                + ' | Окончание: ' + workObject.dateOfEnd}"></span>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">013</th>
                 <td style="text-align: left">Руководитель проекта</td>
-                <td style="text-align: left"><span th:if="${workObject.workObjectChief}">
+                <td style="text-align: left"><span th:if="${workObject.workObjectChief != null}">
                     <a th:href="@{/general/employee/employeeView/{id}(id=${workObject.workObjectChief.empId})}">
                     <button style="width: 450px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
                         <span th:text="(${workObject.workObjectChief} == null)? '' :
                 ((${workObject.workObjectChief.profession} == null)? ${workObject.workObjectChief} :
-                (${workObject.workObjectChief} + ${', ' + workObject.workObjectChief.profession.getProfessionName}?: ''))"></span></button></a></span>
+                (${workObject.workObjectChief}
+                + ${', ' + workObject.workObjectChief.profession.getProfessionName}?: ''))"></span></button></a></span>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">014</th>

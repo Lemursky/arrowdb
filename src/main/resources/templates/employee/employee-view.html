@@ -159,8 +159,9 @@
                             <th style="text-align: left"><span th:text="${employee.height}"></span>
                         </tr>
                         <tr>
-                            <td style="width: 200px; text-align: left">Размер одежды (РФ/EU)</td>
-                            <th style="text-align: left"><span th:text="${employee.clothSize}"></span>
+                            <td style="width: 200px; text-align: left">Размер одежды (EU/РФ)</td>
+                            <th style="text-align: left"><span th:text="${employee.clothSizeENUM == null ? '' :
+                            employee.clothSizeENUM.getTitle()}"></span>
                         </tr>
                         <tr>
                             <td style="width: 200px; text-align: left">Размер обуви (РФ)</td>

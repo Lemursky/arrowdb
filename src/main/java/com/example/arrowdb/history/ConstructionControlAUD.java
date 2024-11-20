@@ -66,7 +66,7 @@ public class ConstructionControlAUD {
     @Column(name = "constr_control_status")
     private ConstructionControlStatusENUM constructionControlStatusENUM;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_object")
     private WorkObject workObject;
 

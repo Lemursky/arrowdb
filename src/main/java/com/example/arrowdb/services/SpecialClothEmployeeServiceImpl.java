@@ -6,6 +6,7 @@ import com.example.arrowdb.entity.SpecialClothEmployee;
 import com.example.arrowdb.repositories.SpecialClothEmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class SpecialClothEmployeeServiceImpl implements SpecialClothEmployeeServ
     private final SpecialClothEmployeeRepository specialClothEmployeeRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public SpecialClothEmployee findSpecialClothEmployeeById(Integer id) {
         SpecialClothEmployee specialClothEmployee = null;
         Optional<SpecialClothEmployee> optional = specialClothEmployeeRepository.findById(id);
@@ -29,49 +30,49 @@ public class SpecialClothEmployeeServiceImpl implements SpecialClothEmployeeServ
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<SpecialClothEmployee> findAllSpecialClothEmployee() {
         return specialClothEmployeeRepository.findAll();
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void saveSpecialClothEmployee(SpecialClothEmployee specialClothEmployee) {
         specialClothEmployeeRepository.save(specialClothEmployee);
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void saveAllSpecialClothEmployee(List<SpecialClothEmployee> specialClothEmployeeList) {
         specialClothEmployeeRepository.saveAll(specialClothEmployeeList);
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteSpecialClothEmployeeById(Integer id) {
         specialClothEmployeeRepository.deleteById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<SpecialClothEmployee> findAllSpecialClothEmployeeByEmployeeId(Integer id) {
         return specialClothEmployeeRepository.findAllSpecialClothEmployeeByEmployeeId(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public Integer findEmployeeIdBySpecialClothEmployeeId(Integer id) {
         return specialClothEmployeeRepository.findEmployeeIdBySpecialClothEmployeeId(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Integer> findAllEmployeeBySpecialClothEmployeeId(Integer id) {
         return specialClothEmployeeRepository.findAllEmployeeBySpecialClothEmployeeId(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Integer> findSpecialClothByEmployeeId(Integer id) {
         return specialClothEmployeeRepository.findSpecialClothByEmployeeId(id);
     }

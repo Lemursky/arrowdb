@@ -29,6 +29,8 @@ public class EventsController {
     private final MeasInstrumentAUDRepository measInstrumentAUDRepository;
     private final ConstructionControlService constructionControlService;
     private final ConstructionControlAUDRepository constructionControlAUDRepository;
+    private final WorkObjectService workObjectService;
+
 
     @GetMapping("/general/employee/employeeJournal/{id}")
     public String getEmployeeJournal(@PathVariable("id") int id, Model model){
@@ -72,6 +74,15 @@ public class EventsController {
                 .findConstructionControlById(id));
         model.addAttribute("constructionControlAUDList", constructionControlAUDRepository
                 .findAllConstructionControlAUDById(id));
+        return "constr_control/c_control_event-journal";
+    }
+
+    @GetMapping("/general/workobject/workobjectlJournal/{id}")
+    public String getWorkObjectJournal(@PathVariable("id") int id, Model model){
+        model.addAttribute("workObject", workObjectService
+                .findWorkObjectById(id));
+//        model.addAttribute("constructionControlAUDList", constructionControlAUDRepository
+//                .findAllConstructionControlAUDById(id));
         return "constr_control/c_control_event-journal";
     }
 }

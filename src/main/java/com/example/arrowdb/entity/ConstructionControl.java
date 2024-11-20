@@ -63,12 +63,12 @@ public class ConstructionControl {
     private String responsibleFromCustomer;
 
     @Audited
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_contractor")
     private Employee responsibleFromContractor;
 
     @Audited
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_sk_contractor")
     private Employee responsibleFromSKContractor;
 

@@ -4,6 +4,7 @@ import com.example.arrowdb.entity.*;
 import com.example.arrowdb.enums.WorkConditionENUM;
 import com.example.arrowdb.services.*;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.jdbc.Work;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,11 +57,13 @@ public class WorkInstrumentEmployeeController {
                                                  @ModelAttribute WorkObject workObject,
                                                  TempIssueDate tempIssueDate) {
         Employee employee = employeeService.findEmployeeById(id);
-        workInstrumentListAdd.forEach(e -> e.setWorkConditionENUM(WorkConditionENUM.INVOLVED));
-        workInstrumentListAdd.forEach(e -> e.setEmployee(employee));
-        workInstrumentListAdd.forEach(e -> e.setWorkObject(workObject));
-        workInstrumentListAdd.forEach(e -> e.setIssueDate(tempIssueDate.getTIssueDate()));
-        workInstrumentService.saveAllWorkInstrument(workInstrumentListAdd);
+        for (WorkInstrument workInstrument : workInstrumentListAdd) {
+            workInstrument.setWorkConditionENUM(WorkConditionENUM.INVOLVED);
+            workInstrument.setEmployee(employee);
+            workInstrument.setWorkObject(workObject);
+            workInstrument.setIssueDate(tempIssueDate.getTIssueDate());
+            workInstrumentService.saveWorkInstrument(workInstrument);
+        }
         return "redirect:/general/w_instrument/w_instrument-emp_update/%d".formatted(id);
     }
 
@@ -82,11 +85,13 @@ public class WorkInstrumentEmployeeController {
     public String deleteAllPersonalInstrumentEmployee(@PathVariable("id") int id) {
         Employee employee = employeeService.findEmployeeById(id);
         List<WorkInstrument> workInstrumentListCurrent = employee.getWorkInstrumentList();
-        workInstrumentListCurrent.forEach(e -> e.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED));
-        workInstrumentListCurrent.forEach(e -> e.setWorkObject(null));
-        workInstrumentListCurrent.forEach(e -> e.setEmployee(null));
-        workInstrumentListCurrent.forEach(e -> e.setIssueDate(null));
-        workInstrumentService.saveAllWorkInstrument(workInstrumentListCurrent);
+        for (WorkInstrument workInstrument: workInstrumentListCurrent) {
+            workInstrument.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED);
+            workInstrument.setWorkObject(null);
+            workInstrument.setEmployee(null);
+            workInstrument.setIssueDate(null);
+            workInstrumentService.saveWorkInstrument(workInstrument);
+        }
         return "redirect:/general/w_instrument/w_instrument-emp_update/%d".formatted(id);
     }
 
@@ -113,10 +118,12 @@ public class WorkInstrumentEmployeeController {
                                                  TempIssueDate tempIssueDate) {
         Employee employeeById = employeeService.findEmployeeById(id);
         List<WorkInstrument> workInstrumentListCurrent = employeeById.getWorkInstrumentList();
-        workInstrumentListCurrent.forEach(e -> e.setEmployee(employee));
-        workInstrumentListCurrent.forEach(e -> e.setWorkObject(workObject));
-        workInstrumentListCurrent.forEach(e -> e.setIssueDate(tempIssueDate.getTIssueDate()));
-        workInstrumentService.saveAllWorkInstrument(workInstrumentListCurrent);
+        for(WorkInstrument workInstrument: workInstrumentListCurrent){
+            workInstrument.setEmployee(employee);
+            workInstrument.setWorkObject(workObject);
+            workInstrument.setIssueDate(tempIssueDate.getTIssueDate());
+            workInstrumentService.saveWorkInstrument(workInstrument);
+        }
         return "redirect:/general/w_instrument/w_instrument-emp_update/%d".formatted(id);
     }
 }

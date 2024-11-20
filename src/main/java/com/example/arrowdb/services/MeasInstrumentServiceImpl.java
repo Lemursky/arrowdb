@@ -4,6 +4,7 @@ import com.example.arrowdb.entity.MeasInstrument;
 import com.example.arrowdb.repositories.MeasInstrumentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ public class MeasInstrumentServiceImpl implements MeasInstrumentService {
     private final MeasInstrumentRepository measInstrumentRepository;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public MeasInstrument findMeasInstrumentById(Integer id) {
         MeasInstrument measInstrument = null;
         Optional<MeasInstrument> optional = measInstrumentRepository.findById(id);
@@ -28,55 +29,55 @@ public class MeasInstrumentServiceImpl implements MeasInstrumentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Integer> findAllIdEmployees(Integer id) {
         return measInstrumentRepository.findAllIdEmployees(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void saveMeasInstrument(MeasInstrument measInstrument) {
         measInstrumentRepository.save(measInstrument);
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteMeasInstrumentById(Integer id) {
         measInstrumentRepository.deleteById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void saveAllMeasInstrument(List<MeasInstrument> measInstrumentList) {
         measInstrumentRepository.saveAll(measInstrumentList);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<MeasInstrument> findAllMeasInstruments() {
         return measInstrumentRepository.findAll();
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Integer> findAllMeasInstrumentByWorkObjectId(Integer id) {
         return measInstrumentRepository.findAllMeasInstrumentByWorkObjectId(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<MeasInstrument> findAllMeasInstrumentById(List<Integer> id) {
         return measInstrumentRepository.findAllById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public Integer findEmployeeIdByMeasInstId(Integer id) {
         return measInstrumentRepository.findEmployeeIdByMeasInstId(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<MeasInstrument> findAllMeasInstrumentById(Integer id) {
         return measInstrumentRepository.findAllMeasInstrumentById(id);
     }

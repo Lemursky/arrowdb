@@ -44,6 +44,7 @@ public class ConstructionControlController {
         List<WorkObject> workObjectList = workObjectService.findAllWorkObjects()
                 .stream()
                 .filter(e -> !e.getWorkObjectStatusENUM().getTitle().contains("Не начат"))
+                .sorted(Comparator.comparingInt(WorkObject::getWorkObjectId))
                 .toList();
         model.addAttribute("workObjectList", workObjectList);
         return "constr_control/constr_control-menu";

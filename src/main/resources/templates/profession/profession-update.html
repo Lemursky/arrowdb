@@ -41,7 +41,7 @@
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">003</th>
-                <td style="text-align: left"><label>Требуемый уровень образования</label></td>
+                <td style="text-align: left"><label>Требуемый уровень профессионального образования</label></td>
                 <td style="text-align: left">
                     <select class="form-select form-select-sm" name="qualityENUM">
                         <option th:each="qty:${qualityList}"
@@ -50,6 +50,7 @@
                                 th:text="${qty.getTitle()}">
                         </option>
                     </select>
+                    <p style="font-size: 12px">Федеральный закон от 29.12.2012 N 273-ФЗ</p>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">004</th>

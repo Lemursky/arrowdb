@@ -78,7 +78,7 @@
                     <td><span th:each="drl:${emp.driverLicenseENUM}">
                     <span th:text="${drl + ' '}"></span></span></td>
                     <td th:text="${emp.height}">
-                    <td th:text="${emp.clothSize}">
+                    <td th:text="${emp.clothSizeENUM == null ? '' : emp.clothSizeENUM.getTitle()}">
                     <td th:text="${emp.shoesSize}">
                 </tr>
                 </tbody>

@@ -4,6 +4,7 @@ import com.example.arrowdb.entity.PersonalInstrument;
 import com.example.arrowdb.repositories.PersonalInstrumentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,13 +17,13 @@ public class PersonalInstrumentServiceImpl implements PersonalInstrumentService 
     private final PersonalInstrumentRepository personalInstrumentRepository;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<PersonalInstrument> findAllPersonalInstruments() {
         return personalInstrumentRepository.findAll();
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public PersonalInstrument findPersonalInstrumentById(Integer id) {
         PersonalInstrument instruments = null;
         Optional<PersonalInstrument> optional = personalInstrumentRepository.findById(id);
@@ -33,25 +34,25 @@ public class PersonalInstrumentServiceImpl implements PersonalInstrumentService 
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void savePersonalInstrument(PersonalInstrument instruments) {
         personalInstrumentRepository.save(instruments);
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deletePersonalInstrumentsById(Integer id) {
         personalInstrumentRepository.deleteById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Integer> findAllIdEmployees(Integer id) {
         return personalInstrumentRepository.findAllIdEmployees(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public Integer findPersonalInstIdByEmployeeId(Integer id) {
         return personalInstrumentRepository.findPersonalInstIdByEmployeeId(id);
     }

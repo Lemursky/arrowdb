@@ -1,10 +1,14 @@
 package com.example.arrowdb.entity;
 
+import com.example.arrowdb.enums.ClothSizeENUM;
 import com.example.arrowdb.enums.DriverLicenseENUM;
 import com.example.arrowdb.enums.EmployeeStatusENUM;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.AuditJoinTable;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
@@ -86,9 +90,8 @@ public class Employee {
     private Integer height;
 
     @Audited
-    @Pattern(regexp = "([-/()\\da-zA-Z\\s]+)?", message = "только - алфавит: Латинский; цифры; символы: -/()")
     @Column(name = "cloth_size")
-    private String clothSize;
+    private ClothSizeENUM clothSizeENUM;
 
     @Audited
     @Min(15)
@@ -128,18 +131,11 @@ public class Employee {
     @ManyToMany(mappedBy = "PTOList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<WorkObject> workObjectPTOList = new ArrayList<>();
 
-//    @ManyToMany(mappedBy = "empDutyList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-//    private List<ConstructionControl> constrControlEmpDutyList = new ArrayList<>();
-
-
-
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "responsibleFromContractor", fetch = FetchType.LAZY)
     private List<ConstructionControl> responsibleFromContractorList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "responsibleFromSKContractor", fetch = FetchType.LAZY)
     private List<ConstructionControl> responsibleFromSKContractorList = new ArrayList<>();
-
-
 
     public void setSurName(String surName) {
         try {

@@ -137,9 +137,7 @@ public class WorkObjectController {
                                    Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("workObjectStatusList", Arrays.stream(WorkObjectStatusENUM.values())
-                    .filter(e -> e.getTitle().contains("Действующий"))
-                    .filter(e -> e.getTitle().contains("Приостановлен"))
-                    .filter(e -> e.getTitle().contains("Закрыт"))
+                    .filter(e -> !e.getTitle().contains("Не начат"))
                     .toList());
             model.addAttribute("employeeList", new ArrayList<>(employeeService.findAllEmployees()
                     .stream()

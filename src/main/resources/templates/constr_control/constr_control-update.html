@@ -107,14 +107,14 @@
                     <th style="text-align: left" scope="row">005</th>
                     <td style="text-align: left"><label>Выявленные несоответствия</label></td>
                     <td style="text-align: left">
-                        <textarea rows="4" cols="40" type="text" style="width: 600px" ;
+                        <textarea rows="4" cols="40" type="text" style="width: 600px";
                                   th:field="${constructionControl.warningName}"></textarea>
                         <p if="${#fields.hasErrors('warningName')}" th:errors="${constructionControl.warningName}"
                            style="font-size: 13px; color: brown"></p>
                 </tr>
                 <tr>
                     <th style="text-align: left" scope="row">006</th>
-                    <td style="text-align: left"><label>Крайняя дата устранения</label></td>
+                    <td style="text-align: left"><label>Срок устранения</label></td>
                     <td style="text-align: left">
                         <input type="date" style="width: 150px" th:field="${constructionControl.deadLine}" id="deadLine" required>
                         <script th:inline="javascript">

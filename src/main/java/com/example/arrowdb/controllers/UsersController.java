@@ -1,8 +1,10 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
+import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.enums.UserStatusENUM;
 import com.example.arrowdb.repositories.*;
+import com.example.arrowdb.services.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +27,7 @@ public class UsersController {
     private final UsersRepository usersRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmployeeService employeeService;
 
     @GetMapping("/general/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -39,6 +42,10 @@ public class UsersController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String createUserForm(@ModelAttribute Users users,
                                  Model model) {
+        model.addAttribute("employeeList", employeeService.findAllEmployees().stream()
+                .filter(e -> e.getEmployeeStatusENUM().getTitle().contains("Действующий"))
+                .sorted(Comparator.comparingInt(Employee::getEmpId))
+                .toList());
         model.addAttribute("roles", roleRepository.findAll());
         return "user/user-create";
     }
@@ -84,7 +91,7 @@ public class UsersController {
     @PostMapping("/general/users/userUpdate")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String updateUser(@Valid Users users) {
-        usersRepository.saveAndFlush(users);
+        usersRepository.save(users);
         return "redirect:/general/users";
     }
 }

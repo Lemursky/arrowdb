@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Arrow</title>
+</head>
+<body>
+<div class="tableContainer m-4" style="font-size: 14px">
+    <div>
+        <a th:href="@{/general/workobject/workobjectView/{id}(id=${workObject.workObjectId})}" style="width: 100px">
+            <button style="width: 90px" type="button" class="btn btn-outline-warning btn-sm">Назад</button>
+        </a>
+    </div>
+    <hr>
+<!--    <div class="pageName">-->
+<!--        <h5>Журнал изменений работника-->
+<!--            <span th:text="${'#ID ' + w_objloyee.w_objId + ' | '}"></span>-->
+<!--            <span th:text="${w_objloyee}"></span>-->
+<!--            <span th:text="${', ' + w_objloyee.profession.professionName}"></span>-->
+<!--        </h5>-->
+<!--    </div>-->
+    <div>
+        <style>
+            .mainTable{
+                display: block;
+                width: 100%;
+                height: 750px;
+                border-collapse: separate;
+                border-spacing: 0;
+                overflow-y: scroll;
+                overflow-x: scroll;
+                -moz-hyphens: auto;
+                -webkit-hyphens: auto;
+                -ms-hyphens: auto;
+            }
+            .head{
+                position: sticky;
+                top: 0;
+                text-align: left; vertical-align: top;
+            }
+        </style>
+        <div class="mainTable">
+            <table class="table table-hover table-sm" style="width: 4300px;">
+                <thead class="head">
+                <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
+                    <th style="width: 150px;">Пользователь</th>
+                    <th style="width: 100px;">Дата и время изм.</th>
+                    <th style="width: 150px;">Статус:</th>
+                    <th style="width: 150px;">№ Заказа (внутр.)</th>
+                    <th style="width: 150px;">№ Лота</th>
+                    <th style="width: 300px;">Наименование объекта строительства</th>
+                    <th style="width: 200px;">Заказчик</th>
+                    <th style="width: 200px;">Номер договора Заказчик - Генподрядчик (Заказчик - ТИК)</th>
+                    <th style="width: 250px;">Генподрядчик</th>
+                    <th style="width: 200px;">Номер договора ТИК - Генподрядчик</th>
+                    <th style="width: 300px;">Предмет договора</th>
+                    <th style="width: 150px;">Сумма контракта ТИК - Генподрядчик (Заказчик), с НДС (20%)</th>
+                    <th style="width: 100px;">Аванс</th>
+                    <th style="width: 100px;">Срок контракта</th>
+
+                    <th style="width: 200px;">Руководитель проекта</th>
+                    <th style="width: 200px;">Ответственные ПТО</th>
+                    <th style="width: 300px;">Куратор от Заказчика</th>
+                    <th style="width: 300px;">Адрес/локация производства работ</th>
+                    <th style="width: 300px;">Адрес склада</th>
+                    <th style="width: 200px;">Ответственный за склад/инструмент</th>
+                    <th style="width: 200px;">Ответственные ОМТР</th>
+                    <th style="width: 300px;">Комментарий</th>
+
+                </tr>
+                </thead>
+                <tbody class="body">
+                <tr th:each="w_obj:${w_objloyeeAUDList}">
+                    <td th:text="${w_obj.exampleRevEntity.userName}">
+                    <td th:text="${#tw_objorals.format(w_obj.exampleRevEntity.localDateTimeModified,
+                    'dd-MM-yyyy HH:mm:ss')}">
+                    <td th:text="${w_obj.w_objloyeeStatusENUM.getTitle()}">
+                    <td th:text="${w_obj.surName}">
+                    <td th:text="${w_obj.name}">
+                    <td th:text="${w_obj.middleName}">
+                    <td th:text="${w_obj.profession}">
+                    <td th:text="${w_obj.phoneNumber}">
+                    <td th:text="${w_obj.email}">
+                    <td th:text="${#tw_objorals.format(w_obj.hireDate, 'dd-MM-yyyy')}">
+                    <td th:text="${w_obj.height}">
+                    <td th:text="${w_obj.clothSizeENUM.getTitle()}">
+                    <td th:text="${w_obj.shoesSize}">
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

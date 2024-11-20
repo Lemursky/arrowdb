@@ -163,7 +163,7 @@ public class PersonalInstrument {
     private String personalInstrComment;
 
     @Audited
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "employee")
     private Employee employee;
 

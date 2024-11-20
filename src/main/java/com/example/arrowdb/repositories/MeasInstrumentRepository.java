@@ -2,6 +2,7 @@ package com.example.arrowdb.repositories;
 
 import com.example.arrowdb.entity.MeasInstrument;
 import com.example.arrowdb.entity.WorkInstrument;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,5 +24,9 @@ public interface MeasInstrumentRepository extends JpaRepository<MeasInstrument, 
 
     @Query(nativeQuery = true, value = "select * from m_instruments where instr_id=:id")
     List<MeasInstrument> findAllMeasInstrumentById(Integer id);
+
+    @Query("select m from MeasInstrument m join fetch m.department")
+    @NotNull
+    List<MeasInstrument> findAll();
 
 }

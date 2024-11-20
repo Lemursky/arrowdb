@@ -163,12 +163,12 @@ public class WorkInstrument {
     private String workInstrComment;
 
     @Audited
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "work_object")
     private WorkObject workObject;
 
     @Audited
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "employee")
     private Employee employee;
 

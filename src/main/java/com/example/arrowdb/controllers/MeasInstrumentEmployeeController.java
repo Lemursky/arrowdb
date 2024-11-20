@@ -56,11 +56,13 @@ public class MeasInstrumentEmployeeController {
                                                  @ModelAttribute WorkObject workObject,
                                                  TempIssueDate tempIssueDate) {
         Employee employee = employeeService.findEmployeeById(id);
-        measInstrumentListAdd.forEach(e -> e.setWorkConditionENUM(WorkConditionENUM.INVOLVED));
-        measInstrumentListAdd.forEach(e -> e.setEmployee(employee));
-        measInstrumentListAdd.forEach(e -> e.setWorkObject(workObject));
-        measInstrumentListAdd.forEach(e -> e.setIssueDate(tempIssueDate.getTIssueDate()));
-        measInstrumentService.saveAllMeasInstrument(measInstrumentListAdd);
+        for(MeasInstrument measInstrument: measInstrumentListAdd){
+            measInstrument.setWorkConditionENUM(WorkConditionENUM.INVOLVED);
+            measInstrument.setEmployee(employee);
+            measInstrument.setWorkObject(workObject);
+            measInstrument.setIssueDate(tempIssueDate.getTIssueDate());
+            measInstrumentService.saveMeasInstrument(measInstrument);
+        }
         return "redirect:/general/m_instrument/m_instrument-emp_update/%d".formatted(id);
     }
 
@@ -82,11 +84,13 @@ public class MeasInstrumentEmployeeController {
     public String deleteAllPersonalInstrumentEmployee(@PathVariable("id") int id) {
         Employee employee = employeeService.findEmployeeById(id);
         List<MeasInstrument> measInstrumentListCurrent = employee.getMeasInstrumentList();
-        measInstrumentListCurrent.forEach(e -> e.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED));
-        measInstrumentListCurrent.forEach(e -> e.setWorkObject(null));
-        measInstrumentListCurrent.forEach(e -> e.setEmployee(null));
-        measInstrumentListCurrent.forEach(e -> e.setIssueDate(null));
-        measInstrumentService.saveAllMeasInstrument(measInstrumentListCurrent);
+        for(MeasInstrument measInstrument: measInstrumentListCurrent){
+            measInstrument.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED);
+            measInstrument.setWorkObject(null);
+            measInstrument.setEmployee(null);
+            measInstrument.setIssueDate(null);
+            measInstrumentService.saveMeasInstrument(measInstrument);
+        }
         return "redirect:/general/m_instrument/m_instrument-emp_update/%d".formatted(id);
     }
 
@@ -113,10 +117,13 @@ public class MeasInstrumentEmployeeController {
                                                  TempIssueDate tempIssueDate) {
         Employee employeeById = employeeService.findEmployeeById(id);
         List<MeasInstrument> measInstrumentListCurrent = employeeById.getMeasInstrumentList();
-        measInstrumentListCurrent.forEach(e -> e.setEmployee(employee));
-        measInstrumentListCurrent.forEach(e -> e.setWorkObject(workObject));
-        measInstrumentListCurrent.forEach(e -> e.setIssueDate(tempIssueDate.getTIssueDate()));
-        measInstrumentService.saveAllMeasInstrument(measInstrumentListCurrent);
+        for(MeasInstrument measInstrument: measInstrumentListCurrent){
+            measInstrument.setWorkConditionENUM(WorkConditionENUM.INVOLVED);
+            measInstrument.setEmployee(employee);
+            measInstrument.setWorkObject(workObject);
+            measInstrument.setIssueDate(tempIssueDate.getTIssueDate());
+            measInstrumentService.saveMeasInstrument(measInstrument);
+        }
         return "redirect:/general/m_instrument/m_instrument-emp_update/%d".formatted(id);
     }
 }

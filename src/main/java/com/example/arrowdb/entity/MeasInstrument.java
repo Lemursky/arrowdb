@@ -183,17 +183,17 @@ public class MeasInstrument {
     private String measInstrComment;
 
     @Audited
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "work_object")
     private WorkObject workObject;
 
     @Audited
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "employee")
     private Employee employee;
 
     @Audited
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "dep_status")
     private Department department;
 

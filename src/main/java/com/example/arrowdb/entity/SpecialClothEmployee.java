@@ -19,7 +19,7 @@ public class SpecialClothEmployee {
     @Column(name = "spec_cloth_emp_id")
     private Integer specClothEmpId;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinColumn(name = "spec_cloth_name")
     private SpecialCloth specialCloth;
 

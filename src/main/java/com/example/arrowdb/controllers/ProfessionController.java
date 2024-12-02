@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Comparator;
-import java.util.List;
 
 import static com.example.arrowdb.message.Message.*;
 
@@ -112,5 +111,4 @@ public class ProfessionController {
             }
         }
     }
-
 }

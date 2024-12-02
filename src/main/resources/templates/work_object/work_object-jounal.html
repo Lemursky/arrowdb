@@ -15,13 +15,12 @@
         </a>
     </div>
     <hr>
-<!--    <div class="pageName">-->
-<!--        <h5>Журнал изменений работника-->
-<!--            <span th:text="${'#ID ' + w_objloyee.w_objId + ' | '}"></span>-->
-<!--            <span th:text="${w_objloyee}"></span>-->
-<!--            <span th:text="${', ' + w_objloyee.profession.professionName}"></span>-->
-<!--        </h5>-->
-<!--    </div>-->
+    <div class="pageName">
+        <h5>Журнал объекта строительства
+            <span th:text="${'#ID ' + workObject.workObjectId + ' | '}"></span>
+            <span th:text="${workObject}"></span>
+        </h5>
+    </div>
     <div>
         <style>
             .mainTable{
@@ -60,7 +59,6 @@
                     <th style="width: 150px;">Сумма контракта ТИК - Генподрядчик (Заказчик), с НДС (20%)</th>
                     <th style="width: 100px;">Аванс</th>
                     <th style="width: 100px;">Срок контракта</th>
-
                     <th style="width: 200px;">Руководитель проекта</th>
                     <th style="width: 200px;">Ответственные ПТО</th>
                     <th style="width: 300px;">Куратор от Заказчика</th>
@@ -73,22 +71,33 @@
                 </tr>
                 </thead>
                 <tbody class="body">
-                <tr th:each="w_obj:${w_objloyeeAUDList}">
+                <tr th:each="w_obj:${workObjectAUDList}">
                     <td th:text="${w_obj.exampleRevEntity.userName}">
-                    <td th:text="${#tw_objorals.format(w_obj.exampleRevEntity.localDateTimeModified,
+                    <td th:text="${#temporals.format(w_obj.exampleRevEntity.localDateTimeModified,
                     'dd-MM-yyyy HH:mm:ss')}">
-                    <td th:text="${w_obj.w_objloyeeStatusENUM.getTitle()}">
-                    <td th:text="${w_obj.surName}">
-                    <td th:text="${w_obj.name}">
-                    <td th:text="${w_obj.middleName}">
-                    <td th:text="${w_obj.profession}">
-                    <td th:text="${w_obj.phoneNumber}">
-                    <td th:text="${w_obj.email}">
-                    <td th:text="${#tw_objorals.format(w_obj.hireDate, 'dd-MM-yyyy')}">
-                    <td th:text="${w_obj.height}">
-                    <td th:text="${w_obj.clothSizeENUM.getTitle()}">
-                    <td th:text="${w_obj.shoesSize}">
-                </tr>
+                    <td th:text="${w_obj.workObjectStatusENUM.getTitle()}">
+                    <td th:text="${w_obj.workObjectOrder}">
+                    <td th:text="${w_obj.workObjectLot}">
+                    <td th:text="${w_obj.workObjectName}">
+                    <td th:text="${w_obj.workObjectCustomer}">
+                    <td th:text="${w_obj.workObjectContractCustomerTotGeneralContractor}">
+                    <td th:text="${w_obj.workObjectGeneralContractor}">
+                    <td th:text="${w_obj.workObjectContractContractorTotGeneralContractor}">
+                    <td th:text="${w_obj.valueOfContract}">
+                    <td th:text="${w_obj.priceOfContract}">
+                    <td th:text="${w_obj.valueOfDeposit}">
+                    <td th:text="${'Начало: ' + w_obj.dateOfStart + ' Окончание: ' + w_obj.dateOfEnd}">
+                    <td th:text="${w_obj.workObjectChief}">
+                    <td><span th:each="skeep:${w_obj.PTOAUDList}">
+                    <span th:text="${skeep}"></span><br></span></td>
+                    <td th:text="${w_obj.chiefOfCustomer}">
+                    <td th:text="${w_obj.workObjectLocalAddress}">
+                    <td th:text="${w_obj.workObjectStorageAddress}">
+                    <td><span th:each="skeep:${w_obj.storeKeeperAUDList}">
+                    <span th:text="${skeep}"></span><br></span></td>
+                    <td><span th:each="skeep:${w_obj.supplierAUDList}">
+                    <span th:text="${skeep}"></span><br></span></td>
+                    <td th:text="${w_obj.workObjectComment}">
                 </tbody>
             </table>
         </div>

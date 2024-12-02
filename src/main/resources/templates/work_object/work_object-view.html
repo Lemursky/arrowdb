@@ -20,18 +20,19 @@
                     </a>
                 </div>
             </th>
-<!--            <th>-->
-<!--                <div>-->
-<!--                    <a th:href="@{/general/workobject/workobjectJournal/{id}(id=${workObject.workObjectId})}">-->
-<!--                        <button type="button" class="btn btn-outline-success btn-sm">Журнал изменений</button>-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--            </th>-->
+            <th>
+                <div>
+                    <a th:href="@{/general/workobject/workobjectJournal/{id}(id=${workObject.workObjectId})}">
+                        <button type="button" class="btn btn-outline-success btn-sm">Журнал изменений</button>
+                    </a>
+                </div>
+            </th>
             <th>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_UPDATE')">
                     <a th:href="@{/general/workobject/workobjectUpdate/{id}(id=${workObject.workObjectId})}"
                        th:unless="${workObject.workObjectStatusENUM.getTitle() == 'Закрыт'}">
-                        <button type="button" class="btn btn-outline-primary btn-sm" aria-pressed="true">Править</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm" aria-pressed="true">
+                            Править</button>
                     </a>
                 </div>
             </th>
@@ -39,7 +40,8 @@
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_WORK_OBJECT_DELETE')">
                     <a th:href="@{/general/workobject/workobjectDelete/{id}(id=${workObject.workObjectId})}">
                         <button onclick="return confirm('Вы действительно хотите безвозвратно удалить эти данные?');"
-                                type="button" class="btn btn-outline-danger btn-sm" aria-pressed="true">Удалить</button>
+                                type="button" class="btn btn-outline-danger btn-sm" aria-pressed="true">
+                            Удалить</button>
                     </a>
                 </div>
             </th>
@@ -229,7 +231,8 @@
             <tr>
                 <th style="text-align: left" scope="row">022</th>
                 <td style="text-align: left">Комментарий</td>
-                <td style="text-align: left"><span style="white-space: pre-wrap" th:text="${workObject.workObjectComment}"></span>
+                <td style="text-align: left">
+                    <span style="white-space: pre-wrap" th:text="${workObject.workObjectComment}"></span>
             </tr>
             </tbody>
         </table>

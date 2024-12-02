@@ -4,16 +4,12 @@ import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.WorkObject;
 import com.example.arrowdb.enums.ConstructionControlStatusENUM;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.envers.Audited;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -42,12 +38,6 @@ public class ConstructionControlAUD {
 
     @Column(name = "responsible_from_customer")
     private String responsibleFromCustomer;
-
-//    @OneToMany
-//    @JoinTable(name = "emp_duty_c_contr_join_aud",
-//            joinColumns = @JoinColumn(name = "rev", referencedColumnName = "rev"),
-//            inverseJoinColumns = @JoinColumn(name = "join_emp_duty_id",  referencedColumnName = "emp_id"))
-//    private List<Employee> empDutyListAUD = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "from_contractor")

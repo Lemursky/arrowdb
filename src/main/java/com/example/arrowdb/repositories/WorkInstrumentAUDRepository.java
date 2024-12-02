@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface WorkInstrumentAUDRepository extends JpaRepository<WorkInstrumentAUD, Integer> {
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Query(nativeQuery = true, value = "select * from history.w_instruments_aud where instr_id=:id order by rev desc")
     List<WorkInstrumentAUD> findAllWorkInstrumentAUDById(Integer id);
 }

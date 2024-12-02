@@ -1,10 +1,5 @@
 package com.example.arrowdb.controllers;
 
-import com.example.arrowdb.entity.*;
-import com.example.arrowdb.history.EmployeeAUD;
-import com.example.arrowdb.history.MeasInstrumentAUD;
-import com.example.arrowdb.history.PersonalInstrumentAUD;
-import com.example.arrowdb.history.WorkInstrumentAUD;
 import com.example.arrowdb.repositories.*;
 import com.example.arrowdb.services.*;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +25,7 @@ public class EventsController {
     private final ConstructionControlService constructionControlService;
     private final ConstructionControlAUDRepository constructionControlAUDRepository;
     private final WorkObjectService workObjectService;
-
+    private final WorkObjectAUDRepository workObjectAUDRepository;
 
     @GetMapping("/general/employee/employeeJournal/{id}")
     public String getEmployeeJournal(@PathVariable("id") int id, Model model){
@@ -77,12 +72,12 @@ public class EventsController {
         return "constr_control/c_control_event-journal";
     }
 
-    @GetMapping("/general/workobject/workobjectlJournal/{id}")
+    @GetMapping("/general/workobject/workobjectJournal/{id}")
     public String getWorkObjectJournal(@PathVariable("id") int id, Model model){
         model.addAttribute("workObject", workObjectService
                 .findWorkObjectById(id));
-//        model.addAttribute("constructionControlAUDList", constructionControlAUDRepository
-//                .findAllConstructionControlAUDById(id));
-        return "constr_control/c_control_event-journal";
+        model.addAttribute("workObjectAUDList", workObjectAUDRepository
+                .findAllWorkObjectAUDById(id));
+        return "work_object/work_object-jounal";
     }
 }

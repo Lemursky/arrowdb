@@ -1,22 +1,16 @@
 package com.example.arrowdb.history;
 
-import com.example.arrowdb.entity.ConstructionControl;
 import com.example.arrowdb.entity.Employee;
-import com.example.arrowdb.entity.MeasInstrument;
-import com.example.arrowdb.entity.WorkInstrument;
 import com.example.arrowdb.enums.WorkObjectStatusENUM;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.envers.Audited;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Getter
 @Setter
@@ -38,7 +32,7 @@ public class WorkObjectAUD {
     private String workObjectLot;
 
     @Size(max = 3000)
-    @Column(name = "work_object_name", unique=true)
+    @Column(name = "work_object_name")
     private String workObjectName;
 
     @Size(max = 500)
@@ -93,38 +87,30 @@ public class WorkObjectAUD {
     @Column(name = "work_object_status")
     private WorkObjectStatusENUM workObjectStatusENUM;
 
-
-//    @OneToMany
-//    private List<WorkInstrument> workInstrumentList;
-//
-//    @Audited(targetAuditMode = NOT_AUDITED)
-//    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
-//    private List<MeasInstrument> measInstrumentList = new ArrayList<>();
-//
-//    @Audited(targetAuditMode = NOT_AUDITED)
-//    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
-//    private List<ConstructionControl> constructionControlList = new ArrayList<>();
-//
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_object_chief")
     private Employee workObjectChief;
-//
-//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-//    @JoinTable(name = "skeep_work_obj_join",
-//            joinColumns = @JoinColumn(name = "join_w_obj_id"),
-//            inverseJoinColumns = @JoinColumn(name = "join_skeep_id"))
-//    private  List<Employee> storeKeeperList = new ArrayList<>();
-//
-//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-//    @JoinTable(name = "pto_work_obj_join",
-//            joinColumns = @JoinColumn(name = "join_w_obj_id"),
-//            inverseJoinColumns = @JoinColumn(name = "join_pto_id"))
-//    private List<Employee> PTOList = new ArrayList<>();
-//
-//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-//    @JoinTable(name = "suppl_work_obj_join",
-//            joinColumns = @JoinColumn(name = "join_w_obj_id"),
-//            inverseJoinColumns = @JoinColumn(name = "join_suppl_id"))
-//    private List<Employee> supplierList = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "rev")
+    private ExampleRevEntity exampleRevEntity;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "skeep_work_obj_join_aud",
+            joinColumns = @JoinColumn(name = "rev", referencedColumnName = "rev"),
+            inverseJoinColumns = @JoinColumn(name = "join_skeep_id", referencedColumnName = "emp_id"))
+    private  List<Employee> storeKeeperAUDList = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinTable(name = "pto_work_obj_join_aud",
+            joinColumns = @JoinColumn(name = "rev", referencedColumnName = "rev"),
+            inverseJoinColumns = @JoinColumn(name = "join_pto_id", referencedColumnName = "emp_id"))
+    private List<Employee> PTOAUDList = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @JoinTable(name = "suppl_work_obj_join_aud",
+            joinColumns = @JoinColumn(name = "rev", referencedColumnName = "rev"),
+            inverseJoinColumns = @JoinColumn(name = "join_suppl_id", referencedColumnName = "emp_id"))
+    private List<Employee> supplierAUDList = new ArrayList<>();
 
 }

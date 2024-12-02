@@ -7,7 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class ExampleListener implements RevisionListener {
 
     String getUser(){
-        var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
         return userDetails.getUsername();
     }
 

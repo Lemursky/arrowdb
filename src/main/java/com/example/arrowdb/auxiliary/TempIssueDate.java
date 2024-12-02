@@ -1,4 +1,4 @@
-package com.example.arrowdb.entity;
+package com.example.arrowdb.auxiliary;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,6 @@
 package com.example.arrowdb.entity;
 
 import com.example.arrowdb.enums.WorkObjectStatusENUM;
-import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -15,8 +14,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Getter @Setter @NoArgsConstructor
 @Entity
@@ -136,18 +133,6 @@ public class WorkObject {
     @Column(name = "work_object_comment")
     private String workObjectComment;
 
-    @AuditJoinTable
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
-    private List<WorkInstrument> workInstrumentList = new ArrayList<>();
-
-    @Audited(targetAuditMode = NOT_AUDITED)
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
-    private List<MeasInstrument> measInstrumentList = new ArrayList<>();
-
-    @Audited(targetAuditMode = NOT_AUDITED)
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
-    private List<ConstructionControl> constructionControlList = new ArrayList<>();
-
     private Integer constructionControlActive;
 
     private Integer constructionControlClosed;
@@ -158,23 +143,36 @@ public class WorkObject {
     @Column(name = "work_object_status")
     private WorkObjectStatusENUM workObjectStatusENUM;
 
+    @Audited
     @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "work_object_chief")
     private Employee workObjectChief;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
+    private List<WorkInstrument> workInstrumentList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
+    private List<MeasInstrument> measInstrumentList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObject", fetch = FetchType.LAZY)
+    private List<ConstructionControl> constructionControlList = new ArrayList<>();
+
+    @Audited
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "skeep_work_obj_join",
             joinColumns = @JoinColumn(name = "join_w_obj_id"),
             inverseJoinColumns = @JoinColumn(name = "join_skeep_id"))
     private  List<Employee> storeKeeperList = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "pto_work_obj_join",
             joinColumns = @JoinColumn(name = "join_w_obj_id"),
             inverseJoinColumns = @JoinColumn(name = "join_pto_id"))
     private List<Employee> PTOList = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @JoinTable(name = "suppl_work_obj_join",
             joinColumns = @JoinColumn(name = "join_w_obj_id"),
             inverseJoinColumns = @JoinColumn(name = "join_suppl_id"))

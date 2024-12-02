@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
+
 @Getter @Setter @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -119,6 +121,7 @@ public class Employee {
     private List<WorkObject> workObjectChiefList = new ArrayList<>();
 
     @Audited
+//    @Enumerated(EnumType.STRING)
     @Column(name = "driver_license")
     private List<DriverLicenseENUM> driverLicenseENUM;
 

@@ -1,7 +1,6 @@
 package com.example.arrowdb.controllers;
 
 import com.example.arrowdb.entity.*;
-import com.example.arrowdb.enums.EmployeeStatusENUM;
 import com.example.arrowdb.enums.UserStatusENUM;
 import com.example.arrowdb.repositories.*;
 import com.example.arrowdb.services.EmployeeService;

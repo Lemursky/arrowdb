@@ -7,12 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
-    @Query("select e from Employee e join fetch e.profession")
-    @NotNull
-    List<Employee> findAll();
+//    @Query(value = "select e from Employee e left join fetch e.profession")
+//    @NotNull
+//    List<Employee> findAll();
 
 }

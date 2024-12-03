@@ -53,7 +53,8 @@ public class WorkInstrumentEmployeeController {
     @PostMapping("/general/w_instrument/w_instrumentCreate_employee/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_WORK_INSTR_UPDATE')")
     public String createSpecialClothEmployeeForm(@PathVariable("id") int id,
-                                                 @RequestParam @ModelAttribute List<WorkInstrument> workInstrumentListAdd,
+                                                 @RequestParam
+                                                 @ModelAttribute List<WorkInstrument> workInstrumentListAdd,
                                                  @ModelAttribute WorkObject workObject,
                                                  TempIssueDate tempIssueDate) {
         Employee employee = employeeService.findEmployeeById(id);

@@ -53,7 +53,8 @@ public class MeasInstrumentEmployeeController {
     @PostMapping("/general/m_instrument/m_instrumentCreate_employee/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_STORE_MEAS_INSTR_UPDATE')")
     public String createSpecialClothEmployeeForm(@PathVariable("id") int id,
-                                                 @RequestParam @ModelAttribute List<MeasInstrument> measInstrumentListAdd,
+                                                 @RequestParam
+                                                 @ModelAttribute List<MeasInstrument> measInstrumentListAdd,
                                                  @ModelAttribute WorkObject workObject,
                                                  TempIssueDate tempIssueDate) {
         Employee employee = employeeService.findEmployeeById(id);

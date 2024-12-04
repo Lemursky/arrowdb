@@ -195,7 +195,7 @@
                     </tr>
                     <script>
                         $('#status').change(function () {
-                            if ($('#status').val() === "ACTIVE") {
+                            if ($('#status').val() === "ACTIVE" || $('#status').val() === "CLOTHED") {
                                 $('#dateOfExtension').css('display', 'block');
                             } else {
                                 $('#dateOfExtension').css('display', 'none');
@@ -203,7 +203,7 @@
                         });
                     </script>
                     <script>
-                        if ($('#status').val() === "ACTIVE") {
+                        if ($('#status').val() === "ACTIVE" || $('#status').val() === "CLOTHED") {
                             $('#dateOfExtension').css('display', 'block');
                         } else {
                             $('#dateOfExtension').css('display', 'none');

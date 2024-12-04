@@ -99,6 +99,10 @@ public class Employee {
     @Column(name = "employee_status")
     private EmployeeStatusENUM employeeStatusENUM;
 
+    @Audited
+    @Column(name = "driver_license")
+    private List<DriverLicenseENUM> driverLicenseENUM;
+
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "employee", fetch = FetchType.LAZY)
     private List<PersonalInstrument> personalInstrumentList = new ArrayList<>();
 
@@ -113,10 +117,6 @@ public class Employee {
 
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObjectChief", fetch = FetchType.LAZY)
     private List<WorkObject> workObjectChiefList = new ArrayList<>();
-
-    @Audited
-    @Column(name = "driver_license")
-    private List<DriverLicenseENUM> driverLicenseENUM;
 
     @ManyToMany(mappedBy = "storeKeeperList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<WorkObject> workObjectStoreKeeperList = new ArrayList<>();

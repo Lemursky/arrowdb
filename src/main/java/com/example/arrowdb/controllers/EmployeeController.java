@@ -123,6 +123,12 @@ public class EmployeeController {
             return "employee/employee-update";
         } else {
             Employee empById = employeeService.findEmployeeById(employee.getEmpId());
+            List<ConstructionControl> constructionControlList = empById.getResponsibleFromContractorList().stream()
+                    .filter(e -> Objects.equals(e.getConstructionControlStatusENUM().getTitle(), "Действующий"))
+                    .toList();
+            List<ConstructionControl> constructionControlListSK = empById.getResponsibleFromSKContractorList().stream()
+                    .filter(e -> Objects.equals(e.getConstructionControlStatusENUM().getTitle(), "Действующий"))
+                    .toList();
             if (!empById.getPersonalInstrumentList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                     .equals("Закрыт") ||
                     !empById.getWorkInstrumentList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
@@ -139,9 +145,9 @@ public class EmployeeController {
                             .equals("Закрыт") ||
                     !empById.getWorkObjectStoreKeeperList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getResponsibleFromContractorList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
+                    !constructionControlList.isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт") ||
-                    !empById.getResponsibleFromSKContractorList().isEmpty() && employee.getEmployeeStatusENUM().getTitle()
+                    !constructionControlListSK.isEmpty() && employee.getEmployeeStatusENUM().getTitle()
                             .equals("Закрыт")) {
                 model.addAttribute("employee", empById);
                 model.addAttribute("error", DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE);

@@ -69,7 +69,7 @@
                 overflow: auto;
             }
         </style>
-        <table class="table table-hover table-sm" style="width: 800px; text-align: center;">
+        <table class="table table-hover table-sm" style="width: 1000px; text-align: center;">
             <thead>
             <tr>
                 <th style="width: 50px; text-align: left;" scope="col">#</th>
@@ -81,7 +81,7 @@
             <tr>
                 <th style="text-align: left">
                 <th style="text-align: left"><label>Статус:</label></th>
-                <td style="text-align: left; width: 500px">
+                <td style="text-align: left; width: 700px">
                     <span th:text="${employee.employeeStatusENUM.getTitle()}"
                           th:if="${employee.employeeStatusENUM.getTitle() == 'Действующий'}"></span>
                     <span th:text="${employee.employeeStatusENUM.getTitle()}"
@@ -176,7 +176,7 @@
                 <td style="text-align: left">Инструмент персональный</td>
                 <td style="text-align: left"><span th:each="persInstr:${employee.personalInstrumentList}">
                     <a th:href="@{/general/p_instrument/p_instrumentView/{id}(id=${persInstr.personalInstrId})}">
-                        <button style="text-align: left; width: 500px" type="button"
+                        <button style="text-align: left; width: 680px" type="button"
                                 class="btn btn-outline-dark btn-sm"><span
                                 th:text="${persInstr}"></span></button></a><br></span>
                 </td>
@@ -186,7 +186,7 @@
                 <td style="text-align: left">Инструмент строительный</td>
                 <td style="text-align: left"><span th:each="workInstr:${employee.workInstrumentList}">
                     <a th:href="@{/general/w_instrument/w_instrumentView/{id}(id=${workInstr.workInstrId})}">
-                        <button style="text-align: left; width: 500px" type="button"
+                        <button style="text-align: left; width: 680px" type="button"
                                 class="btn btn-outline-dark btn-sm"><span
                                 th:text="${workInstr}"></span></button></a><br></span>
                 </td>
@@ -196,7 +196,7 @@
                 <td style="text-align: left">Инструмент измерительный</td>
                 <td style="text-align: left"><span th:each="measInstr:${employee.measInstrumentList}">
                     <a th:href="@{/general/m_instrument/m_instrumentView/{id}(id=${measInstr.measInstrId})}">
-                        <button style="text-align: left; width: 500px" type="button"
+                        <button style="text-align: left; width: 680px" type="button"
                                 class="btn btn-outline-dark btn-sm"><span
                                 th:text="${measInstr}"></span></button></a><br></span>
                 </td>
@@ -209,9 +209,74 @@
                     </span>
                 </td>
             </tr>
+            <tr>
+                <th style="text-align: left" scope="row">015</th>
+                <td style="text-align: left">Занятость на объектах строительства</td>
+                <td style="text-align: left">
+                    <div th:each="wObjCh:${employee.workObjectChiefList}">
+                        <span></span>
+                        <span th:if="${employee.workObjectChiefList != null}">
+                            <a th:href="@{/general/workobject/workobjectView/{id}(id=${wObjCh.workObjectId})}">
+                                <button style="text-align: left; width: 300px" type="button"
+                                class="btn btn-outline-dark btn-sm">
+                            <span th:text="${wObjCh}">
+                        </span></button></a> - Руководитель проекта</span>
+                    </div>
+                    <div th:each="wObjPto:${employee.workObjectPTOList}">
+                        <span></span>
+                        <span th:if="${employee.workObjectPTOList != null}">
+                            <a th:href="@{/general/workobject/workobjectView/{id}(id=${wObjPto.workObjectId})}">
+                                <button style="text-align: left; width: 300px" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                            <span th:text="${wObjPto}">
+                        </span></button></a> - Ответственные ПТО</span>
+                    </div>
+                    <div th:each="wObjSp:${employee.workObjectSupplierList}">
+                        <span></span>
+                        <span th:if="${employee.workObjectSupplierList != null}">
+                            <a th:href="@{/general/workobject/workobjectView/{id}(id=${wObjSp.workObjectId})}">
+                                <button style="text-align: left; width: 300px" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                            <span th:text="${wObjSp}">
+                        </span></button></a> - Ответственные ОМТР</span>
+                    </div>
+                    <div th:each="wObjSk:${employee.workObjectStoreKeeperList}">
+                        <span></span>
+                        <span th:if="${employee.workObjectStoreKeeperList != null}">
+                            <a th:href="@{/general/workobject/workobjectView/{id}(id=${wObjSk.workObjectId})}">
+                                <button style="text-align: left; width: 300px" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                            <span th:text="${wObjSk}">
+                        </span></button></a> - Ответственный за склад/инструмент</span>
+                    </div>
+
+                    <div th:each="cContr:${employee.responsibleFromContractorList}">
+                        <span></span>
+                        <span th:if="${employee.responsibleFromContractorList != null} AND
+                        ${cContr.getConstructionControlStatusENUM().getTitle() != 'Черновик'}">
+                            <a th:href="@{/general/constr_control/constr_controlWarnings/{id}
+                            (id=${cContr.workObject.workObjectId})}">
+                                <button style="text-align: left; width: 300px" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                            <span th:text="${cContr}">
+                        </span></button></a> - Представитель подрядчика по строительству</span>
+                    </div>
+                    <div th:each="cContrSK:${employee.responsibleFromSKContractorList}">
+                        <span></span>
+                        <span th:if="${employee.responsibleFromSKContractorList != null} AND
+                        ${cContrSK.getConstructionControlStatusENUM().getTitle() != 'Черновик'}">
+                            <a th:href="@{/general/constr_control/constr_controlWarnings/{id}
+                            (id=${cContrSK.workObject.workObjectId})}">
+                                <button style="text-align: left; width: 300px" type="button"
+                                        class="btn btn-outline-dark btn-sm">
+                            <span th:text="${cContrSK}">
+                        </span></button></a> - Представитель СК подрядчика по строительству</span>
+                    </div>
+                </td>
+            </tr>
             <div th:if="${userName == employee.login} OR ${adminAccept} OR ${personalAccept}">
                 <tr>
-                    <th style="text-align: left" scope="row">015</th>
+                    <th style="text-align: left" scope="row">000</th>
                     <td style="text-align: left">Персональный информация</td>
                     <td style="text-align: left">AAAAAAAAAAA
                     </td>
@@ -219,7 +284,7 @@
             </div>
             <div th:if="${userName == employee.login} OR ${adminAccept} OR ${financeAccept}">
                 <tr>
-                    <th style="text-align: left" scope="row">016</th>
+                    <th style="text-align: left" scope="row">000</th>
                     <td style="text-align: left">Финансовый проект</td>
                     <td style="text-align: left">BBBBBBBBBBBBBBBB
                     </td>

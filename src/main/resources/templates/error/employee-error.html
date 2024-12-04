@@ -48,11 +48,13 @@
         </div>
         <div th:each="wObjConstr:${employee.responsibleFromContractorList}">
             <span th:text="${wObjConstr} + ${' - Представитель подрядчика по строительству'}"
-                  th:if="${employee.responsibleFromContractorList != null}"></span><br>
+                  th:if="${employee.responsibleFromContractorList != null} AND
+                  ${wObjConstr.getConstructionControlStatusENUM().getTitle() != 'Черновик'}"></span><br>
         </div>
         <div th:each="wObjConstr:${employee.responsibleFromSKContractorList}">
             <span th:text="${wObjConstr} + ${' - Представитель СК подрядчика по строительству'}"
-                  th:if="${employee.responsibleFromSKContractorList != null}"></span><br>
+                  th:if="${employee.responsibleFromSKContractorList != null} AND
+                  ${wObjConstr.getConstructionControlStatusENUM().getTitle() != 'Черновик'}"></span><br>
         </div>
     </div>
     <div>

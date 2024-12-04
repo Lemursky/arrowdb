@@ -58,8 +58,6 @@ public class ConstructionControlController {
         WorkObject workObject = workObjectService.findWorkObjectById(id);
         Users users = usersRepository.findByUserName(userDetails.getUsername()).orElseThrow();
         model.addAttribute("userName", userDetails.getUsername());
-        model.addAttribute("constructionControlStatusDRAFT", ConstructionControlStatusENUM.DRAFT);
-        model.addAttribute("constructionControlStatusACTIVE", ConstructionControlStatusENUM.ACTIVE);
         model.addAttribute("adminAccept", users.getRolesSet().contains(roleRepository
                 .findRolesByRoleName("ROLE_ADMIN")));
         model.addAttribute("roleDraft", users.getRolesSet().contains(roleRepository

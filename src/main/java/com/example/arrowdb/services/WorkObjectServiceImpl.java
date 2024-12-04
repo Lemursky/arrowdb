@@ -3,7 +3,6 @@ package com.example.arrowdb.services;
 import com.example.arrowdb.entity.WorkObject;
 import com.example.arrowdb.repositories.WorkObjectRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;

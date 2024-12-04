@@ -3,13 +3,10 @@ package com.example.arrowdb.services;
 import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.repositories.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 

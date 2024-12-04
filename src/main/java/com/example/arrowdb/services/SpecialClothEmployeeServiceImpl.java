@@ -1,7 +1,5 @@
 package com.example.arrowdb.services;
 
-import com.example.arrowdb.entity.Employee;
-import com.example.arrowdb.entity.SpecialCloth;
 import com.example.arrowdb.entity.SpecialClothEmployee;
 import com.example.arrowdb.repositories.SpecialClothEmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,17 +18,6 @@ public class SpecialClothEmployeeServiceImpl implements SpecialClothEmployeeServ
 
     @Override
     @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    public SpecialClothEmployee findSpecialClothEmployeeById(Integer id) {
-        SpecialClothEmployee specialClothEmployee = null;
-        Optional<SpecialClothEmployee> optional = specialClothEmployeeRepository.findById(id);
-        if(optional.isPresent()){
-            specialClothEmployee = optional.get();
-        }
-        return specialClothEmployee;
-    }
-
-    @Override
-    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<SpecialClothEmployee> findAllSpecialClothEmployee() {
         return specialClothEmployeeRepository.findAll();
     }
@@ -39,12 +26,6 @@ public class SpecialClothEmployeeServiceImpl implements SpecialClothEmployeeServ
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void saveSpecialClothEmployee(SpecialClothEmployee specialClothEmployee) {
         specialClothEmployeeRepository.save(specialClothEmployee);
-    }
-
-    @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void saveAllSpecialClothEmployee(List<SpecialClothEmployee> specialClothEmployeeList) {
-        specialClothEmployeeRepository.saveAll(specialClothEmployeeList);
     }
 
     @Override

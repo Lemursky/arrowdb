@@ -1,6 +1,5 @@
 package com.example.arrowdb.history;
 
-import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.Profession;
 import com.example.arrowdb.enums.ClothSizeENUM;
 import com.example.arrowdb.enums.DriverLicenseENUM;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter

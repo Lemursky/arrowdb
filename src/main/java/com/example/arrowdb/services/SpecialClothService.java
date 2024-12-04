@@ -1,6 +1,5 @@
 package com.example.arrowdb.services;
 
-import com.example.arrowdb.entity.Employee;
 import com.example.arrowdb.entity.SpecialCloth;
 
 import java.util.List;

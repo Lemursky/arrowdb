@@ -25,8 +25,4 @@ public interface MeasInstrumentRepository extends JpaRepository<MeasInstrument, 
     @Query(nativeQuery = true, value = "select * from m_instruments where instr_id=:id")
     List<MeasInstrument> findAllMeasInstrumentById(Integer id);
 
-//    @Query("select m from MeasInstrument m join fetch m.employee")
-//    @NotNull
-//    List<MeasInstrument> findAll();
-
 }

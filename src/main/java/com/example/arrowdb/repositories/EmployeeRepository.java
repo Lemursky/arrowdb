@@ -12,8 +12,4 @@ import java.util.Optional;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
-//    @Query(value = "select e from Employee e left join fetch e.profession")
-//    @NotNull
-//    List<Employee> findAll();
-
 }

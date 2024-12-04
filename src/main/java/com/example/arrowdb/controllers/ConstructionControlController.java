@@ -57,6 +57,7 @@ public class ConstructionControlController {
                                          Model model) {
         WorkObject workObject = workObjectService.findWorkObjectById(id);
         Users users = usersRepository.findByUserName(userDetails.getUsername()).orElseThrow();
+        model.addAttribute("userName", userDetails.getUsername());
         model.addAttribute("constructionControlStatus", ConstructionControlStatusENUM.DRAFT);
         model.addAttribute("adminAccept", users.getRolesSet().contains(roleRepository
                 .findRolesByRoleName("ROLE_ADMIN")));
@@ -100,6 +101,7 @@ public class ConstructionControlController {
     @PostMapping("/general/constr_control/constr_controlCreate")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_CREATE')")
     public String creatConstructionControl(@Valid ConstructionControl constructionControl,
+                                           @AuthenticationPrincipal UserDetails userDetails,
                                            BindingResult bindingResult,
                                            Model model) {
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
@@ -117,6 +119,7 @@ public class ConstructionControlController {
             return "constr_control/constr_control-create";
         } else {
             try {
+                constructionControl.setAuthor(userDetails.getUsername());
                 constructionControlService.saveConstructionControl(constructionControl);
                 return "redirect:/general/constr_control";
             } catch (Exception e) {

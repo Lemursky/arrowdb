@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter @Setter @NoArgsConstructor
@@ -33,6 +35,9 @@ public class Users {
 
     @Column(name = "user_status_enum")
     private UserStatusENUM userStatusENUM;
+
+//    @OneToMany(mappedBy = "users")
+//    private List<ConstructionControl> constructionControlList = new ArrayList<>();
 
     public void addRolesToUsers() {
         rolesSet.forEach(e -> e.getUsers().add(this));

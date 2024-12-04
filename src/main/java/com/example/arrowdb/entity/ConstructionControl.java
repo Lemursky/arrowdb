@@ -27,6 +27,9 @@ public class ConstructionControl {
     @Column(name = "constr_control_id")
     private Integer constrControlId;
 
+    @Column(name = "author")
+    private String author;
+
     @Audited
     @NotBlank(message = "Поле не может быть пустым")
     @Size(min = 1, max = 100, message = "Кол-во символов максимум 100")

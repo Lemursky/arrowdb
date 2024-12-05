@@ -96,7 +96,7 @@
                 <td th:text="${const_cont.constrControlId}"/>
                 <td th:text="${const_cont.numOfWarning}"/>
                 <td th:text="${#temporals.format(const_cont.dateOfIssue, 'dd-MM-yyyy')}"/>
-                <td th:text="${const_cont.warningName}"/>
+                <td th:text="${const_cont.warningName}" style="white-space: pre-wrap"/>
                 <td th:text="${#temporals.format(const_cont.deadLine, 'dd-MM-yyyy')}"/>
                 <td th:text="${const_cont.responsibleFromCustomer}"/>
                 <td>

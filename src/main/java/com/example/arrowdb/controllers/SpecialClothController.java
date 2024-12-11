@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.*;
 
-import static com.example.arrowdb.message.Message.*;
+import static com.example.arrowdb.auxiliary.Message.*;
 
 @Controller
 @RequiredArgsConstructor

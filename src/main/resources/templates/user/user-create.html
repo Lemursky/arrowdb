@@ -44,8 +44,9 @@
                                     ((${emp.profession} == null)? '' : ${', ' + emp.profession.professionName})">
                             </option>
                         </select>
-                        <p style="font-size: 13px; color: #112970">* если список "Пользователь" пуст,
-                            означает что связку "логин - пароль" имеют все работники</p>
+                        <span style="font-size: 13px; color: #112970">* если список "Пользователь" пуст,
+                            означает что связку "логин - пароль" имеют все работники</span><br>
+                        <span th:text="${error}" style="font-size: 13px; color: brown"></span>
                         <script>
                             $(".livesearch").chosen();
                         </script>

@@ -19,7 +19,7 @@
     </div>
     <hr>
     <div class="pageName">
-        <h4>Пользователи</h4>
+        <h4>Пользователи <span th:text="${error}" style="font-size: 15px; color: brown"></span></h4>
     </div>
     <style>
         .mainTable {
@@ -46,8 +46,8 @@
             <thead class="head">
             <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
                 <th style="width: 100px; text-align: left;">#ID</th>
-                <th style="width: 300px; text-align: left;">Логин</th>
-                <th style="width: 500px; text-align: left;">Пользователь</th>
+                <th style="width: 300px; text-align: left;">Учетная запись</th>
+                <th style="width: 500px; text-align: left;">Работник</th>
                 <th style="width: 200px; text-align: left;">Статус</th>
                 <th style="width: 300px; text-align: center;">Действие</th>
             </tr>
@@ -61,22 +61,20 @@
                     <button style="width: 400px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
                         <span th:text="(${usr.employee} == null)? '' :
                 ((${usr.employee.profession} == null)? ${usr.employee} :
-                (${usr.employee} + ${', ' + usr.employee.profession.getProfessionName}?: ''))"></span></button></a></span>
+                (${usr.employee} + ${', ' + usr.employee.profession.getProfessionName}?: ''))"></span></button>
+                </a></span>
                 </td>
                 <td th:text="${usr.userStatusENUM.getTitle()}" style="width: 200px"/>
                 <td style="width: 300px">
                     <a th:href="@{/general/users/userUpdate/{id}(id=${usr.userId})}">
-                        <button type="button" class="btn btn-outline-warning btn-sm">Править
-                        </button>
+                        <button type="button" class="btn btn-outline-warning btn-sm">Править</button>
                     </a>
                     <a th:href="@{/general/users/recovery/{id}(id=${usr.userId})}">
-                        <button type="button" class="btn btn-outline-success btn-sm">Восст. доступ
-                        </button>
+                        <button type="button" class="btn btn-outline-primary btn-sm">Восст. доступ</button>
                     </a>
                     <a th:href="@{/general/users/userDelete/{id}(id=${usr.userId})}">
                         <button onclick="return confirm('Вы действительно хотите безвозвратно удалить эти данные?');"
-                                type="button" class="btn btn-outline-danger btn-sm">Удалить
-                        </button>
+                                type="button" class="btn btn-outline-danger btn-sm">Удалить</button>
                     </a>
             </tr>
             </tbody>

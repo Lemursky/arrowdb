@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.example.arrowdb.message.Message.SPEC_CLOTH_UNIQUE_ERROR;
+import static com.example.arrowdb.auxiliary.Message.SPEC_CLOTH_UNIQUE_ERROR;
 
 @Controller
 @RequiredArgsConstructor

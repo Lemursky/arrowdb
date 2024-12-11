@@ -118,6 +118,12 @@ public class Employee {
     @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "workObjectChief", fetch = FetchType.LAZY)
     private List<WorkObject> workObjectChiefList = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "responsibleFromContractor", fetch = FetchType.LAZY)
+    private List<ConstructionControl> responsibleFromContractorList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "responsibleFromSKContractor", fetch = FetchType.LAZY)
+    private List<ConstructionControl> responsibleFromSKContractorList = new ArrayList<>();
+
     @ManyToMany(mappedBy = "storeKeeperList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<WorkObject> workObjectStoreKeeperList = new ArrayList<>();
 
@@ -126,12 +132,6 @@ public class Employee {
 
     @ManyToMany(mappedBy = "PTOList", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private List<WorkObject> workObjectPTOList = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "responsibleFromContractor", fetch = FetchType.LAZY)
-    private List<ConstructionControl> responsibleFromContractorList = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "responsibleFromSKContractor", fetch = FetchType.LAZY)
-    private List<ConstructionControl> responsibleFromSKContractorList = new ArrayList<>();
 
     public void setSurName(String surName) {
         try {

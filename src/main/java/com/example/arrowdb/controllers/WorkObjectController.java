@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.*;
 
-import static com.example.arrowdb.message.Message.*;
+import static com.example.arrowdb.auxiliary.Message.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,7 +40,7 @@ public class WorkObjectController {
     @GetMapping("/general/workobject/workobjectView/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_WORK_OBJECT_VIEW')")
     public String findWorkObjectById(@PathVariable("id") int id,
-                                     Model model) {;
+                                     Model model) {
         model.addAttribute("workObject", workObjectService.findWorkObjectById(id));
         return "work_object/work_object-view";
     }

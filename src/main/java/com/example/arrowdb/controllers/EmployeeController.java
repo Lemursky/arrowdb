@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-import static com.example.arrowdb.message.Message.*;
+import static com.example.arrowdb.auxiliary.Message.*;
+import static com.example.arrowdb.enums.UserStatusENUM.OFF;
 
 @Controller
 @RequiredArgsConstructor
@@ -105,8 +106,8 @@ public class EmployeeController {
     public String updateEmployeeForm(@PathVariable("id") int id,
                                      Model model) {
         Employee employee = employeeService.findEmployeeById(id);
-        if(employee.getEmployeeStatusENUM().getTitle().equals(EmployeeStatusENUM.CLOTHED.getTitle()) ||
-                employee.getEmployeeStatusENUM().getTitle().equals(EmployeeStatusENUM.IN_VOCATION.getTitle())){
+        if (employee.getEmployeeStatusENUM().getTitle().equals(EmployeeStatusENUM.CLOTHED.getTitle()) ||
+                employee.getEmployeeStatusENUM().getTitle().equals(EmployeeStatusENUM.IN_VOCATION.getTitle())) {
             return "redirect:/general/employee/employeeView/%d".formatted(employee.getEmpId());
         }
         model.addAttribute("employee", employee);
@@ -160,6 +161,15 @@ public class EmployeeController {
                 model.addAttribute("error", DELETE_OR_CHANGE_STATUS_EMPLOYEE_MESSAGE);
                 return "error/employee-error";
             } else {
+                if (employee.getEmployeeStatusENUM().getTitle().equals("Закрыт")) {
+                    Optional<Users> users = usersRepository.findUsersByUserName(empById.getLogin());
+                    assert users.orElse(null) != null;
+                    try {
+                        users.get().setUserStatusENUM(OFF);
+                    } catch (Exception e) {
+                        e.getStackTrace();
+                    }
+                }
                 employeeService.saveEmployee(employee);
             }
         }

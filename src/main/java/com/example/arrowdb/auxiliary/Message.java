@@ -1,4 +1,4 @@
-package com.example.arrowdb.message;
+package com.example.arrowdb.auxiliary;
 
 public class Message {
 
@@ -30,5 +30,8 @@ public class Message {
     public static String UNIQUE_CONST_CONTROL = "Данный номер предупреждения уже существует";
 
     public static String SPEC_CLOTH_UNIQUE_ERROR = "Данная экипировка уже закреплена за работником";
+
+    public static String ERROR_CREATE_NEW_USER = "У данного работника отсутствует e-mail, " +
+            "создать учетную запись возможности нет";
 
 }

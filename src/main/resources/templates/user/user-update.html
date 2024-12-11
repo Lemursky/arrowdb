@@ -11,7 +11,8 @@
 <body>
 <div class="tableContainer m-4" style="font-size: 15px">
     <div class="pageName">
-        <h4>Меню обновления Пользователя</h4>
+        <h4>Меню обновления Пользователя <span th:text="${'«' + users.userName + '» '} + ${users.employee}
++ ${', ' + users.employee.profession.professionName}"></span></h4>
     </div>
     <br>
     <form th:action="@{/general/users/userUpdate}" th:method="post" th:object="${users}">
@@ -28,35 +29,40 @@
                 <th style="text-align: left" scope="row">001</th>
                 <td style="text-align: left">#ID (изм. не подлежит)</td>
                 <td style="text-align: left">
-                    <input readonly type="text" th:field="${users.userId}" placeholder="#ID">
+                    <input readonly style="width: 200px; text-align: left;" type="text" th:field="${users.userId}">
+            </tr>
+            <tr style="display: none">
+                <th style="text-align: left" scope="row">000</th>
+                <td style="text-align: left"><label>Логин (изм. не подлежит)</label></td>
+                <td style="text-align: left">
+                    <input style="width: 200px; text-align: left;" type="text" th:field="${users.userName}">
+            </tr>
+            <tr style="display: none">
+                <th style="text-align: left" scope="row">000</th>
+                <td style="text-align: left"><label>Пользователь (изм. не подлежит)</label></td>
+                <td style="text-align: left">
+                    <input readonly style="width: 400px; text-align: left;" type="text" th:field="${users.employee}">
+            </tr>
+            <tr style="display: none">
+                <th style="text-align: left" scope="row">000</th>
+                <td style="text-align: left"><label>Пароль</label></td>
+                <td style="text-align: left">
+                    <input readonly style="width: 400px; text-align: left;" type="text" th:field="${users.password}" placeholder="">
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">002</th>
-                <td style="text-align: left"><label>Пользователь</label></td>
-                <td style="text-align: left">
-                    <input style="width: 400px; text-align: left;" type="text" th:field="${users.userName}" placeholder="">
-            </tr>
-            <tr>
-                <th style="text-align: left" scope="row">003</th>
-                <td style="text-align: left"><label>Пароль</label></td>
-                <td style="text-align: left">
-                    <input style="width: 400px; text-align: left;" type="text" th:field="${users.password}" placeholder="">
-            </tr>
-            <tr>
-                <th style="text-align: left" scope="row">004</th>
                 <td style="text-align: left"><label>Статус</label></td>
                 <td style="text-align: left">
                     <select style="width: 200px; text-align: left;" class="form-select form-select-sm" name="userStatusENUM">
                         <option th:each="usrStat:${statusList}"
                                 th:field="*{userStatusENUM}"
                                 th:value="${usrStat}"
-                                th:text="${usrStat}">
+                                th:text="${usrStat.getTitle()}">
                         </option>
                     </select>
             </tr>
             </tbody>
         </table>
-        <br>
         <table class="table table-hover table-sm" style="width: 900px">
             <thead>
             <tr>
@@ -100,7 +106,6 @@
             </tr>
             </tbody>
         </table>
-        <br>
         <hr>
         <div>
             <button onclick="return confirm('Вы действительно хотите внести изменения?');"

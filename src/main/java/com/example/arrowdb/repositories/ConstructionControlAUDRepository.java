@@ -1,7 +1,6 @@
 package com.example.arrowdb.repositories;
 
 import com.example.arrowdb.history.ConstructionControlAUD;
-import com.example.arrowdb.history.MeasInstrumentAUD;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,6 +14,6 @@ public interface ConstructionControlAUDRepository extends JpaRepository<Construc
     @Transactional
     @Query(nativeQuery = true, value = "select * from history.constr_control_aud where " +
             "constr_control_id=:id order by rev desc")
-    List<ConstructionControlAUD> findAllConstructionControlAUDById(Integer id);
+    List<ConstructionControlAUD> findAllConstructionControlsAUDById(Integer id);
 
 }

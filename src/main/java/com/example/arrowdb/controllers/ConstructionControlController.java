@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,7 +57,7 @@ public class ConstructionControlController {
                                          @AuthenticationPrincipal UserDetails userDetails,
                                          Model model) {
         WorkObject workObject = workObjectService.findWorkObjectById(id);
-        Users users = usersRepository.findByUserName(userDetails.getUsername()).orElseThrow();
+        Users users = usersRepository.findUsersByUserName(userDetails.getUsername()).orElseThrow();
         model.addAttribute("userName", userDetails.getUsername());
         model.addAttribute("adminAccept", users.getRolesSet().contains(roleRepository
                 .findRolesByRoleName("ROLE_ADMIN")));
@@ -102,9 +103,9 @@ public class ConstructionControlController {
     @PostMapping("/general/constr_control/constr_controlCreate")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_CONSTR_CONTROL_CREATE')")
     public String creatConstructionControl(@Valid ConstructionControl constructionControl,
-                                           @AuthenticationPrincipal UserDetails userDetails,
                                            BindingResult bindingResult,
                                            Model model) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Employee> employeeList = new ArrayList<>(employeeService.findAllEmployees().stream()
                 .filter(e -> e.getEmployeeStatusENUM().getTitle().equals("Действующий"))
                 .sorted(Comparator.comparingInt(Employee::getEmpId))

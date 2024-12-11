@@ -1,5 +1,6 @@
 package com.example.arrowdb.controllers;
 
+import com.example.arrowdb.auxiliary.MailSenderService;
 import com.example.arrowdb.entity.*;
 import com.example.arrowdb.enums.UserStatusENUM;
 import com.example.arrowdb.repositories.*;
@@ -10,14 +11,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
-import java.util.List;
+
+import static com.example.arrowdb.auxiliary.PassGenerator.randomPass;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,6 +25,7 @@ public class UsersController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmployeeService employeeService;
+    private final MailSenderService mailSenderService;
 
     @GetMapping("/general/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -41,35 +40,56 @@ public class UsersController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String createUserForm(@ModelAttribute Users users,
                                  Model model) {
-        model.addAttribute("employeeList", employeeService.findAllEmployees().stream()
-                .filter(e -> e.getEmployeeStatusENUM().getTitle().contains("Действующий"))
+        model.addAttribute("employeeList", employeeService.findEmployeeByParameters(2).stream()
                 .sorted(Comparator.comparingInt(Employee::getEmpId))
                 .toList());
-        model.addAttribute("roles", roleRepository.findAll());
+        model.addAttribute("rolesAdmin", roleRepository.findRolesByMenuName("admin"));
+        model.addAttribute("rolesPersonal", roleRepository.findRolesByMenuName("personal"));
+        model.addAttribute("rolesStore", roleRepository.findRolesByMenuName("store"));
+        model.addAttribute("rolesActivity", roleRepository.findRolesByMenuName("activity"));
+        model.addAttribute("statusList", UserStatusENUM.values());
         return "user/user-create";
     }
 
     @PostMapping("/general/users/userCreate")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String createUser(@Valid @ModelAttribute Users users,
-                             BindingResult bindingResult,
                              Model model) {
-        List<Roles> roles = roleRepository.findAll();
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("roles", roles);
-            return "user/user-create";
-        } else {
-            users.setUserStatusENUM(UserStatusENUM.OFF);
-            model.addAttribute("roles", roles);
-            users.setPassword(passwordEncoder.encode(users.getPassword()));
-            usersRepository.save(users);
+        model.addAttribute("rolesAdmin", roleRepository.findRolesByMenuName("admin"));
+        model.addAttribute("rolesPersonal", roleRepository.findRolesByMenuName("personal"));
+        model.addAttribute("rolesStore", roleRepository.findRolesByMenuName("store"));
+        model.addAttribute("rolesActivity", roleRepository.findRolesByMenuName("activity"));
+        model.addAttribute("statusList", UserStatusENUM.values());
+        String login = users.getEmployee().getName().substring(0, 1).toUpperCase()
+                + users.getEmployee().getMiddleName().substring(0, 1).toUpperCase() + "_"
+                + users.getEmployee().getSurName() + "_" + users.getEmployee().getEmpId();
+        users.setUserName(login);
+        users.getEmployee().setLogin(login);
+        String tempPassword = randomPass();
+        users.setPassword(tempPassword);
+        users.setPassword(passwordEncoder.encode(users.getPassword()));
+        usersRepository.save(users);
+        try {
+            mailSenderService.send(
+                    employeeService.findEmailByLogin(users.getUserName()),
+                    "Данные для входа в систему",
+                    String.format("Логин: %s%nПароль: %s%nСтатус учетной записи: " +
+                                    "%s%nАдрес: http://192.168.3.250:8080/login",
+                            users.getUserName(),
+                            tempPassword,
+                            users.getUserStatusENUM().getTitle()));
+        } catch (NullPointerException e) {
             return "redirect:/general/users";
         }
+        return "redirect:/general/users";
     }
 
     @GetMapping("/general/users/userDelete/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String deleteUser(@PathVariable("id") int id) {
+        Users users = usersRepository.findById(id).orElse(null);
+        assert users != null;
+        users.getEmployee().setLogin(null);
         usersRepository.deleteById(id);
         return "redirect:/general/users";
     }
@@ -91,6 +111,28 @@ public class UsersController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String updateUser(@Valid Users users) {
         usersRepository.save(users);
+        return "redirect:/general/users";
+    }
+
+    @GetMapping("/general/users/recovery/{id}")
+    public String sendMessage(@PathVariable("id") int id) {
+        Users users = usersRepository.findById(id).orElseThrow();
+        String tempPassword = randomPass();
+        users.setPassword(tempPassword);
+        users.setPassword(passwordEncoder.encode(users.getPassword()));
+        usersRepository.save(users);
+        try {
+            mailSenderService.send(
+                    employeeService.findEmailByLogin(users.getUserName()),
+                    "Данные для входа в систему",
+                    String.format("Логин: %s%nПароль: %s%nСтатус учетной записи: " +
+                                    "%s%nАдрес: http://192.168.3.250:8080/login",
+                            users.getUserName(),
+                            tempPassword,
+                            users.getUserStatusENUM().getTitle()));
+        } catch (NullPointerException e) {
+            return "redirect:/general/users";
+        }
         return "redirect:/general/users";
     }
 }

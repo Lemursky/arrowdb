@@ -93,6 +93,10 @@
                 <th style="text-align: left" scope="row"></th>
                 <th style="text-align: left">Логин:</th>
                 <th style="text-align: left"><span th:text="${employee.login}"></span>
+                    <span th:text="${' (Действует)'}" style="color: green"
+                          th:if="${userStatus == 0}"></span>
+                    <span th:text="${' (Отключен)'}" style="color: brown"
+                          th:if="${userStatus == 1}"></span>
             </tr>
             <tr>
                 <th style="text-align: left" scope="row">001</th>

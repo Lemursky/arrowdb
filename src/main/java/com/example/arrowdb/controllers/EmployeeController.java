@@ -9,8 +9,9 @@ import com.example.arrowdb.repositories.UsersRepository;
 import com.example.arrowdb.services.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,10 +43,16 @@ public class EmployeeController {
     @GetMapping("/general/employee/employeeView/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_EMPLOYEE_VIEW')")
     public String findEmployeeById(@PathVariable("id") int id,
-                                   @AuthenticationPrincipal UserDetails userDetails,
                                    Model model) {
-        Users users = usersRepository.findByUserName(userDetails.getUsername()).orElseThrow();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Users users = usersRepository.findUsersByUserName(userDetails.getUsername()).orElseThrow();
         model.addAttribute("employee", employeeService.findEmployeeById(id));
+        try {
+            model.addAttribute("userStatus", usersRepository
+                    .findStatusByUserName(employeeService.findEmployeeById(id).getLogin()));
+        } catch (AopInvocationException e) {
+            model.addAttribute("userStatus", "");
+        }
         model.addAttribute("userName", userDetails.getUsername());
         model.addAttribute("adminAccept", users.getRolesSet().contains(roleRepository
                 .findRolesByRoleName("ROLE_ADMIN")));

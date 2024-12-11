@@ -83,10 +83,8 @@
                 <th onclick="sortTable(3)" style="width: 400px; text-align: left;">Выявленные несоответствия</th>
                 <th onclick="sortTable(4)" style="width: 100px; text-align: left;">Срок устранения</th>
                 <th onclick="sortTable(5)" style="width: 200px; text-align: left;">Представитель СК Заказчика</th>
-                <th onclick="sortTable(6)" style="width: 350px; text-align: left;">Ответственные за устранение
-                    замечания
-                </th>
-                <th onclick="sortTable(7)" style="width: 100px; text-align: left;">Срок<br>продл., до</th>
+                <th onclick="sortTable(6)" style="width: 350px; text-align: left;">Ответственные за устранение замечания</th>
+                <th onclick="sortTable(7)" style="width: 100px; text-align: left;">Срок продл., до</th>
                 <th onclick="sortTable(8)" style="width: 100px; text-align: left;">Статус предупр.</th>
                 <th style="width: 150px; text-align: left;"></th>
             </tr>
@@ -106,15 +104,15 @@
                         <button style="text-align: left; width: 340px" type="button" class="btn btn-outline-dark btn-sm">
                             <span th:text="(${emp} == null)? '' : ((${emp.profession} == null)? ${emp} :
                             (${emp} + ${', ' + emp.profession.getProfessionName}?: ''))"></span></button></a><br></span>
-                    <hr>
+
                     <strong style="font-size: 13px">Представитель СК подрядчика по строительству:</strong>
                     <span th:each="emp:${const_cont.responsibleFromSKContractor}">
                     <a th:href="@{/general/employee/employeeView/{id}(id=${emp.empId})}">
                         <button style="text-align: left; width: 340px" type="button" class="btn btn-outline-dark btn-sm">
                             <span th:text="(${emp} == null)? '' : ((${emp.profession} == null)? ${emp} :
                             (${emp} + ${', ' + emp.profession.getProfessionName}?: ''))"></span></button></a><br></span>
-                    <hr>
-                    <p><strong style="font-size: 13px">Представитель субподрядчика:</strong></p>
+
+                    <strong style="font-size: 13px">Представитель субподрядчика:</strong><br>
                     <span th:text="${const_cont.responsibleFromSubContractor}"></span>
                 </td>
                 <td th:text="${#temporals.format(const_cont.dateOfExtension, 'dd-MM-yyyy')}"/>

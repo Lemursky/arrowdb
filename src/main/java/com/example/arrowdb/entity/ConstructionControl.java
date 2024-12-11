@@ -15,7 +15,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "constr_control")
@@ -26,6 +28,10 @@ public class ConstructionControl {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "constr_control_id")
     private Integer constrControlId;
+
+//    @ManyToOne(cascade = CascadeType.REFRESH)
+//    @JoinColumn(name = "author")
+//    private Users author;
 
     @Column(name = "author")
     private String author;

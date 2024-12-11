@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserStatusENUM {
 
-    ON ("false"),
-    OFF ("true");
+    ON ("Действует"),
+    OFF ("Отключен");
 
     private final String title;
 

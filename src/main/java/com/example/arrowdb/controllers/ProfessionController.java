@@ -56,6 +56,7 @@ public class ProfessionController {
                                    BindingResult bindingResult,
                                    Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("qualityList", QualityENUM.values());
             return "profession/profession-create";
         } else {
             try {

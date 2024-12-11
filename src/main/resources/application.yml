@@ -11,6 +11,19 @@ spring:
     url: jdbc:postgresql://localhost:5432/arrow_db
     username: main_user
     password: user666
+  mail:
+    protocol: smtp
+    host: smtp.timeweb.ru
+    port: 465
+    username: service@strelaperm.ru
+    password: 313Lv661q
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            protocols: TLSv1.2
 
 server:
   port: 8080

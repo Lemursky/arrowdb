@@ -45,4 +45,15 @@ public class EmployeeServiceImpl implements EmployeeService{
         employeeRepository.deleteById(id);
     }
 
+    @Override
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
+    public List<Employee> findEmployeeByParameters(int status) {
+        return employeeRepository.findEmployeeByParameters(status);
+    }
+
+    @Override
+    public String findEmailByLogin(String login) {
+        return employeeRepository.findEmailByLogin(login);
+    }
+
 }

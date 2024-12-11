@@ -15,54 +15,73 @@
         </a>
         <a th:href="@{/general/users/userCreate}">
             <button type="button" class="btn btn-outline-success btn-sm">Создать нового пользователя</button>
-           </a>
+        </a>
     </div>
     <hr>
     <div class="pageName">
         <h4>Пользователи</h4>
     </div>
     <style>
-        table {
-            width: 100%;}
-        thead, tbody {
-            display: table;
-            width: 100%;}
-        .body {
+        .mainTable {
             display: block;
             width: 100%;
-            height: 700px;
-            overflow-y: scroll;}
+            height: 650px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow-y: scroll;
+            -moz-hyphens: auto;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
+
         .head {
-            display: block;
-            width: 100%;
-            overflow-y: scroll;}
+            position: sticky;
+            top: 0;
+            text-align: left;
+            vertical-align: top;
+        }
     </style>
-    <table class="table table-hover table-sm" style="width: 800px;" id="employee-table">
-        <thead class="head">
-        <tr>
-            <th style="width: 100px; text-align: left;">#ID</th>
-            <th style="width: 300px; text-align: left;">Пользователь</th>
-            <th style="width: 200px; text-align: left;">Статус</th>
-            <th style="width: 200px; text-align: center;">Действие</th>
-        </tr>
-        </thead>
-        <tbody class="body">
-        <tr style="text-align: left" scope="row" th:each="usr:${users}">
-            <th th:text="${usr.userId}" style="width: 100px"/>
-            <td th:text="${usr.userName}" style="width: 300px"/>
-            <td th:text="${usr.userStatusENUM}" style="width: 200px"/>
-            <td style="width: 200px">
-                <div style="text-align: center;">
+    <div class="mainTable">
+        <table class="table table-hover table-sm" style="width: 1300px;" id="employee-table">
+            <thead class="head">
+            <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
+                <th style="width: 100px; text-align: left;">#ID</th>
+                <th style="width: 300px; text-align: left;">Логин</th>
+                <th style="width: 500px; text-align: left;">Пользователь</th>
+                <th style="width: 200px; text-align: left;">Статус</th>
+                <th style="width: 300px; text-align: center;">Действие</th>
+            </tr>
+            </thead>
+            <tbody class="body">
+            <tr style="text-align: left" scope="row" th:each="usr:${users}">
+                <th th:text="${usr.userId}" style="width: 100px"/>
+                <td th:text="${usr.userName}" style="width: 300px"/>
+                <td style="width: 500px"><span th:if="${usr.employee != null}">
+                <a th:href="@{/general/employee/employeeView/{id}(id=${usr.employee.empId})}">
+                    <button style="width: 400px; text-align: left" type="button" class="btn btn-outline-dark btn-sm">
+                        <span th:text="(${usr.employee} == null)? '' :
+                ((${usr.employee.profession} == null)? ${usr.employee} :
+                (${usr.employee} + ${', ' + usr.employee.profession.getProfessionName}?: ''))"></span></button></a></span>
+                </td>
+                <td th:text="${usr.userStatusENUM.getTitle()}" style="width: 200px"/>
+                <td style="width: 300px">
                     <a th:href="@{/general/users/userUpdate/{id}(id=${usr.userId})}">
-                        <button type="button" class="btn btn-outline-warning btn-sm" aria-pressed="true">Править</button></a>
+                        <button type="button" class="btn btn-outline-warning btn-sm">Править
+                        </button>
+                    </a>
+                    <a th:href="@{/general/users/recovery/{id}(id=${usr.userId})}">
+                        <button type="button" class="btn btn-outline-success btn-sm">Восст. доступ
+                        </button>
+                    </a>
                     <a th:href="@{/general/users/userDelete/{id}(id=${usr.userId})}">
                         <button onclick="return confirm('Вы действительно хотите безвозвратно удалить эти данные?');"
-                                type="button" class="btn btn-outline-danger btn-sm" aria-pressed="true">Удалить</button></a>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                                type="button" class="btn btn-outline-danger btn-sm">Удалить
+                        </button>
+                    </a>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <hr>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

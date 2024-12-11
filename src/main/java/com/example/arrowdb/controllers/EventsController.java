@@ -66,7 +66,7 @@ public class EventsController {
         model.addAttribute("constructionControl", constructionControlService
                 .findConstructionControlById(id));
         model.addAttribute("constructionControlAUDList", constructionControlAUDRepository
-                .findAllConstructionControlAUDById(id));
+                .findAllConstructionControlsAUDById(id));
         return "constr_control/c_control_event-journal";
     }
 

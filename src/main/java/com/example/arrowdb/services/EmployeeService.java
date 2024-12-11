@@ -9,5 +9,7 @@ public interface EmployeeService {
     Employee findEmployeeById(Integer id);
     void saveEmployee(Employee employee);
     void deleteEmployeeById(Integer id);
+    List<Employee> findEmployeeByParameters(int status);
+    String findEmailByLogin(String login);
 
 }

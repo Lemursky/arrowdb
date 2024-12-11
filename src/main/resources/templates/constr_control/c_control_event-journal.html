@@ -45,10 +45,10 @@
             }
         </style>
         <div class="mainTable">
-            <table class="table table-hover table-sm" style="width: 1750px;">
+            <table class="table table-hover table-sm" style="width: 1800px;">
                 <thead class="head">
                 <tr class="table-secondary" style="width: 150px; text-align: left; vertical-align: top">
-                    <th style="width: 150px;">Пользователь</th>
+                    <th style="width: 200px;">Пользователь</th>
                     <th style="width: 100px;">Дата и время изм.</th>
                     <th style="width: 150px;">Объект строительства</th>
                     <th style="width: 200px;">№ предупр.</th>
@@ -64,6 +64,13 @@
                 <tbody class="body">
                 <tr th:each="c_contr:${constructionControlAUDList}">
                     <td th:text="${c_contr.exampleRevEntity.userName}">
+
+<!--                        <td>-->
+<!--                    <a th:href="@{/general/employee/employeeView/{id}(id=${employee.empId})}">-->
+<!--                        <button style="text-align: left; width: 180px" type="button" class="btn btn-outline-dark btn-sm">-->
+<!--                            <span th:text="${c_contr.exampleRevEntity.userName}"></span></button></a>-->
+<!--                </td>-->
+
                     <td th:text="${#temporals.format(c_contr.exampleRevEntity.localDateTimeModified,
                     'dd-MM-yyyy HH:mm:ss')}">
                     <td th:text="${c_contr.workObject}">

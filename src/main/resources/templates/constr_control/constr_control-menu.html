@@ -88,9 +88,9 @@
                 <td th:text="${w_obj.workObjectCustomer}"/>
                 <td th:text="${w_obj.workObjectOrder}"/>
                 <td th:text="${w_obj.workObjectLot}"/>
-                <td th:text="${w_obj.getConstructionControlActive}"/>
-                <td th:text="${w_obj.getConstructionControlClosed}"/>
-                <td th:text="${w_obj.getTotalCount}"/>
+                <td th:text="${w_obj.constructionControlActive}"/>
+                <td th:text="${w_obj.constructionControlClosed}"/>
+                <td th:text="${w_obj.totalCount}"/>
                 <td style="width: 100px">
                     <a th:href="@{/general/constr_control/constr_controlWarnings/{id}(id=${w_obj.workObjectId})}">
                         <button type="button" class="btn btn-outline-primary btn-sm">Просмотр</button>

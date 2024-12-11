@@ -34,6 +34,10 @@ public class Users {
     @Column(name = "user_status_enum")
     private UserStatusENUM userStatusENUM;
 
+    @OneToOne(cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
     @Override
     public String toString() {
         return userName;

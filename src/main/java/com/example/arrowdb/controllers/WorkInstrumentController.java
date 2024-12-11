@@ -152,11 +152,14 @@ public class WorkInstrumentController {
                 if (!workInstrument.getWorkConditionENUM().getTitle().contains("Закреплен") ||
                         !workInstrument.getTechnicalConditionENUM().getTitle().contains("Исправен")) {
                     workInstrument.setEmployee(null);
+                    workInstrument.setIssueDate(null);
                 }
                 if (!workInstrument.getWorkConditionENUM().getTitle().contains("Закреплен") ||
                         workInstrument.getTechnicalConditionENUM().getTitle().contains("Списан")) {
                     workInstrument.setWorkObject(null);
                     workInstrument.setEmployee(null);
+                    workInstrument.setIssueDate(null);
+                    workInstrument.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED);
                 }
                 model.addAttribute("employeeList", employeeList);
                 model.addAttribute("workObjectList", workObjectList);

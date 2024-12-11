@@ -8,15 +8,15 @@ spring:
     generate-ddl: true
 
   datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASS}
+    url: jdbc:postgresql://localhost:5432/arrow_db
+    username: main_user
+    password: user666
   mail:
     protocol: smtp
     host: smtp.timeweb.ru
     port: 465
-    username: ${POST_USER}
-    password: ${POST_PASS}
+    username: service@strelaperm.ru
+    password: 313Lv661q
     properties:
       mail:
         smtp:

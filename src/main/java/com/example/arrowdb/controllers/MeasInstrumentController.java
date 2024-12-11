@@ -165,11 +165,14 @@ public class MeasInstrumentController {
                 if (!measInstrument.getWorkConditionENUM().getTitle().contains("Закреплен") ||
                         !measInstrument.getTechnicalConditionENUM().getTitle().contains("Исправен")) {
                     measInstrument.setEmployee(null);
+                    measInstrument.setIssueDate(null);
                 }
                 if (!measInstrument.getWorkConditionENUM().getTitle().contains("Закреплен") ||
                         measInstrument.getTechnicalConditionENUM().getTitle().contains("Списан")) {
                     measInstrument.setWorkObject(null);
                     measInstrument.setEmployee(null);
+                    measInstrument.setIssueDate(null);
+                    measInstrument.setWorkConditionENUM(WorkConditionENUM.NOT_INVOLVED);
                 }
                 model.addAttribute("employeeList", employeeList);
                 model.addAttribute("workObjectList", workObjectList);
